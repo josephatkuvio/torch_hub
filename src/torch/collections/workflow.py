@@ -24,6 +24,7 @@ def upsert_specimen(collection, file, config):
     s_filename = secure_filename(file.filename)
     filename = s_filename.split(".")[0]
     extension = s_filename.split(".")[1]
+
     target_dir = os.path.join(config['BASE_DIR'], "static", "uploads", collection.collection_folder)
 
     execute_workflow = True
@@ -36,6 +37,7 @@ def upsert_specimen(collection, file, config):
         return specimen, False
 
     file.save(destination)
+    upload_to_azure("torchhub", f"{collection.collection_folder}/{s_filename}")
 
     if specimen is not None:
         if extension.lower() == "dng":
