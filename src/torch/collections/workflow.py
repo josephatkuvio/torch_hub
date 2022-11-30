@@ -3,6 +3,7 @@ from torch.prefect_flows.process_specimen import process_specimen
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import FileStorage
 from torch.collections.specimens import Specimen, SpecimenImage
+from torch.plugins.azure_blob_storage import upload_to_azure
 import os
 
 
@@ -37,7 +38,10 @@ def upsert_specimen(collection, file, config):
         return specimen, False
 
     file.save(destination)
-    upload_to_azure("torchhub", f"{collection.collection_folder}/{s_filename}")
+
+    cloud_destination = upload_to_azure("torchhub", f"{collection.collection_folder}/{s_filename}")
+    if cloud_destination:
+        destination = cloud_destination
 
     if specimen is not None:
         if extension.lower() == "dng":

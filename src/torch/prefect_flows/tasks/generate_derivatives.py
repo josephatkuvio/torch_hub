@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 import prefect
 from prefect.orion.schemas.states import Failed
 from torch.prefect_flows.tasks.save_specimen import save_specimen
+from torch.plugins.azure_blob_storage import upload_to_azure
 
 
 @task
@@ -63,16 +64,9 @@ def generate_derivative(specimen: Specimen, size, flow_config) -> Optional[Speci
 
         img.save(derivative_path)
 
-        cloud_connection_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-        if cloud_connection_str:
-            blob_service_client = BlobServiceClient.from_connection_string(cloud_connection_str)
-            blob_client = blob_service_client.get_blob_client(
-                container="torchhub",
-                blob=f"{collection.collection_folder}/{s_filename}")
-
-            with open(file=destination, mode="rb") as data:
-                blob_client.upload_blob(data)
-                destination = blob_client.url
+        cloud_destination = upload_to_azure("torchhub", f"{specimen.upload_path}/{derivative_file_name}")
+        if cloud_destination:
+            derivative_path = cloud_destination
 
         return SpecimenImage(
             specimen_id=specimen.id,
