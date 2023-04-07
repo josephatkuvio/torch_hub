@@ -220,7 +220,7 @@ def list_collections(collection_id, search_string, take):
 
 @collections_bp.post("/<collectionid>/specimens")
 @collections_bp.output({}, status_code=202)
-def upload(collectionid):
+async def upload(collectionid):
     files = request.files.getlist("file")
     batch_id = str(uuid.uuid4())
     for file in files:
@@ -230,7 +230,7 @@ def upload(collectionid):
         destination = os.path.join(target_dir, filename)
         file.save(destination)
 
-        collections.upload(collectionid, [destination])
+        await collections.upload(collectionid, [destination])
     return ''
 
 

@@ -1,8 +1,8 @@
-from tkinter import SEL
 import imagehash
 import datetime
 import importlib
 import os
+import asyncio
 
 from operator import or_
 from typing import List
@@ -231,13 +231,16 @@ def retry_workflow(specimenid):
     return True
 
 
-def upload(collectionid, files):
+async def upload(collectionid, files):
     collection = db.session.get(Collection, collectionid)
-
+    specimens = []
     for file in files:
         specimen, execute_workflow = upsert_specimen(collection, file)
         context.socketio.emit('specimen_added', specimen.id);
-        run_workflow(collection, specimen)
+        specimens.append(specimen)
+    
+        
+    await asyncio.gather(*[asyncio.to_thread(run_workflow, collection, s) for s in specimens]) 
     
     return True
 
