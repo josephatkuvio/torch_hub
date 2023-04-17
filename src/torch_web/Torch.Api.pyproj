@@ -45,6 +45,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="workflows\tasks\check_duplicate.py" />
+    <Compile Include="workflows\tasks\get_exif_info.py" />
+    <Compile Include="workflows\tasks\recognize_text_in_image.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="workflows\workflows.py">
       <SubType>Code</SubType>
     </Compile>
