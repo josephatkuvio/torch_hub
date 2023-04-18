@@ -1,8 +1,8 @@
-﻿<figure class="specimen-card" @onclick=Open>
+﻿<figure class="specimen-card" @onclick=Go>
     <img src="@ImageUrl" alt="@Specimen.Catalog_number" />
     <figcaption>
         <h2>@Specimen.Catalog_number</h2>
-        <h3>@Specimen.Catalog_number</h3>
+        <h3>@Specimen.Create_date.ToString("d")</h3>
         <aside>
             @Status
         </aside>
@@ -10,7 +10,7 @@
 </figure>
 
 @inject IConfiguration Config
-@inject IModalService Modal
+@*@inject IModalService Modal*@
 
 @code {
     [Parameter] public SpecimenResponse Specimen { get; set; } = null!;
@@ -24,6 +24,7 @@
         Socket.On($"specimen_updated_{Specimen.Id}", (response) =>
         {
             LocalSpecimen.Catalog_number = response.GetValue<string>(0);
+            LocalSpecimen.Create_date = response.GetValue<DateTime>(0);
             Status = response.GetValue<string>(1);
             StateHasChanged();
         });
@@ -32,12 +33,14 @@
     string? ImageUrl => (Specimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
         + Specimen.Card_image?.External_url;
 
-    async Task Open()
-    {
-        var fullSpecimen = await TorchCommands.GetSpecimenAsync(Specimen.Collection_id, Specimen.Id);
-        var parameters = new ModalParameters().Add("Specimen", fullSpecimen);
-        var options = new ModalOptions() { Size = ModalSize.Automatic };
-        var modal = Modal.Show<SpecimenDetail>(fullSpecimen.Catalog_number, parameters, options);
-        await modal.Result;
-    }
+    //async Task Open()
+    //{
+    //    var fullSpecimen = await TorchCommands.GetSpecimenAsync(Specimen.Collection_id, Specimen.Id);
+    //    var parameters = new ModalParameters().Add("Specimen", fullSpecimen);
+    //    var options = new ModalOptions() { Size = ModalSize.Automatic };
+    //    var modal = Modal.Show<SpecimenDetail>(fullSpecimen.Catalog_number, parameters, options);
+    //    await modal.Result;
+    //}
+
+    void Go() => Nav.NavigateTo($"/collections/{Specimen.Collection_id}/{Specimen.Id}");
 }

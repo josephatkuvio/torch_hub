@@ -45,8 +45,9 @@
 }
 .collection .specimen-list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
 }
 .collection .specimen-list > aside {
   color: gray;
@@ -86,7 +87,7 @@
   bottom: 42px;
   font-size: 17px;
   line-height: 21px;
-  color: #212433;
+  color: var(--grey-800);
   font-weight: 500;
 }
 .specimen-card figcaption h3 {
@@ -97,7 +98,7 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
-  color: #7A8099;
+  color: var(--grey-400);
 }
 .specimen-card figcaption aside {
   font-size: 14px;
@@ -344,4 +345,9 @@ button.secondary {
 }
 button.secondary:hover {
   background-color: var(--grey-300);
+}
+
+:root {
+  --grey-800: #212433;
+  --grey-400: #7A8099;
 }

@@ -95,6 +95,10 @@
           "collection_name": {
             "type": "string"
           },
+          "create_date": {
+            "format": "date-time",
+            "type": "string"
+          },
           "id": {
             "type": "integer"
           },

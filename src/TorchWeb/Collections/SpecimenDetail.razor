@@ -1,51 +1,73 @@
-﻿@inherits SparcModal
+﻿@*@inherits SparcModal*@
+
+@page "/collections/{CollectionId:int}/{SpecimenId:int}"
 
 <div class="specimen-detail">
-    <figure>
-        @if (ImageUrl != null)
-        {
-            <img src="@SelectedImageUrl" alt="@Specimen.Catalog_number" />
-        }
-        <figcaption>
-            <dl>
-                <dt>Catalog Number</dt>
-                <dd>@Specimen.Catalog_number</dd>
-                <dt>Collection</dt>
-                <dd>@Specimen.Collection_code: @Specimen.Collection_name</dd>
-            </dl>
-        </figcaption>
-    </figure>
-    <div class="images">
-        @foreach (var img in Specimen.Images)
-        {
-            <figure class="@(SelectedImage == img ? "selected" : "")" @onclick="@(() => Select(img))">
-                <img src="@img.External_url" alt="@img.Size" />
-                <figcaption>
-                    @img.Size
-                </figcaption>
-            </figure>
-        }
-    </div>
-    <div class="tasks">
-        @foreach (var task in Specimen.Tasks)
-        {
-            <TaskCard Task="task" />
-        }
-    </div>
+    @if (FullSpecimen != null)
+    {
+        <div>
+            <h3>
+                The page has been loaded successfully!
+            </h3>
+            <p>@FullSpecimen.Catalog_number</p>
+            <p>@FullSpecimen.Create_date</p>
+        </div>
+    }
+        <figure>
+            @if (ImageUrl != null)
+            {
+                <img src="@SelectedImageUrl" alt="@FullSpecimen.Catalog_number" />
+            }
+            <figcaption>
+                <dl>
+                    <dt>Catalog Number</dt>
+                    <dd>@FullSpecimen.Catalog_number</dd>
+                    <dt>Collection</dt>
+                    <dd>@FullSpecimen.Collection_code: @FullSpecimen.Collection_name</dd>
+                </dl>
+            </figcaption>
+        </figure>
+        <div class="images">
+            @foreach (var img in FullSpecimen.Images)
+            {
+                <figure class="@(SelectedImage == img ? "selected" : "")" @onclick="@(() => Select(img))">
+                    <img src="@img.External_url" alt="@img.Size" />
+                    <figcaption>
+                        @img.Size
+                    </figcaption>
+                </figure>
+            }
+        </div>
+        <div class="tasks">
+            @foreach (var task in FullSpecimen.Tasks)
+            {
+                <TaskCard Task="task" />
+            }
+        </div>        
 </div>
 
 @inject IConfiguration Config
 @code {
+    [Parameter] public int CollectionId { get; set; }
+    [Parameter] public int SpecimenId { get; set; }
     [Parameter] public SpecimenResponse Specimen { get; set; } = null!;
     SpecimenImageResponse? SelectedImage;
+    SpecimenResponse? FullSpecimen;
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        SelectedImage = Specimen.Images.FirstOrDefault();
+        FullSpecimen = await TorchCommands.GetSpecimenAsync(CollectionId, SpecimenId);
+        SelectedImage = FullSpecimen.Images.FirstOrDefault();
     }
 
-    string? ImageUrl => (Specimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
-        + Specimen.Card_image?.External_url;
+    //protected override async Task OnParametersSetAsync()
+    //{
+    //    //SelectedImage = Specimen.Images.FirstOrDefault();
+    //    //SelectedImage = FullSpecimen.Images.FirstOrDefault();
+    //}
+
+    string? ImageUrl => (FullSpecimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
+        + FullSpecimen.Card_image?.External_url;
 
     string? SelectedImageUrl => SelectedImage?.External_url ?? ImageUrl;
 
