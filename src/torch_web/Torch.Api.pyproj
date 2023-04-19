@@ -25,6 +25,7 @@
   <ItemGroup>
     <Content Include=".env" />
     <Content Include="requirements.txt" />
+    <Content Include="startup.sh" />
     <Content Include="torch_web\security\base.html" />
     <Content Include="torch_web\security\change_password.html" />
     <Content Include="torch_web\security\forgot_password.html" />
