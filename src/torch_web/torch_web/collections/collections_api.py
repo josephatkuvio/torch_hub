@@ -1,3 +1,4 @@
+from datetime import timezone
 import json
 from pathlib import Path
 import click
@@ -32,6 +33,7 @@ class SpecimenImageResponse(Schema):
 
 class SpecimenResponse(Schema):
     id = Integer()
+    create_date = DateTime(timezone=True)
     collection_id = Integer()
     collection_name = String()
     collection_code = String(nullable=True)

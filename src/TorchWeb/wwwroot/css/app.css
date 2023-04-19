@@ -45,8 +45,10 @@
 }
 .collection .specimen-list {
   display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 24px;
 }
 .collection .specimen-list > aside {
   color: gray;
@@ -58,11 +60,11 @@
 }
 
 .specimen-card {
-  border: 1px solid #dfdfe3;
-  border-radius: 8px;
+  width: 226.86px;
+  height: 248px;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.25)) drop-shadow(0px 0px 9px rgba(227, 227, 227, 0.1));
+  border-radius: 22px;
   position: relative;
-  height: 300px;
-  width: 208px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
   overflow: hidden;
@@ -72,31 +74,48 @@
 }
 .specimen-card figcaption {
   position: absolute;
+  height: 78px;
   bottom: 0;
   left: 0;
   right: 0;
   background: white;
   padding: 16px;
-  border-radius: 0 0 8px 8px;
 }
 .specimen-card figcaption h2 {
-  font-size: 16px;
+  width: 103px;
+  height: 21px;
+  left: 20px;
+  bottom: 42px;
+  font-size: 17px;
+  line-height: 21px;
+  color: var(--grey-800);
+  font-weight: 500;
+}
+.specimen-card figcaption h3 {
+  width: 75px;
+  height: 24px;
+  left: 20px;
+  bottom: 15px;
+  font-weight: 400;
+  font-size: 14px;
   line-height: 24px;
-  color: #242427;
-  font-weight: 600;
+  color: var(--grey-400);
 }
 .specimen-card figcaption aside {
   font-size: 14px;
   color: gray;
 }
 .specimen-card img {
-  width: 100%;
-  height: 100%;
+  width: 226.86px;
+  height: 170px;
+  position: absolute;
+  bottom: 78px;
   object-fit: cover;
-  object-position: top center;
+  object-position: center;
   text-align: center;
   color: var(--grey-500);
   font-size: 12px;
+  transform: scale(1.1);
 }
 .specimen-card img[alt]:after {
   display: flex;
@@ -184,8 +203,59 @@
   grid-template-columns: 3fr 5fr;
   gap: 24px;
 }
-.specimen-detail img {
+.specimen-detail .left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  position: absolute;
+  width: 991px;
+  height: 433px;
+}
+.specimen-detail h4 {
+  width: 267px;
+  height: 29px;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 0.035em;
+  color: var(--grey-800);
+  margin-bottom: 6px;
+}
+.specimen-detail h5 {
+  width: 99px;
+  height: 24px;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  color: var(--primary-600);
+}
+.specimen-detail p {
+  width: 153px;
+  height: 15px;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--grey-500);
+}
+.specimen-detail .long-text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.specimen-detail .text {
+  width: 991px;
+  height: 63px;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 21px;
+  color: #434966;
+}
+.specimen-detail .right img {
   max-width: 100%;
+  position: absolute;
+  width: 613px;
+  height: 921.41px;
+  left: 1126px;
+  box-shadow: -15.2773px 22.9159px 29.5997px 3.81931px rgba(0, 0, 0, 0.25);
 }
 .specimen-detail .images {
   display: flex;
@@ -327,4 +397,10 @@ button.secondary {
 }
 button.secondary:hover {
   background-color: var(--grey-300);
+}
+
+:root {
+  --grey-800: #212433;
+  --grey-500: #606580;
+  --grey-400: #7A8099;
 }
