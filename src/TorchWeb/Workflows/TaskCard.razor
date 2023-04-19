@@ -1,6 +1,10 @@
 ﻿<article class="task @(IsRunning ? "running" : "") @(IsSelected ? "selected" : "")" @onclick=Select>
-    <header>@Task.Name</header>
-    <aside>@Task.Func_name</aside>
+    @*<img src="/images/ellipse186.png" alt="" />*@
+    <header>
+        <img src="/images/ellipse186.png" alt="" />
+        <h4>@Task.Name</h4>
+    </header>
+    @*<aside>@Task.Func_name</aside>*@
 
     @if (DisplayParameters.Any())
     {
