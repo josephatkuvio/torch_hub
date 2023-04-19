@@ -25,72 +25,73 @@
   <ItemGroup>
     <Content Include=".env" />
     <Content Include="requirements.txt" />
-    <Content Include="security\base.html" />
-    <Content Include="security\change_password.html" />
-    <Content Include="security\forgot_password.html" />
-    <Content Include="security\login_user.html" />
-    <Content Include="security\register_user.html" />
-    <Content Include="security\reset_password.html" />
-    <Content Include="static\security.css" />
-    <Content Include="security\_macros.html" />
-    <Content Include="static\uploads\Default\BRIT240602.jpg" />
-    <Content Include="static\uploads\Default\BRIT259313.jpg" />
-    <Content Include="static\uploads\Default\BRIT259313_MED.jpg" />
-    <Content Include="static\uploads\Default\BRIT259313_THUMB.jpg" />
-    <Content Include="static\uploads\Default\BRIT337760.jpg" />
-    <Content Include="static\uploads\Default\BRIT342753.jpg" />
+    <Content Include="torch_web\security\base.html" />
+    <Content Include="torch_web\security\change_password.html" />
+    <Content Include="torch_web\security\forgot_password.html" />
+    <Content Include="torch_web\security\login_user.html" />
+    <Content Include="torch_web\security\register_user.html" />
+    <Content Include="torch_web\security\reset_password.html" />
+    <Content Include="torch_web\static\security.css" />
+    <Content Include="torch_web\security\_macros.html" />
+    <Content Include="torch_web\static\uploads\Default\BRIT240602.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT259313.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT259313_MED.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT259313_THUMB.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT337760.jpg" />
+    <Content Include="torch_web\static\uploads\Default\BRIT342753.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="prefect_flows\blocks\upload_credentials.py">
+    <Compile Include="torch_web\prefect_flows\blocks\upload_credentials.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="workflows\tasks\check_duplicate.py" />
-    <Compile Include="workflows\workflows.py">
+    <Compile Include="torch_web\workflows\tasks\check_duplicate.py" />
+    <Compile Include="torch_web\workflows\workflows.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="workflows\workflow_api.py">
+    <Compile Include="torch_web\workflows\workflow_api.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="__init__.py" />
+    <Compile Include="torch_web\__init__.py" />
     <Compile Include="app.py" />
-    <Compile Include="collections\collections_api.py" />
-    <Compile Include="collections\collections.py" />
-    <Compile Include="config\watchdog\watchdog_cli.py" />
-    <Compile Include="config\watchdog\watchdog_handler.py" />
-    <Compile Include="institutions\institutions_api.py" />
-    <Compile Include="institutions\institutions.py" />
-    <Compile Include="notifications\notifications_api.py" />
-    <Compile Include="prefect_flows\process_specimen.py" />
-    <Compile Include="workflows\tasks\check_catalog_number.py" />
-    <Compile Include="workflows\tasks\check_orientation.py" />
-    <Compile Include="workflows\tasks\copy_file.py" />
-    <Compile Include="workflows\tasks\generate_derivatives.py" />
-    <Compile Include="workflows\tasks\herbar.py" />
-    <Compile Include="workflows\tasks\upload.py" />
-    <Compile Include="reports\reports_api.py" />
-    <Compile Include="reports\reports.py" />
-    <Compile Include="users\role.py" />
-    <Compile Include="users\roles_api.py" />
-    <Compile Include="users\user.py" />
-    <Compile Include="users\users_api.py" />
+    <Compile Include="torch_web\collections\collections_api.py" />
+    <Compile Include="torch_web\collections\collections.py" />
+    <Compile Include="torch_web\config\watchdog\watchdog_cli.py" />
+    <Compile Include="torch_web\config\watchdog\watchdog_handler.py" />
+    <Compile Include="torch_web\institutions\institutions_api.py" />
+    <Compile Include="torch_web\institutions\institutions.py" />
+    <Compile Include="torch_web\notifications\notifications_api.py" />
+    <Compile Include="torch_web\prefect_flows\process_specimen.py" />
+    <Compile Include="torch_web\workflows\tasks\check_catalog_number.py" />
+    <Compile Include="torch_web\workflows\tasks\check_orientation.py" />
+    <Compile Include="torch_web\workflows\tasks\copy_file.py" />
+    <Compile Include="torch_web\workflows\tasks\generate_derivatives.py" />
+    <Compile Include="torch_web\workflows\tasks\herbar.py" />
+    <Compile Include="torch_web\workflows\tasks\upload.py" />
+    <Compile Include="torch_web\reports\reports_api.py" />
+    <Compile Include="torch_web\reports\reports.py" />
+    <Compile Include="torch_web\users\role.py" />
+    <Compile Include="torch_web\users\roles_api.py" />
+    <Compile Include="torch_web\users\user.py" />
+    <Compile Include="torch_web\users\users_api.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="collections" />
-    <Folder Include="config\" />
-    <Folder Include="config\watchdog\" />
-    <Folder Include="institutions" />
-    <Folder Include="workflows\" />
-    <Folder Include="notifications" />
-    <Folder Include="prefect_flows\" />
-    <Folder Include="prefect_flows\blocks\" />
-    <Folder Include="prefect_flows\tasks\" />
-    <Folder Include="reports" />
-    <Folder Include="security" />
-    <Folder Include="static\" />
-    <Folder Include="static\uploads\" />
-    <Folder Include="static\uploads\Default" />
-    <Folder Include="users" />
-    <Folder Include="workflows\tasks\" />
+    <Folder Include="torch_web\collections\" />
+    <Folder Include="torch_web\config\" />
+    <Folder Include="torch_web\config\watchdog\" />
+    <Folder Include="torch_web\institutions\" />
+    <Folder Include="torch_web\" />
+    <Folder Include="torch_web\workflows\" />
+    <Folder Include="torch_web\notifications\" />
+    <Folder Include="torch_web\prefect_flows\" />
+    <Folder Include="torch_web\prefect_flows\blocks\" />
+    <Folder Include="torch_web\prefect_flows\tasks\" />
+    <Folder Include="torch_web\reports\" />
+    <Folder Include="torch_web\security\" />
+    <Folder Include="torch_web\static\" />
+    <Folder Include="torch_web\static\uploads\" />
+    <Folder Include="torch_web\static\uploads\Default\" />
+    <Folder Include="torch_web\users\" />
+    <Folder Include="torch_web\workflows\tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <ProjectExtensions>
