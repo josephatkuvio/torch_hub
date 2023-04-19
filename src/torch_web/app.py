@@ -23,4 +23,3 @@ else:
 
     app.app_context().push()
     context.socketio = socketio
-    socketio.run(app)
