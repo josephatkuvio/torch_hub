@@ -48,6 +48,7 @@
   flex-direction: row;
   align-items: flex-start;
   gap: 8px;
+  flex-wrap: wrap;
 }
 .collection .specimen-list > aside {
   color: gray;
@@ -202,8 +203,59 @@
   grid-template-columns: 3fr 5fr;
   gap: 24px;
 }
-.specimen-detail img {
+.specimen-detail .left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  position: absolute;
+  width: 991px;
+  height: 433px;
+}
+.specimen-detail h4 {
+  width: 267px;
+  height: 29px;
+  font-weight: 500;
+  font-size: 24px;
+  letter-spacing: 0.035em;
+  color: var(--grey-800);
+  margin-bottom: 6px;
+}
+.specimen-detail h5 {
+  width: 99px;
+  height: 24px;
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: 0.05em;
+  color: var(--primary-600);
+}
+.specimen-detail p {
+  width: 153px;
+  height: 15px;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--grey-500);
+}
+.specimen-detail .long-text {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.specimen-detail .text {
+  width: 991px;
+  height: 63px;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 21px;
+  color: #434966;
+}
+.specimen-detail .right img {
   max-width: 100%;
+  position: absolute;
+  width: 613px;
+  height: 921.41px;
+  left: 1126px;
+  box-shadow: -15.2773px 22.9159px 29.5997px 3.81931px rgba(0, 0, 0, 0.25);
 }
 .specimen-detail .images {
   display: flex;
@@ -349,5 +401,6 @@ button.secondary:hover {
 
 :root {
   --grey-800: #212433;
+  --grey-500: #606580;
   --grey-400: #7A8099;
 }

@@ -8,6 +8,7 @@
         flex-direction: row;
         align-items: flex-start;
         gap: 8px;
+        flex-wrap: wrap;
 
         > aside {
             color: gray;
