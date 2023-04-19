@@ -62,10 +62,14 @@ class CollectionsResponse(Schema):
 
 @home_bp.route("/")
 def home():
-    response = redirect(os.environ.get('APP_URL'))
+    app_url = os.environ.get('APP_URL')
+    response = redirect(app_url)
     session_cookie = request.cookies.get('session')
     if session_cookie is not None:
-        response.set_cookie('session', value=session_cookie, samesite='Lax')
+        if app_url.startswith('https'):
+            response.set_cookie('session', value=session_cookie, samesite='None', secure=True)
+        else:
+            response.set_cookie('session', value=session_cookie, samesite='Strict')
     
     return response
 
