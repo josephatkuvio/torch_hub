@@ -15,8 +15,12 @@ if __name__ == "__main__":
     context.socketio = socketio
     socketio.run(app)
 else:
+    freeze_support()
     app = create_app()
+    socketio = SocketIO(app)
+    socketio.init_app(app, cors_allowed_origins="*")
     mail = Mail(app)
 
-    freeze_support()
     app.app_context().push()
+    context.socketio = socketio
+    socketio.run(app)
