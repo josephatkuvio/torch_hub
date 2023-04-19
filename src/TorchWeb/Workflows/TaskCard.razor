@@ -1,10 +1,8 @@
 ﻿<article class="task @(IsRunning ? "running" : "") @(IsSelected ? "selected" : "")" @onclick=Select>
-    @*<img src="/images/ellipse186.png" alt="" />*@
     <header>
         <img src="/images/ellipse186.png" alt="" />
         <h4>@Task.Name</h4>
     </header>
-    @*<aside>@Task.Func_name</aside>*@
 
     @if (DisplayParameters.Any())
     {
@@ -17,10 +15,6 @@
         </dl>
     }
 
-    @if (OnAdd.HasDelegate)
-    {
-        <button class="secondary" @onclick="Add">Add</button>
-    }
     @if (OnDelete.HasDelegate)
     {
         <button class="secondary" @onclick="Delete">Delete</button>

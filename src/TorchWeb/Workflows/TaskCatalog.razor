@@ -1,18 +1,25 @@
 ﻿<section class="task-catalog">
-    <header>
-        <h2>Task Catalog</h2>
-    </header>
-    @if (Tasks != null)
-    {
-        <ul>
-            @foreach (var task in Tasks)
-            {
-                <li>
-                    <TaskCard Task="task" OnAdd="AddTask" />
-                </li>
-            }
-        </ul>
-    }
+    <section>
+        <header>
+            <h2>Configuration</h2>
+        </header>
+    </section>
+    <section>
+        <header>
+            <h2>Available Tasks</h2>
+        </header>
+        @if (Tasks != null)
+        {
+            <ul>
+                @foreach (var task in Tasks)
+                {
+                    <li>
+                        <TaskCard Task="task" OnAdd="AddTask" />
+                    </li>
+                }
+            </ul>
+        }
+    </section>
 </section>
 
 @code {

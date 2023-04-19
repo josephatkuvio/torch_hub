@@ -1,29 +1,11 @@
 .workflow {
     display: grid;
-    grid-template-rows: auto 50px;
+    height: calc(100% - 64px);
+    grid-template-rows: auto 1fr 50px;
     gap: 24px;
-    transition: width 0.3s ease-in-out;
 
     .task button {
         display: none;
-    }
-
-    header {
-        margin-bottom: 24px;
-
-        h1 {
-            color: #111219;
-            letter-spacing: 0.05em;
-            line-height: 24px;
-        }
-    }
-
-    h3 {
-        font-size: 14px;
-        line-height: 17px;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: #212433;
     }
 
     .progress {
@@ -68,11 +50,6 @@
 
     > button {
         text-align: center;
-        position: absolute;
-        width: 302px;
-        height: 43px;
-        left: 32px;
-        bottom: 27px;
         padding: 13px 129px;
         border-radius: 15px;
         font-size: 14px;

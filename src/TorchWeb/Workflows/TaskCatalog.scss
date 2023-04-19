@@ -1,11 +1,4 @@
 .task-catalog {
-    ul {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-
-        li {
-            width: 200px;
-        }
-    }
+    display: grid;
+    grid-template-columns: auto 300px;
 }

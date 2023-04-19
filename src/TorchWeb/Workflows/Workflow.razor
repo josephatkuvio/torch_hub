@@ -1,18 +1,8 @@
-﻿<aside class="workflow @(IsEditing ? "editing" : "")">
+﻿<section class="workflow @(IsEditing ? "editing" : "")">
     <section>
         <header>
             <h2>Progress</h2>
         </header>
-    </section>
-
-    <section>
-        <header>
-            <h1>Task Board</h1>
-            @*<button class="secondary" @onclick=ToggleEdit>@(IsEditing ? "Done" : "Edit")</button>*@
-        </header>
-        <div>
-            <h3>Progress</h3>
-        </div>
         <div class="progress">
             <img src="/images/ellipse196.png" alt="" />
             <div class="inside-circle">
@@ -20,12 +10,12 @@
                 <p>60%</p>            @*show task progress percentage here*@
             </div>
         </div>
-        @* <div>
-        <img src="/static/images/plus_icon.svg" alt="Plus icon" />
-        </div>*@
-        <div>
-            <h3>Tasks</h3>
-        </div>
+    </section>
+
+    <section>
+        <header>
+            <h2>Tasks</h2>
+        </header>
         <ul>
             @foreach (var task in Tasks)
             {
@@ -42,7 +32,7 @@
 
     <button @onclick=SelectFiles>Upload</button>
     <input type="file" name="file" @ref=FilePicker multiple hidden @onchange="Upload" />
-</aside>
+</section>
 
 @inject IModalService Modal
 @inject IConfiguration Config
@@ -54,7 +44,7 @@
     bool IsSelected;
     ElementReference FilePicker;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         if (Collection.Tasks != null)
             Tasks = Collection.Tasks.ToList();
