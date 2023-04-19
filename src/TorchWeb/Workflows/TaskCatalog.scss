@@ -1,0 +1,11 @@
+.task-catalog {
+    ul {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+
+        li {
+            width: 200px;
+        }
+    }
+}

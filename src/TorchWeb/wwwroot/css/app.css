@@ -1,6 +1,7 @@
 ﻿.main-layout {
   display: grid;
-  grid-template-rows: 80px auto;
+  grid-template-rows: auto;
+  grid-template-columns: auto;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -11,7 +12,7 @@
   padding: 0 7vw;
 }
 .main-layout > main {
-  padding: 65px 7vw;
+  padding: 0;
   overflow-y: auto;
 }
 .main-layout > main > header {
@@ -38,25 +39,55 @@
   color: var(--primary-500);
 }
 
+.bookmark {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+}
+.bookmark:hover {
+  transform: scale(1.1, 1.01);
+  cursor: pointer;
+}
+.bookmark figure {
+  margin-bottom: 12px;
+}
+.bookmark .border {
+  width: 1px;
+  height: 90vh;
+  border-left: 1px solid white;
+}
+
 .collection {
   display: grid;
-  grid-template-columns: 8fr 2fr;
-  gap: 24px;
+  height: 100vh;
+  width: 100vw;
+  padding: 32px;
+  grid-template-columns: 32px 1fr 32px 0px 32px 0px 32px;
+  gap: 32px;
+  background: rgba(217, 217, 217, 0.1);
+  -webkit-backdrop-filter: blur(250px);
+  backdrop-filter: blur(250px);
+  transition: 0.5s ease-in-out;
 }
-.collection .specimen-list {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 8px;
-  flex-wrap: wrap;
+.collection-specimens {
+  grid-template-columns: 32px 1fr 32px 0fr 32px 0px 32px;
 }
-.collection .specimen-list > aside {
-  color: gray;
-  font-size: 14px;
+.collection-specimens-taskboard {
+  grid-template-columns: 32px 1fr 32px 0fr 32px 360px 32px;
 }
-.collection header {
-  display: flex;
-  justify-content: space-between;
+.collection-catalog {
+  grid-template-columns: 32px 0fr 32px 1fr 32px 0px 32px;
+}
+.collection-catalog-taskboard {
+  grid-template-columns: 32px 0fr 32px 1fr 32px 360px 32px;
+}
+.collection > * {
+  overflow: hidden;
+}
+.collection > section {
+  padding: 32px 0;
 }
 
 .specimen-card {
@@ -70,32 +101,24 @@
   overflow: hidden;
 }
 .specimen-card:hover {
-  transform: scale(1.03, 1.03);
+  z-index: 1;
+  transform: scale(1.1, 1.1);
 }
 .specimen-card figcaption {
   position: absolute;
-  height: 78px;
   bottom: 0;
   left: 0;
   right: 0;
   background: white;
   padding: 16px;
 }
-.specimen-card figcaption h2 {
-  width: 103px;
-  height: 21px;
-  left: 20px;
-  bottom: 42px;
+.specimen-card figcaption h3 {
   font-size: 17px;
   line-height: 21px;
   color: var(--grey-800);
   font-weight: 500;
 }
-.specimen-card figcaption h3 {
-  width: 75px;
-  height: 24px;
-  left: 20px;
-  bottom: 15px;
+.specimen-card figcaption time {
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
@@ -106,10 +129,10 @@
   color: gray;
 }
 .specimen-card img {
-  width: 226.86px;
-  height: 170px;
+  width: 100%;
+  height: 100%;
   position: absolute;
-  bottom: 78px;
+  bottom: 0;
   object-fit: cover;
   object-position: center;
   text-align: center;
@@ -269,46 +292,44 @@
   display: block;
 }
 
-.workflow {
-  background: white;
-  position: fixed;
-  top: 80px;
-  bottom: 0;
-  right: 0;
-  width: 20vw;
+.specimen-list {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-height: 70vh;
+  overflow-y: auto;
   padding: 16px;
+}
+.specimen-list > aside {
+  color: gray;
+  font-size: 14px;
+}
+
+.workflow {
   display: grid;
   grid-template-rows: auto 50px;
   gap: 24px;
   transition: width 0.3s ease-in-out;
-  overflow-y: auto;
 }
 .workflow .task button {
   display: none;
-}
-.workflow.editing {
-  width: 80vw;
-  grid-template-columns: auto 20vw;
-}
-.workflow.editing .available-tasks {
-  grid-row: 1/span 2;
-}
-.workflow.editing .available-tasks ul {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.workflow.editing .available-tasks ul li {
-  width: 200px;
-}
-.workflow.editing .task button {
-  display: block;
 }
 .workflow header {
   margin-bottom: 24px;
 }
 .workflow > button {
   text-align: center;
+}
+
+.task-catalog ul {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.task-catalog ul li {
+  width: 200px;
 }
 
 .task {
@@ -387,9 +408,20 @@
 }
 
 h1 {
-  font-size: 24px;
-  line-height: 28px;
-  margin-bottom: 24px;
+  font-size: 20px;
+  line-height: 24.2px;
+  letter-spacing: 0.05em;
+  margin-bottom: 42px;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 20px;
 }
 
 button.secondary {
@@ -399,7 +431,19 @@ button.secondary:hover {
   background-color: var(--grey-300);
 }
 
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #7f56d9;
+  border-radius: 10px;
+}
+
 :root {
+  --grey-900: #111219;
   --grey-800: #212433;
   --grey-500: #606580;
   --grey-400: #7A8099;

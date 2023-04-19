@@ -1,8 +1,8 @@
 ﻿<figure class="specimen-card" @onclick=Go>
-    <img src="@ImageUrl" alt="@Specimen.Catalog_number" />
+    <img src="@ImageUrl" alt="@(Specimen.Catalog_number ?? Specimen.Create_date.ToString("d"))" />
     <figcaption>
-        <h2>@Specimen.Catalog_number</h2>
-        <h3>@Specimen.Create_date.ToString("d")</h3>
+        <h3>@Specimen.Catalog_number</h3>
+        <time>@Specimen.Create_date.ToString("d")</time>
         <aside>
             @Status
         </aside>

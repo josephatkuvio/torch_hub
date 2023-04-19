@@ -9,34 +9,26 @@
     overflow: hidden;
 
     &:hover {
-        transform: scale(1.03, 1.03);
+        z-index: 1;
+        transform: scale(1.1, 1.1);
     }
 
     figcaption {
         position: absolute;
-        height: 78px;
         bottom: 0;
         left: 0;
         right: 0;
         background: white;
         padding: 16px;
 
-        h2 {
-            width: 103px;
-            height: 21px;
-            left: 20px;
-            bottom: 42px;
+        h3 {
             font-size: 17px;
             line-height: 21px;
             color: var(--grey-800);
             font-weight: 500;
         }
 
-        h3 {
-            width: 75px;
-            height: 24px;
-            left: 20px;
-            bottom: 15px;
+        time {
             font-weight: 400;
             font-size: 14px;
             line-height: 24px;
@@ -50,10 +42,10 @@
     }
 
     img {
-        width: 226.86px;
-        height: 170px;
+        width: 100%;
+        height: 100%;
         position: absolute;
-        bottom: 78px;
+        bottom: 0;
         object-fit: cover;
         object-position: center;
         text-align: center;

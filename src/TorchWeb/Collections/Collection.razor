@@ -2,36 +2,48 @@
 @page "/collections/{Id:int}"
 
 <CascadingValue Value="Socket">
-<section class="collection">
-    <section>
-        <header>
-            <h1>@Model?.Name</h1>
-        </header>
+    <section class="collection @ActiveTabClass">
+        <Bookmark OnClick="GoToSpecimens">
+            <SpecimensIcon />
+        </Bookmark>
+        <section>
+            <header>
+                <h1>@Model?.Name</h1>
+                <h2>Specimens</h2>
+            </header>
 
-        <section class="specimen-list">
-            @if (Specimens != null)
-            {
-                @foreach (var specimen in Specimens.Specimens)
-                {
-                    <SpecimenCard Specimen="specimen" @key=specimen.Id />
-                }
-
-                @if (Specimens.Specimens.Count == 0)
-                    {
-                        <aside>
-                            No specimens have been added to this collection yet. 
-                            Click the Upload Specimens button at the bottom right to begin uploading.
-                        </aside>
-                    }
-                }
+            <SpecimenList Specimens="TheSpecimens?.Specimens" />
         </section>
-    </section>
 
-    @if (Model != null)
-    {
-        <Workflow Collection="Model" />
-    }
-</section>
+        <Bookmark OnClick="GoToCatalog">
+            <Catalog />
+        </Bookmark>
+
+        <section>
+            <header>
+                <h1>Task Catalog</h1>
+            </header>
+            <TaskCatalog />
+        </section>
+
+        <Bookmark OnClick="ToggleTaskboard">
+            <TaskBoard />
+        </Bookmark>
+
+        <section>
+            <header>
+                <h1>Task Board</h1>
+            </header>
+            @if (Model != null)
+            {
+                <Workflow Collection="Model" />
+            }
+        </section>
+        
+        <Bookmark>
+            <Settings />
+        </Bookmark>
+    </section>
 </CascadingValue>
 
 
@@ -39,9 +51,13 @@
 @code {
     [Parameter] public int Id { get; set; }
     public SocketIOClient.SocketIO Socket { get; set; } = null!;
+    string ActiveTab = "specimens";
+    bool IsTaskboardActive; 
+    string ActiveTabClass => $"collection-{ActiveTab}{(IsTaskboardActive ? "-taskboard" : "")}";
 
     CollectionResponse? Model;
-    SpecimensResponse? Specimens;
+    SpecimensResponse? TheSpecimens;
+
     protected override async Task OnInitializedAsync()
     {
         Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
@@ -50,13 +66,17 @@
         Socket.On("specimen_added", async (response) =>
         {
             Console.WriteLine("got it");
-            Specimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+            TheSpecimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
             StateHasChanged();
         });
 
         Model = await TorchCommands.GetCollectionAsync(Id);
-        Specimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+        TheSpecimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
     }
+
+    void GoToSpecimens() => ActiveTab = "specimens";
+    void GoToCatalog() => ActiveTab = "catalog";
+    void ToggleTaskboard() => IsTaskboardActive = !IsTaskboardActive;
 
     public void Dispose()
     {

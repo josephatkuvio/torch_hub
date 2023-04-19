@@ -1,35 +1,23 @@
 ﻿<aside class="workflow @(IsEditing ? "editing" : "")">
-    @if (IsEditing)
-    {
-        <section class="available-tasks">
-            <header>
-                <h4>Available Tasks</h4>
-            </header>
-            <ul>
-                @foreach (var task in AllTasks)
-                {
-                    <li>
-                        <TaskCard Task="task" OnAdd="AddTask" />
-                    </li>
-                }
-            </ul>
-        </section>   
-    }
+    <section>
+        <header>
+            <h2>Progress</h2>
+        </header>
+    </section>
 
     <section>
         <header>
-            <h4>Workflow</h4>
-            <button class="secondary" @onclick=ToggleEdit>@(IsEditing ? "Done" : "Edit")</button>
+            <h2>Tasks</h2>
         </header>
         <ul>
-            @foreach (var task in CollectionTasks)
+            @foreach (var task in Tasks)
             {
                 <li>
                     <TaskCard Task="task" OnDelete="RemoveTask" />
                 </li>
             }
         </ul>
-        @if (!CollectionTasks.Any())
+        @if (!Tasks.Any())
         {
             <p>You haven't yet added any tasks to this workflow. Click the Edit button to browse the Task Catalog and set up your workflow.</p>
         }
@@ -44,36 +32,20 @@
 @inject IJSRuntime JS
 @code {
     [Parameter] public CollectionResponse Collection { get; set; } = null!;
-    List<TorchTask> AllTasks = new();
-    List<TorchTask> CollectionTasks = new();
+    List<TorchTask> Tasks = new();
     bool IsEditing;
     bool IsSelected;
     ElementReference FilePicker;
 
     protected override async Task OnInitializedAsync()
     {
-        var workflow = await TorchCommands.GetAllTasksAsync();
-        AllTasks = workflow.Tasks.ToList();
         if (Collection.Tasks != null)
-            CollectionTasks = Collection.Tasks.ToList();
-    }
-
-    async Task AddTask(TorchTask task)
-    {
-        if (task.Parameters.Any(x => x.Name != "specimen"))
-        {
-            var parameters = new ModalParameters().Add("Task", task);
-            var modal = Modal.Show<TaskParameters>("Set Up Your Task", parameters);
-            await modal.Result;
-        }
-
-        CollectionTasks.Add(task);
-        await SaveAsync();
+            Tasks = Collection.Tasks.ToList();
     }
 
     async Task RemoveTask(TorchTask task)
     {
-        CollectionTasks.Remove(task);
+        Tasks.Remove(task);
         await SaveAsync();
     }
 
@@ -92,7 +64,7 @@
     {
         var workflow = new TorchTasksResponse
         {
-            Tasks = CollectionTasks
+            Tasks = Tasks
         };
         await TorchCommands.UpdateWorkflowAsync(Collection.Id, workflow);
 

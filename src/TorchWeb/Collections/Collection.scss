@@ -1,23 +1,36 @@
 .collection {
     display: grid;
-    grid-template-columns: 8fr 2fr;
-    gap: 24px;
+    height: 100vh;
+    width: 100vw;
+    padding: 32px;
+    grid-template-columns: 32px 1fr 32px 0px 32px 0px 32px;
+    gap: 32px;
+    background: rgba(217, 217, 217, 0.1);
+    -webkit-backdrop-filter: blur(250px);
+    backdrop-filter: blur(250px);
+    transition: 0.5s ease-in-out;
 
-    .specimen-list {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 8px;
-        flex-wrap: wrap;
+    &-specimens {
+        grid-template-columns: 32px 1fr 32px 0fr 32px 0px 32px;
 
-        > aside {
-            color: gray;
-            font-size: 14px;
+        &-taskboard {
+            grid-template-columns: 32px 1fr 32px 0fr 32px 360px 32px;
         }
     }
 
-    header {
-        display: flex;
-        justify-content: space-between;
+    &-catalog {
+        grid-template-columns: 32px 0fr 32px 1fr 32px 0px 32px;
+
+        &-taskboard {
+            grid-template-columns: 32px 0fr 32px 1fr 32px 360px 32px;
+        }
+    }
+
+    > * {
+        overflow: hidden;
+    }
+
+    > section {
+        padding: 32px 0;
     }
 }

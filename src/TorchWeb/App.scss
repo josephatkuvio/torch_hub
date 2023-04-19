@@ -1,13 +1,16 @@
 @import 'Shared/MainLayout';
 @import 'Shared/NavMenu';
+@import 'Shared/Bookmark';
 
 @import 'Collections/Index';
 @import 'Collections/Collection';
 @import 'Collections/SpecimenCard';
 @import 'Collections/CollectionCard';
 @import 'Collections/SpecimenDetail';
+@import 'Collections/SpecimenList';
 
 @import 'Workflows/Workflow';
+@import 'Workflows/TaskCatalog';
 @import 'Workflows/TaskCard';
 @import 'Workflows/TaskParameters';
 
@@ -16,9 +19,20 @@
 }
 
 h1 {
-    font-size: 24px;
-    line-height: 28px;
-    margin-bottom: 24px;
+    font-size: 20px;
+    line-height: 24.2px;
+    letter-spacing: 0.05em;
+    margin-bottom: 42px;
+    font-weight: 500;
+}
+
+h2 {
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 20px;
 }
 
 button.secondary {
@@ -29,7 +43,19 @@ button.secondary {
     }
 }
 
+::-webkit-scrollbar {
+    width: 4px;
+    &-track {
+        background: transparent;
+    }
+    &-thumb {
+        background: #7f56d9;
+        border-radius: 10px;
+    }
+}
+
 :root {
+    --grey-900: #111219;
     --grey-800: #212433;
     --grey-500: #606580;
     --grey-400: #7A8099;

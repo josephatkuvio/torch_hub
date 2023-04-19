@@ -1,0 +1,21 @@
+﻿<section class="specimen-list">
+    @if (Specimens != null)
+    {
+        @foreach (var specimen in Specimens)
+        {
+            <SpecimenCard Specimen="specimen" @key=specimen.Id />
+        }
+
+        @if (Specimens.Count() == 0)
+        {
+            <aside>
+                No specimens have been added to this collection yet.
+                Click the Upload Specimens button at the bottom right to begin uploading.
+            </aside>
+        }
+    }
+</section>
+
+@code {
+    [Parameter] public IEnumerable<SpecimenResponse> Specimens { get; set; } = null!;
+}

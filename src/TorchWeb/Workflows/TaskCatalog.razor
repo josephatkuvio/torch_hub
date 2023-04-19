@@ -1,0 +1,38 @@
+﻿<section class="task-catalog">
+    <header>
+        <h2>Task Catalog</h2>
+    </header>
+    @if (Tasks != null)
+    {
+        <ul>
+            @foreach (var task in Tasks)
+            {
+                <li>
+                    <TaskCard Task="task" OnAdd="AddTask" />
+                </li>
+            }
+        </ul>
+    }
+</section>
+
+@code {
+    ICollection<TorchTask> Tasks { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tasks = (await TorchCommands.GetAllTasksAsync()).Tasks;
+    }
+
+    async Task AddTask(TorchTask task)
+    {
+        if (task.Parameters.Any(x => x.Name != "specimen"))
+        {
+            var parameters = new ModalParameters().Add("Task", task);
+            var modal = Modal.Show<TaskParameters>("Set Up Your Task", parameters);
+            await modal.Result;
+        }
+
+        Tasks.Add(task);
+        //await SaveAsync();
+    }
+}
