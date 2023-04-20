@@ -17,6 +17,7 @@ from rich.prompt import Prompt
 from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
 from torch_web.workflows.workflows import TorchTask
 from werkzeug.utils import secure_filename
+from azure.storage.blob import BlobServiceClient
 
 
 home_bp = APIBlueprint("home", __name__, url_prefix="")
@@ -231,14 +232,13 @@ def list_collections(collection_id, search_string, take):
 def upload(collectionid):
     files = request.files.getlist("file")
     batch_id = str(uuid.uuid4())
+    blob_service_client = BlobServiceClient.from_connection_string(os.environ.get("AZURE_STORAGE_CONNECTION_STRING"))
+    
     for file in files:
-        target_dir = os.path.join(current_app.config['BASE_DIR'], "static", "uploads", batch_id)
-        Path(target_dir).mkdir(parents=True, exist_ok=True)
-        filename = secure_filename(file.filename)
-        destination = os.path.join(target_dir, filename)
-        file.save(destination)
-
-        collections.upload(collectionid, [destination])
+        filename = str(collectionid) + '/uploads/' + batch_id + '/' + file.filename
+        blob_client = blob_service_client.get_blob_client(container='torchhub', blob=filename)
+        blob_client.upload_blob(file)
+        collections.upload(collectionid, [blob_client.url])
     return ''
 
 

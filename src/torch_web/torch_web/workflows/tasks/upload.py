@@ -1,7 +1,8 @@
 import os
 import boto3
 import paramiko
-import pysftp
+import requests
+from io import BytesIO
 
 from botocore.config import Config
 from botocore.exceptions import ClientError
@@ -53,9 +54,10 @@ def upload_via_paramiko_sftp(collection_folder, path, host, username, password):
     transport = paramiko.Transport((host, 22))
     transport.connect(username=username, password=password)
     sftp = paramiko.SFTPClient.from_transport(transport)
+    image_bytes = BytesIO(requests.get(path, stream=True).content)
 
     mkdir_p(sftp, collection_folder)
-    sftp.put(path, os.path.basename(path))
+    sftp.putfo(image_bytes, os.path.basename(path))
     final_url = f"{host}" + sftp.getcwd() + f"/{os.path.basename(path)}"
     sftp.close()
     transport.close()
@@ -76,33 +78,13 @@ def upload_via_s3(collection_folder, path, host, username, password):
     )
 
     try:
-        response = s3.upload_file(
-            path, collection_folder, os.path.basename(path)
+        image_bytes = BytesIO(requests.get(path, stream=True).content)
+        response = s3.upload_fileobj(
+            image_bytes, collection_folder, os.path.basename(path)
         )
         return response
     except ClientError:
         return None
-
-
-def upload_via_pysftp(collection_folder, path, host, username, password):
-    cnopts = pysftp.CnOpts()
-    cnopts.hostkeys = None
-
-    with pysftp.Connection(
-        host=host,
-        username=username,
-        password=password,
-        cnopts=cnopts,
-    ) as sftp:
-        try:
-            sftp.chdir(collection_folder)
-        except IOError:
-            sftp.mkdir(collection_folder)
-            sftp.chdir(collection_folder)
-
-        sftp.put(path)
-
-        return f'https://{host}' + sftp.getcwd() + f"/{os.path.basename(path)}"
 
 
 def upload_via_minio(collection_folder, path, host, username, password):
@@ -118,7 +100,9 @@ def upload_via_minio(collection_folder, path, host, username, password):
     else:
         print(f"Bucket {collection_folder} already exists")
 
-    result = client.fput_object(collection_folder, os.path.basename(path), path)
+    image = requests.get(path, stream=True).content
+    image_bytes = BytesIO(image)
+    result = client.put_object(collection_folder, os.path.basename(path), image_bytes, len(image))
 
     return 'https://' + result.location
 

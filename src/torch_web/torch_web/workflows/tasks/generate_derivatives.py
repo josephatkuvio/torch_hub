@@ -1,13 +1,16 @@
-import json
+import os
+
 from pathlib import Path
 from typing import Optional
 
 from PIL import Image
+from io import BytesIO
 from torch_web.collections import collections
 from torch_web.collections.collections import SpecimenImage
 from torch_web.workflows.workflows import torch_task
 from torch_web import db
 from flask import current_app
+from azure.storage.blob import BlobServiceClient
 
 
 def parse_sizes(sizes):
@@ -40,7 +43,7 @@ def parse_sizes(sizes):
 def generate_derivatives(specimen: collections.Specimen, sizes_to_generate):
     try:
         local_specimen = db.session.merge(specimen)  # thread-safe
-
+        local_specimen
         sizes = parse_sizes(sizes_to_generate)
 
         derivatives_to_add = {
@@ -51,7 +54,8 @@ def generate_derivatives(specimen: collections.Specimen, sizes_to_generate):
 
         for derivative in derivatives_to_add.keys():
             new_derivative = generate_derivative(local_specimen, derivative, derivatives_to_add[derivative])
-            local_specimen.images.append(new_derivative)
+            if new_derivative is not None:
+                local_specimen.images.append(new_derivative)
 
         return local_specimen
     except Exception as e:
@@ -64,21 +68,33 @@ def generate_derivative(specimen: collections.Specimen, size, width) -> Optional
     derivative_path = str(full_image_path.parent.joinpath(derivative_file_name))
 
     try:
-        img = Image.open(specimen.upload_path)
+        img = Image.open(specimen.image_bytes())
+        print('opened')
 
         if width is None:
             img.thumbnail((width, width))
 
-        img.save(derivative_path)
+        # img.save(derivative_path)
+        blob_service_client = BlobServiceClient.from_connection_string(os.environ.get("AZURE_STORAGE_CONNECTION_STRING"))
+        blob_client = blob_service_client.get_blob_client(container='torchhub', blob=derivative_path)
+        image_stream = BytesIO()
+        img.save(image_stream, format='JPEG')
+        print('saved')
+        image_stream.seek(0)
+        blob_client.upload_blob(image_stream.read())
+        print('uploaded')
 
-        return SpecimenImage(
+        specimen_image = SpecimenImage(
             specimen_id=specimen.id,
             size=size,
             height=width if width is not None else img.height,
             width=width if width is not None else img.width,
-            url=derivative_path,
-            external_url = derivative_path.replace(current_app.config['BASE_DIR'] + "\\", '').replace("\\", "/")
+            url=blob_client.url,
+            external_url = blob_client.url
         )
+
+        return specimen_image
+
     except Exception as e:
         print("Unable to create derivative:", e)
         return None

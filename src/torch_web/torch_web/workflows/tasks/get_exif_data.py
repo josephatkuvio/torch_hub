@@ -13,9 +13,11 @@ def get_exif_data(specimen: collections.Specimen):
     Returns:
         dict: A dictionary containing the extracted EXIF data.
     """
-    print("Hello 1")
+
     # Open the image
-    image = Image.open(specimen.upload_path)
+    for img in specimen.images:
+        if img.size == 'FULL':
+            image = Image.open(img.image_bytes)
 
     # Extract EXIF data
     exif_data = image._getexif()

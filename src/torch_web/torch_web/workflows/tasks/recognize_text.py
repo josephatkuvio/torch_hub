@@ -1,9 +1,9 @@
 from torch_web.collections import collections
 from torch_web.workflows.workflows import torch_task
-
 import requests
-from io import BytesIO
-from PIL import Image
+import os
+import time
+
 
 @torch_task("Get Text from Image")
 def recognize_text(specimen: collections.Specimen):
@@ -19,13 +19,8 @@ def recognize_text(specimen: collections.Specimen):
         list: A list of recognized texts extracted from the image.
     """
 
-    image_path = specimen.upload_path
-
     endpoint = "https://britcomputervision.cognitiveservices.azure.com/"
-    subscription_key = "a40bc0a0725e496aaa5a4dec1eeac042"
-
-    # Load the image from the file
-    image_data = open(image_path, "rb").read()
+    subscription_key = os.environ.get('AZURE_COMPUTER_VISION_KEY')
 
     # Set the API endpoint and parameters
     api_url = f"{endpoint}/vision/v3.2/read/analyze"
@@ -39,7 +34,7 @@ def recognize_text(specimen: collections.Specimen):
     }
 
     # Make a POST request to the API
-    response = requests.post(api_url, headers=headers, params=params, data=image_data)
+    response = requests.post(api_url, headers=headers, params=params, data=specimen.image_bytes())
 
     # Check if the request was successful
     if response.status_code == 202:

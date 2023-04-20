@@ -8,7 +8,7 @@ from PIL import Image
 
 
 def hash(image: SpecimenImage, hashfunc="average"):
-    with Image.open(image.url) as im:
+    with Image.open(image.image_bytes) as im:
         result = str(imagehash.average_hash(im) if hashfunc == "average" else imagehash.phash(im))
         split_hash = [result[i:i+4] for i in range(0, len(result), 4)]
         image.hash_a = split_hash[0]
@@ -23,7 +23,6 @@ def check_duplicate(specimen, max_distance=35):
     Hashes the incoming image and compares it against other hashes to 
     ensure uniqueness in the specimen database
     """
-    
     for img in specimen.images:
         try:
             hash(img)

@@ -227,7 +227,7 @@
 .specimen-detail {
   width: 80vw;
   display: grid;
-  grid-template-columns: 3fr 5fr;
+  grid-template-columns: 5fr 3fr;
   gap: 24px;
 }
 .specimen-detail .left {

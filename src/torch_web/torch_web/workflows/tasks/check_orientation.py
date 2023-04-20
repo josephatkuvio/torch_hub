@@ -18,7 +18,9 @@ def is_portrait(image_path=None):
 
 @torch_task("Check Portrait Orientation")
 def check_orientation(specimen: collections.Specimen):
-    if not is_portrait(specimen.upload_path):
+    image_bytes = specimen.image_bytes()
+    print('image bytes is', image_bytes)
+    if not is_portrait(image_bytes):
         return f"Incorrect orientation"
 
     return specimen

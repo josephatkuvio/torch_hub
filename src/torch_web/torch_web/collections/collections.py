@@ -2,14 +2,16 @@ import imagehash
 import datetime
 import importlib
 import os
+import requests
 
 from operator import or_
-from typing import List
+from typing import List, Optional
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, func, exists, select
-from sqlalchemy.orm import Mapped, relationship, joinedload, selectinload
+from sqlalchemy.orm import Mapped, relationship, joinedload
 from torch_web import db, Base
 from prefect import context
 from flask import current_app
+from io import BytesIO
 
 
 class Collection(Base):
@@ -76,6 +78,13 @@ class Specimen(Base):
 
         sorted_images = sorted(self.images, key=lambda x: x.size)
         return sorted_images[0]
+    
+    def image_bytes(self):
+        for img in self.images:
+            if img.size == 'FULL':
+                return img.image_bytes
+        
+        return None
 
 
 class SpecimenTask(Base):
@@ -119,7 +128,8 @@ class SpecimenImage(Base):
     hash_b = Column(String(16))
     hash_c = Column(String(16))
     hash_d = Column(String(16))
-    
+    image_bytes: Optional[BytesIO]
+   
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
@@ -359,6 +369,11 @@ def notify(task, specimen, state, message=None):
 
 def run_workflow(collection, specimen):
     db.session.merge(specimen)
+    
+    # Preload full image into memory
+    for img in specimen.images:
+        if img.size == 'FULL':
+            img.image_bytes = BytesIO(requests.get(img.url, stream=True).content)
         
     for task in collection.tasks:
         specimen_task_parameters = [SpecimenTaskParameter(name=p.name, value=p.value) for p in task.parameters]
