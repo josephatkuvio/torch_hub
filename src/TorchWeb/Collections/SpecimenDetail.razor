@@ -4,30 +4,22 @@
     @if (FullSpecimen != null)
     {
         <section class="tasks">
-            <header>
-                <aside>@FullSpecimen.Catalog_number | @FullSpecimen.Create_date.ToString("d MMM yyy")</aside>
-            </header>
-            <div class="long-text">
-                <h5>Long text</h5>
-                <p class="text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </div>
-            <div class="images">
-                @foreach (var img in FullSpecimen.Images)
-                {
-                    <figure class="@(SelectedImage == img ? "selected" : "")" @onclick="@(() => Select(img))">
-                        <img src="@img.External_url" alt="@img.Size" />
-                        <figcaption>
-                            @img.Size
-                        </figcaption>
-                    </figure>
-                }
-            </div>
-            <div class="tasks">
-                @foreach (var task in FullSpecimen.Tasks)
-                {
-                    <TaskCard Task="task" />
-                }
-            </div>
+            @*            <div class="images">
+        @foreach (var img in FullSpecimen.Images)
+        {
+        <figure class="@(SelectedImage == img ? "selected" : "")" @onclick="@(() => Select(img))">
+        <img src="@img.External_url" alt="@img.Size" />
+        <figcaption>
+        @img.Size
+        </figcaption>
+        </figure>
+        }
+        </div>
+        *@
+            @foreach (var task in FullSpecimen.Tasks)
+            {
+                <TaskCard Task="task" />
+            }
         </section>
         <figure>
             @if (ImageUrl != null)

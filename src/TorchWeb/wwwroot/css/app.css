@@ -71,7 +71,7 @@
   width: 100vw;
   padding: 32px;
   grid-template-columns: 32px 1fr 32px 0px 32px 0vw 32px;
-  gap: 32px;
+  gap: 4px;
   background: linear-gradient(180deg, #FFFFFF 1.34%, #DDDEE8 84.08%);
   transition: 0.3s ease-in-out;
 }
@@ -92,6 +92,13 @@
 }
 .collection > section {
   padding: 32px 0;
+}
+.collection .back {
+  color: var(--grey-500);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  margin-bottom: 10px;
 }
 
 .specimen-card {
@@ -225,62 +232,16 @@
 }
 
 .specimen-detail {
-  width: 80vw;
   display: grid;
-  grid-template-columns: 5fr 3fr;
-  gap: 24px;
-}
-.specimen-detail .left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  grid-template-columns: 4fr 4fr;
   gap: 32px;
-  position: absolute;
 }
-.specimen-detail h4 {
-  font-weight: 500;
-  font-size: 24px;
-  letter-spacing: 0.035em;
-  color: var(--grey-800);
-  margin-bottom: 6px;
+.specimen-detail > section {
+  max-height: 80vw;
+  overflow-y: auto;
 }
-.specimen-detail h5 {
-  font-weight: 500;
-  font-size: 20px;
-  letter-spacing: 0.05em;
-  color: var(--primary-600);
-}
-.specimen-detail p {
-  font-weight: 400;
-  font-size: 12px;
-  color: var(--grey-500);
-}
-.specimen-detail .long-text {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.specimen-detail .text {
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 21px;
-  color: #434966;
-}
-.specimen-detail .right img {
+.specimen-detail > figure img {
   max-width: 100%;
-  position: absolute;
-  box-shadow: -15.2773px 22.9159px 29.5997px 3.81931px rgba(0, 0, 0, 0.25);
-}
-.specimen-detail .images {
-  display: flex;
-  grid-row: 2;
-  grid-column: 1;
-}
-.specimen-detail .images img {
-  max-width: 100px;
-}
-.specimen-detail .task dl {
-  display: block;
 }
 
 .specimen-list {
@@ -380,23 +341,23 @@
 }
 
 .task {
-  border-radius: 32px;
-  height: 46px;
-  background: white;
   margin: 1px 0;
   position: relative;
 }
 .task:hover {
   cursor: pointer;
+}
+.task:hover header {
   background-color: #f4ebff;
 }
 .task header {
+  border-radius: 32px;
+  background: white;
   display: flex;
   margin-bottom: 8px;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 16px;
-  padding-top: 11px;
+  padding: 11px 16px;
 }
 .task header h4 {
   font-size: 13px;
@@ -409,12 +370,8 @@
   color: #dfdfe3;
 }
 .task footer {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #eee;
-  padding: 8px;
+  padding: 8px 16px;
+  margin-bottom: 32px;
 }
 .task footer aside {
   color: #777;
@@ -422,8 +379,8 @@
 .task button.secondary {
   position: absolute;
   top: 0px;
-  bottom: 0px;
   right: 0px;
+  height: 46px;
   font-size: 12px;
   border-radius: 0;
   background: transparent;
@@ -449,7 +406,7 @@
   text-overflow: ellipsis;
 }
 
-.selected .task {
+.selected .task header {
   border: 1px solid #7f56d9;
   background-color: #f4ebff;
 }

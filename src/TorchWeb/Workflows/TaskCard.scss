@@ -1,22 +1,23 @@
 .task {
-    border-radius: 32px;
-    height: 46px;
-    background: white;
     margin: 1px 0;
     position: relative;
 
     &:hover {
         cursor: pointer;
-        background-color: #f4ebff;
+
+        header {
+            background-color: #f4ebff;
+        }
     }
-     
+
     header {
+        border-radius: 32px;
+        background: white;
         display: flex;
         margin-bottom: 8px;
         align-items: center;
         justify-content: flex-start;
-        padding-left: 16px;
-        padding-top: 11px;
+        padding: 11px 16px;
 
 
         h4 {
@@ -33,12 +34,8 @@
     }
 
     footer {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: #eee;
-        padding: 8px;
+        padding: 8px 16px;
+        margin-bottom: 32px;
 
         aside {
             color: #777;
@@ -48,12 +45,13 @@
     button.secondary {
         position: absolute;
         top: 0px;
-        bottom: 0px;
         right: 0px;
+        height: 46px;
         font-size: 12px;
         border-radius: 0;
         background: transparent;
         color: #7f56d9;
+
         &:hover {
             background: transparent;
             text-decoration: underline;
@@ -80,7 +78,7 @@
     }
 }
 
-.selected .task {
+.selected .task header {
     border: 1px solid #7f56d9;
     background-color: #f4ebff;
 }
