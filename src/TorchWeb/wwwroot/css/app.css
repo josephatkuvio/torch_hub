@@ -233,15 +233,18 @@
 
 .specimen-detail {
   display: grid;
-  grid-template-columns: 4fr 4fr;
+  grid-template-columns: 3fr 2fr;
   gap: 32px;
 }
 .specimen-detail > section {
-  max-height: 80vw;
+  max-height: 70vh;
   overflow-y: auto;
 }
 .specimen-detail > figure img {
-  max-width: 100%;
+  max-inline-size: 100%;
+  max-height: 80vh;
+  block-size: auto;
+  object-fit: contain;
 }
 
 .specimen-list {
@@ -400,10 +403,34 @@
   margin-bottom: 4px;
 }
 .task dl dd {
-  width: 160px;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+}
+.task dl.results {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.task .images {
+  display: flex;
+  gap: 10px;
+}
+.task .images figure {
+  background: linear-gradient(0.36deg, rgba(255, 255, 255, 0.59) 0.41%, rgba(255, 255, 255, 0) 179.92%);
+  border-radius: 22px;
+  width: 174px;
+  padding: 16px;
+}
+.task .images figure img {
+  max-inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+}
+.task .images figure figcaption {
+  color: #434966;
+  font-size: 12px;
+  padding-top: 16px;
 }
 
 .selected .task header {

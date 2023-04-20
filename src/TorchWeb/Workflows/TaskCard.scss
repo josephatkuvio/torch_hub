@@ -70,10 +70,39 @@
         }
 
         dd {
-            width: 160px;
             overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
+        }
+
+        &.results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    }
+
+    .images {
+        display: flex;
+        gap: 10px;
+
+        figure {
+            background: linear-gradient(0.36deg, rgba(255, 255, 255, 0.59) 0.41%, rgba(255, 255, 255, 0) 179.92%);
+            border-radius: 22px;
+            width: 174px;
+            padding: 16px;
+
+            img {
+                max-inline-size: 100%;
+                block-size: auto;
+                object-fit: contain;
+            }
+
+            figcaption {
+                color: #434966;
+                font-size: 12px;
+                padding-top: 16px;
+            }
         }
     }
 }

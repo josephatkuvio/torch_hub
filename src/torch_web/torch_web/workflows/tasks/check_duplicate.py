@@ -35,8 +35,11 @@ def check_duplicate(specimen, max_distance=35):
             too_close_images = [sim for sim in similar_images if abs(sim.average_hash() - img.average_hash()) < max_distance]
     
             if len(too_close_images) > 0:
-                return f"Specimen image {img.id} is too similar to {too_close_images[0].url}"
+                distance = abs(too_close_images[0].average_hash() - img.average_hash())
+                return f"Specimen image {img.id} is too similar to {too_close_images[0].url}. Distance is {distance}"
         except:
             return f'Unable to compare image {img.id}'
 
-    return specimen
+    return {
+        "New Image Hash": img.hash_a + img.hash_b + img.hash_c + img.hash_d
+    }

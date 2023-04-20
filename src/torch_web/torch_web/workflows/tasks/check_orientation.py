@@ -23,4 +23,6 @@ def check_orientation(specimen: collections.Specimen):
     if not is_portrait(image_bytes):
         return f"Incorrect orientation"
 
-    return specimen
+    return {
+        "Orientation": "Portrait"
+    }

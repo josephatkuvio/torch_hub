@@ -3,6 +3,7 @@ import datetime
 import importlib
 import os
 import requests
+import json
 
 from operator import or_
 from typing import List, Optional
@@ -391,7 +392,7 @@ def run_workflow(collection, specimen):
             notify(specimen_task, specimen, 'Error', result)
             break
             
-        notify(specimen_task, specimen, 'Success')
+        notify(specimen_task, specimen, 'Success', json.dumps(result))
 
 
 def upsert_specimen(collection, file):

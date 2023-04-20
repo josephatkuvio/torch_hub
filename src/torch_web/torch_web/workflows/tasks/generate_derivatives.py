@@ -52,12 +52,19 @@ def generate_derivatives(specimen: collections.Specimen, sizes_to_generate):
             if not any(image.size == size for image in local_specimen.images)
         }
 
+        result = {}
         for derivative in derivatives_to_add.keys():
             new_derivative = generate_derivative(local_specimen, derivative, derivatives_to_add[derivative])
             if new_derivative is not None:
                 local_specimen.images.append(new_derivative)
+                result[derivative] = {
+                    "url": new_derivative.url,
+                    "size": new_derivative.size,
+                    "width": new_derivative.width,
+                    "height": new_derivative.height
+                }
 
-        return local_specimen
+        return result
     except Exception as e:
         return f"Unable to create derivatives: {e}"
 
@@ -65,13 +72,13 @@ def generate_derivatives(specimen: collections.Specimen, sizes_to_generate):
 def generate_derivative(specimen: collections.Specimen, size, width) -> Optional[collections.SpecimenImage]:
     full_image_path = Path(specimen.upload_path)
     derivative_file_name = full_image_path.stem + "_" + size + full_image_path.suffix
-    derivative_path = str(full_image_path.parent.joinpath(derivative_file_name))
+    derivative_path = str(specimen.collection_id) + '/' + str(specimen.id) + '/' + derivative_file_name
 
     try:
         img = Image.open(specimen.image_bytes())
         print('opened')
 
-        if width is None:
+        if width is not None:
             img.thumbnail((width, width))
 
         # img.save(derivative_path)
@@ -87,8 +94,8 @@ def generate_derivative(specimen: collections.Specimen, size, width) -> Optional
         specimen_image = SpecimenImage(
             specimen_id=specimen.id,
             size=size,
-            height=width if width is not None else img.height,
-            width=width if width is not None else img.width,
+            height=img.height,
+            width=img.width,
             url=blob_client.url,
             external_url = blob_client.url
         )

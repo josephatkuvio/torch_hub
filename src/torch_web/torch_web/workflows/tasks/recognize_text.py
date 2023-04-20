@@ -49,14 +49,12 @@ def recognize_text(specimen: collections.Specimen):
             status = operation_result["status"]
             if status == "succeeded":
                 # Extract the recognized texts from the result
-                #recognized_texts = []
-                #for result in operation_result["analyzeResult"]["readResults"]:
-                #    recognized_texts.append(result["text"])
-                print(response.json())
-                return "abc"
-                #return recognized_texts
+                recognized_texts = []
+                for result in operation_result["analyzeResult"]["readResults"]:
+                    recognized_texts.append(result["text"])
+                return recognized_texts
             elif status == "failed":
-                raise Exception("Text recognition failed. Reason: " + operation_result["message"])
+                return "Text recognition failed. Reason: " + operation_result["message"]
             else:
                 time.sleep(1)
     else:

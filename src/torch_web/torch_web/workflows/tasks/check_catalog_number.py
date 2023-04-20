@@ -20,4 +20,6 @@ def check_catalog_number(specimen: collections.Specimen, catalog_number_regex, c
             specimen.catalog_number = c.group(catalog_group_name)
                 # break
     
-    return specimen
+    return { 
+        "Catalog Number": specimen.catalog_number
+    }

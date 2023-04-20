@@ -20,11 +20,37 @@
         <button class="secondary" @onclick="Delete">Delete</button>
     }
 
-    @if (Task.Run_state != null)
+    @if (Task.Run_message != null)
     {
         <footer>
-            @Task.Run_state
-            <aside>@Task.Run_message</aside>
+            @if (Derivatives != null)
+            {
+                <div class="images">
+                    @foreach (var img in Derivatives)
+                    {
+                        <figure @onclick="@(() => SelectImage(img.size))">
+                            <img src="@img.url" alt="@img.size" />
+                            <figcaption>
+                                @img.size (@img.width x @img.height)
+                            </figcaption>
+                        </figure>
+                    }
+                </div>
+            }
+            else if (Result != null)
+            {
+                <dl class="results">
+                    @foreach (var item in Result)
+                    {
+                        <dt>@item.Key</dt>
+                        <dd>@item.Value</dd>
+                    }
+                </dl>
+            }
+            else
+            {
+                <aside>@Task.Run_message</aside>
+            }
         </footer>
     }
 </article>
@@ -34,6 +60,7 @@
     [Parameter] public EventCallback<TorchTask> OnAdd { get; set; }
     [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
+    record Derivative(string url, string size, int width, int height);
     bool IsRunning;
     bool IsSelected;
 
@@ -46,6 +73,14 @@
         });
     }
 
+    Dictionary<string, object>? Result => Task.Run_message?.StartsWith("{") == true
+        ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(Task.Run_message)
+        : null;
+
+    List<Derivative?>? Derivatives => Task.Name == "Generate Derivatives" && Result != null
+        ? Result.Keys.Select(x => System.Text.Json.JsonSerializer.Deserialize<Derivative>(Result[x].ToString())).ToList()
+        : null;
+
     List<TorchTaskParameter> DisplayParameters => Task.Parameters
         .Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value != "None")
         .ToList();
@@ -55,4 +90,5 @@
     async Task Delete() => await OnDelete.InvokeAsync(Task);
 
     void Select() => IsSelected = !IsSelected;
+    void SelectImage(object img) => Console.WriteLine(img);
 }

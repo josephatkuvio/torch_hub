@@ -39,6 +39,7 @@ def decrypt(password):
 def upload(specimen: Specimen, upload_folder: str, upload_type='sftp', host=None, username=None, password=None):
     # password = decrypt(password)
     
+    result = {}
     for image in specimen.images:
         if upload_type == "sftp":
             image.external_url = upload_via_paramiko_sftp(upload_folder, image.url, host, username, password)
@@ -48,6 +49,9 @@ def upload(specimen: Specimen, upload_folder: str, upload_type='sftp', host=None
             image.external_url = upload_via_minio(upload_folder, image.url, host, username, password)
         else:
             raise NotImplementedError(f"Upload type {upload_type} is not yet implemented.")
+        result[image.size] = image.external_url
+
+    return result
 
 
 def upload_via_paramiko_sftp(collection_folder, path, host, username, password):

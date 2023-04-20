@@ -4,19 +4,7 @@
     @if (FullSpecimen != null)
     {
         <section class="tasks">
-            @*            <div class="images">
-        @foreach (var img in FullSpecimen.Images)
-        {
-        <figure class="@(SelectedImage == img ? "selected" : "")" @onclick="@(() => Select(img))">
-        <img src="@img.External_url" alt="@img.Size" />
-        <figcaption>
-        @img.Size
-        </figcaption>
-        </figure>
-        }
-        </div>
-        *@
-            @foreach (var task in FullSpecimen.Tasks)
+            @foreach (var task in FullSpecimen.Tasks.OrderBy(x => x.Start_date))
             {
                 <TaskCard Task="task" />
             }

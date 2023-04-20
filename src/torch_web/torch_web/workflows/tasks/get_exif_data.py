@@ -1,8 +1,26 @@
 from torch_web.collections import collections
 from torch_web.workflows.workflows import torch_task
 
-from PIL import Image
+from PIL import Image, TiffImagePlugin
 from PIL.ExifTags import TAGS
+
+
+def cast(v):
+    try:
+        if isinstance(v, TiffImagePlugin.IFDRational):
+            return float(v)
+        elif isinstance(v, tuple):
+            return tuple(cast(t) for t in v)
+        elif isinstance(v, bytes):
+            return v.decode(errors="replace")
+        elif isinstance(v, dict):
+            for kk, vv in v.items():
+                v[kk] = cast(vv)
+            return v
+        else: return v
+    except Exception as e:
+        return None
+
 
 @torch_task("Get EXIF Info")
 def get_exif_data(specimen: collections.Specimen):
@@ -25,20 +43,12 @@ def get_exif_data(specimen: collections.Specimen):
     # Create a dictionary to store the extracted data
     exif_info = {}
     if exif_data is not None:
-        for tag_id, value in exif_data.items():
-            tag_name = TAGS.get(tag_id, tag_id)
-            exif_info[tag_name] = value
+        for k, v in exif_data.items():
+            if k in TAGS:
+                v = cast(v)
+                if v is not None:
+                    exif_info[TAGS[k]] = v
 
-    # Accessing individual EXIF data
-    #print("Image Make: ", exif_info.get('Make'))
-    #print("Image Model: ", exif_info.get('Model'))
-    #print("Image Exposure Time: ", exif_info.get('ExposureTime'))
-    #print("Image Focal Length: ", exif_info.get('FocalLength'))
-
-    for tag, value in exif_data.items():
-        tag_name = TAGS.get(tag, tag)
-        print(f'Tag: {tag_name}, Value: {value}')
-    # ... and so on
     return exif_info
 
 ## Example usage
