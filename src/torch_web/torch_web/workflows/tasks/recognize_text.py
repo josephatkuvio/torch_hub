@@ -1,8 +1,12 @@
 from torch_web.collections import collections
 from torch_web.workflows.workflows import torch_task
-import requests
+from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
+from msrest.authentication import CognitiveServicesCredentials
+
 import os
 import time
+
 
 
 @torch_task("Get Text from Image")
@@ -21,42 +25,32 @@ def recognize_text(specimen: collections.Specimen):
 
     endpoint = "https://britcomputervision.cognitiveservices.azure.com/"
     subscription_key = os.environ.get('AZURE_COMPUTER_VISION_KEY')
+    client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(subscription_key))
+    
+    # Call API with URL and raw response (allows you to get the operation location)
+    read_response = client.read(specimen.upload_path, raw=True)
 
-    # Set the API endpoint and parameters
-    api_url = f"{endpoint}/vision/v3.2/read/analyze"
-    headers = {
-        "Content-Type": "application/octet-stream",
-        "Ocp-Apim-Subscription-Key": subscription_key
-    }
-    params = {
-        "language": "en",
-        "detectOrientation": "true"
-    }
+    # Get the operation location (URL with an ID at the end) from the response
+    read_operation_location = read_response.headers["Operation-Location"]
+    
+    # Grab the ID from the URL
+    operation_id = read_operation_location.split("/")[-1]
 
-    # Make a POST request to the API
-    response = requests.post(api_url, headers=headers, params=params, data=specimen.image_bytes())
+    # Call the "GET" API and wait for it to retrieve the results 
+    while True:
+        read_result = client.get_read_result(operation_id)
+        if read_result.status not in ['notStarted', 'running']:
+            break
+        time.sleep(1)
 
-    # Check if the request was successful
-    if response.status_code == 202:
-        # Get the operation ID from the response
-        operation_url = response.headers["Operation-Location"]
-        operation_id = operation_url.split("/")[-1]
+    # Print the detected text, line by line
+    results = {}
+    i = 0
+    if read_result.status == OperationStatusCodes.succeeded:
+        for text_result in read_result.analyze_result.read_results:
+            for line in text_result.lines:
+                key = str(i)
+                i += 1
+                results[key] = line.text
 
-        # Poll the operation status until it's completed
-        while True:
-            response = requests.get(operation_url, headers=headers)
-            operation_result = response.json()
-            status = operation_result["status"]
-            if status == "succeeded":
-                # Extract the recognized texts from the result
-                recognized_texts = []
-                for result in operation_result["analyzeResult"]["readResults"]:
-                    recognized_texts.append(result["text"])
-                return recognized_texts
-            elif status == "failed":
-                return "Text recognition failed. Reason: " + operation_result["message"]
-            else:
-                time.sleep(1)
-    else:
-        raise Exception("Text recognition failed. Status code: " + str(response.status_code))
-
+    return results
