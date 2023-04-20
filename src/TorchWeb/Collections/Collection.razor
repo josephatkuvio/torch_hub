@@ -6,14 +6,30 @@
         <Bookmark OnClick="GoToSpecimens">
             <SpecimensIcon />
         </Bookmark>
-        <section>
-            <header>
-                <h1>Collections &#8250; @Model?.Name</h1>
-                <h2>Specimens</h2>
-            </header>
 
-            <SpecimenList Specimens="TheSpecimens?.Specimens" />
-        </section>
+        @if (SelectedSpecimen != null)
+        {
+            <section>
+                <header>
+                    <aside @onclick=CloseSpecimenDetails>
+                        &larr; Back 
+                    </aside>
+                    <h1>Collections &#8250; @Model?.Name &#8250; @SelectedSpecimen.Catalog_number</h1>
+                </header>
+                <SpecimenDetail Specimen="SelectedSpecimen" />
+            </section>
+        }
+        else
+        {
+            <section>
+                <header>
+                    <h1>Collections &#8250; @Model?.Name</h1>
+                    <h2>Specimens</h2>
+                </header>
+
+                <SpecimenList Specimens="TheSpecimens?.Specimens" OnSelect="Select" />
+            </section>
+        }
 
         <Bookmark OnClick="GoToCatalog">
             <Catalog />
@@ -23,7 +39,7 @@
             <header>
                 <h1>Task Catalog</h1>
             </header>
-            <TaskCatalog />
+            <TaskCatalog OnTaskAdded="AddTask" />
         </section>
 
         <Bookmark OnClick="ToggleTaskboard">
@@ -39,7 +55,7 @@
                 <Workflow Collection="Model" />
             }
         </section>
-        
+
         <Bookmark>
             <Settings />
         </Bookmark>
@@ -48,15 +64,17 @@
 
 
 @inject IConfiguration Config
+
 @code {
     [Parameter] public int Id { get; set; }
     public SocketIOClient.SocketIO Socket { get; set; } = null!;
     string ActiveTab = "specimens";
-    bool IsTaskboardActive; 
+    bool IsTaskboardActive = true;
     string ActiveTabClass => $"collection-{ActiveTab}{(IsTaskboardActive ? "-taskboard" : "")}";
 
     CollectionResponse? Model;
     SpecimensResponse? TheSpecimens;
+    SpecimenResponse? SelectedSpecimen;
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,6 +95,23 @@
     void GoToSpecimens() => ActiveTab = "specimens";
     void GoToCatalog() => ActiveTab = "catalog";
     void ToggleTaskboard() => IsTaskboardActive = !IsTaskboardActive;
+    void Select(SpecimenResponse specimen) 
+    {
+        SelectedSpecimen = specimen;
+        IsTaskboardActive = false;
+    }
+    void CloseSpecimenDetails() => SelectedSpecimen = null;
+
+    async Task AddTask(TorchTask task)
+    {
+        Model!.Tasks.Add(task);
+        await TorchCommands.UpdateWorkflowAsync(Id, new TorchTasksResponse
+            {
+                Tasks = Model.Tasks
+            });
+        IsTaskboardActive = true;
+        StateHasChanged();
+    }
 
     public void Dispose()
     {

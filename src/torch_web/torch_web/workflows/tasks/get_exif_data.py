@@ -26,13 +26,13 @@ def get_exif_data(specimen: collections.Specimen):
         for tag_id, value in exif_data.items():
             tag_name = TAGS.get(tag_id, tag_id)
             exif_info[tag_name] = value
-    exif_info.get()
+
     # Accessing individual EXIF data
-    print("Hello2")
     #print("Image Make: ", exif_info.get('Make'))
     #print("Image Model: ", exif_info.get('Model'))
     #print("Image Exposure Time: ", exif_info.get('ExposureTime'))
     #print("Image Focal Length: ", exif_info.get('FocalLength'))
+
     for tag, value in exif_data.items():
         tag_name = TAGS.get(tag, tag)
         print(f'Tag: {tag_name}, Value: {value}')

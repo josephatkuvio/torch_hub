@@ -3,6 +3,27 @@
         <header>
             <h2>Configuration</h2>
         </header>
+        @if (SelectedTask != null)
+        {
+            <section>
+                <header>
+                    <h3>@SelectedTask.Name</h3>
+                    <aside>@SelectedTask.Description</aside>
+                </header>
+
+                <section class="task-parameters">
+                    @foreach (var key in SelectedTask.Parameters.Where(x => x.Name != "specimen"))
+                    {
+                        <label>
+                            @key.Name
+                            <input @bind="@key.Value" />
+                        </label>
+                    }
+                </section>
+
+                <button @onclick=AddTask>Add to Task Board</button>
+            </section>
+        }
     </section>
     <section>
         <header>
@@ -13,8 +34,8 @@
             <ul>
                 @foreach (var task in Tasks)
                 {
-                    <li>
-                        <TaskCard Task="task" OnAdd="AddTask" />
+                    <li class="@(SelectedTask == task ? "selected" : "")" @onclick="@(() => Select(task))">
+                        <TaskCard Task="task" />
                     </li>
                 }
             </ul>
@@ -23,23 +44,26 @@
 </section>
 
 @code {
+    [Parameter] public EventCallback<TorchTask> OnTaskAdded { get; set; }
     ICollection<TorchTask> Tasks { get; set; } = null!;
+    TorchTask? SelectedTask { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
         Tasks = (await TorchCommands.GetAllTasksAsync()).Tasks;
     }
 
-    async Task AddTask(TorchTask task)
+    void Select(TorchTask task)
     {
-        if (task.Parameters.Any(x => x.Name != "specimen"))
-        {
-            var parameters = new ModalParameters().Add("Task", task);
-            var modal = Modal.Show<TaskParameters>("Set Up Your Task", parameters);
-            await modal.Result;
-        }
+        SelectedTask = SelectedTask == task ? null : task;
+    }
 
-        Tasks.Add(task);
-        //await SaveAsync();
+    async Task AddTask()
+    {
+        if (SelectedTask == null)
+            return;
+        
+        await OnTaskAdded.InvokeAsync(SelectedTask);   
     }
 }

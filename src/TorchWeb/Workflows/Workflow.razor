@@ -17,16 +17,16 @@
             <h2>Tasks</h2>
         </header>
         <ul>
-            @foreach (var task in Tasks)
+            @foreach (var task in Collection.Tasks)
             {
                 <li>
                     <TaskCard Task="task" OnDelete="RemoveTask" />
                 </li>
             }
         </ul>
-        @if (!Tasks.Any())
+        @if (!Collection.Tasks.Any())
         {
-            <p>You haven't yet added any tasks to this workflow. Click the Edit button to browse the Task Catalog and set up your workflow.</p>
+            <p>You haven't yet added any tasks to this workflow. Open the Task Catalog to browse available tasks and set up your workflow.</p>
         }
     </section>
 
@@ -39,20 +39,13 @@
 @inject IJSRuntime JS
 @code {
     [Parameter] public CollectionResponse Collection { get; set; } = null!;
-    List<TorchTask> Tasks = new();
     bool IsEditing;
     bool IsSelected;
     ElementReference FilePicker;
 
-    protected override void OnInitialized()
-    {
-        if (Collection.Tasks != null)
-            Tasks = Collection.Tasks.ToList();
-    }
-
     async Task RemoveTask(TorchTask task)
     {
-        Tasks.Remove(task);
+        Collection.Tasks.Remove(task);
         await SaveAsync();
     }
 
@@ -71,7 +64,7 @@
     {
         var workflow = new TorchTasksResponse
         {
-            Tasks = Tasks
+            Tasks = Collection.Tasks
         };
         await TorchCommands.UpdateWorkflowAsync(Collection.Id, workflow);
 

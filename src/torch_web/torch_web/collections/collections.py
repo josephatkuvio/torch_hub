@@ -367,7 +367,7 @@ def run_workflow(collection, specimen):
 
         notify(specimen_task, specimen, 'Running')
             
-        module = importlib.import_module('workflows.tasks.' + task.func_name)
+        module = importlib.import_module('torch_web.workflows.tasks.' + task.func_name)
         func = getattr(module, task.func_name)
         result = func(specimen, **task.parameters_dict())
             

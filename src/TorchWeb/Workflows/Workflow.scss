@@ -4,8 +4,15 @@
     grid-template-rows: auto 1fr 50px;
     gap: 24px;
 
-    .task button {
-        display: none;
+    .task {
+        button.secondary {
+            display: none;
+        }
+        &:hover {
+            button.secondary {
+                display: block;
+            }
+        }
     }
 
     .progress {

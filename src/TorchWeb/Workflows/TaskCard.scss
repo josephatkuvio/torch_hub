@@ -3,6 +3,7 @@
     height: 46px;
     background: white;
     margin: 1px 0;
+    position: relative;
 
     &:hover {
         cursor: pointer;
@@ -44,12 +45,19 @@
         }
     }
 
-    button {
+    button.secondary {
         position: absolute;
+        top: 0px;
         bottom: 0px;
         right: 0px;
-        font-size: 14px;
+        font-size: 12px;
         border-radius: 0;
+        background: transparent;
+        color: #7f56d9;
+        &:hover {
+            background: transparent;
+            text-decoration: underline;
+        }
     }
 
 
@@ -70,8 +78,9 @@
             text-overflow: ellipsis;
         }
     }
+}
 
-    &.selected dl {
-        display: block;
-    }
+.selected .task {
+    border: 1px solid #7f56d9;
+    background-color: #f4ebff;
 }

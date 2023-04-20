@@ -3,7 +3,7 @@
     {
         @foreach (var specimen in Specimens)
         {
-            <article style="animation-delay: @(i)ms">
+            <article style="animation-delay: @(i)ms" @onclick="@(() => Select(specimen))">
                 <SpecimenCard Specimen="specimen" @key=specimen.Id />
             </article>
             i += 75;
@@ -21,5 +21,8 @@
 
 @code {
     [Parameter] public IEnumerable<SpecimenResponse> Specimens { get; set; } = null!;
+    [Parameter] public EventCallback<SpecimenResponse> OnSelect { get; set; }
     int i = 0;
+
+    async Task Select(SpecimenResponse specimen) => await OnSelect.InvokeAsync(specimen);
 }

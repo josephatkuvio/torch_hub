@@ -236,12 +236,8 @@
   align-items: flex-start;
   gap: 32px;
   position: absolute;
-  width: 991px;
-  height: 433px;
 }
 .specimen-detail h4 {
-  width: 267px;
-  height: 29px;
   font-weight: 500;
   font-size: 24px;
   letter-spacing: 0.035em;
@@ -249,16 +245,12 @@
   margin-bottom: 6px;
 }
 .specimen-detail h5 {
-  width: 99px;
-  height: 24px;
   font-weight: 500;
   font-size: 20px;
   letter-spacing: 0.05em;
   color: var(--primary-600);
 }
 .specimen-detail p {
-  width: 153px;
-  height: 15px;
   font-weight: 400;
   font-size: 12px;
   color: var(--grey-500);
@@ -269,8 +261,6 @@
   gap: 12px;
 }
 .specimen-detail .text {
-  width: 991px;
-  height: 63px;
   font-weight: 400;
   font-size: 17px;
   line-height: 21px;
@@ -279,9 +269,6 @@
 .specimen-detail .right img {
   max-width: 100%;
   position: absolute;
-  width: 613px;
-  height: 921.41px;
-  left: 1126px;
   box-shadow: -15.2773px 22.9159px 29.5997px 3.81931px rgba(0, 0, 0, 0.25);
 }
 .specimen-detail .images {
@@ -329,8 +316,11 @@
   grid-template-rows: auto 1fr 50px;
   gap: 24px;
 }
-.workflow .task button {
+.workflow .task button.secondary {
   display: none;
+}
+.workflow .task:hover button.secondary {
+  display: block;
 }
 .workflow .progress {
   box-sizing: border-box;
@@ -377,6 +367,16 @@
 .task-catalog {
   display: grid;
   grid-template-columns: auto 300px;
+  gap: 32px;
+}
+.task-catalog .task-parameters {
+  margin: 24px 0;
+}
+.task-catalog button {
+  padding-left: 48px;
+  padding-right: 48px;
+  font-weight: 400;
+  margin-top: 32px;
 }
 
 .task {
@@ -384,6 +384,7 @@
   height: 46px;
   background: white;
   margin: 1px 0;
+  position: relative;
 }
 .task:hover {
   cursor: pointer;
@@ -418,12 +419,19 @@
 .task footer aside {
   color: #777;
 }
-.task button {
+.task button.secondary {
   position: absolute;
+  top: 0px;
   bottom: 0px;
   right: 0px;
-  font-size: 14px;
+  font-size: 12px;
   border-radius: 0;
+  background: transparent;
+  color: #7f56d9;
+}
+.task button.secondary:hover {
+  background: transparent;
+  text-decoration: underline;
 }
 .task dl {
   font-size: 12px;
@@ -440,8 +448,10 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.task.selected dl {
-  display: block;
+
+.selected .task {
+  border: 1px solid #7f56d9;
+  background-color: #f4ebff;
 }
 
 .task-parameters p {
@@ -453,6 +463,8 @@
 .task-parameters input {
   margin: 8px 0 16px;
   width: 100%;
+  background: white;
+  border: 1px solid #d0d5dd;
 }
 
 #blazor-error-ui {
@@ -474,6 +486,10 @@ h2 {
   text-transform: uppercase;
   font-weight: 500;
   margin-bottom: 20px;
+}
+
+button {
+  border-radius: 15px;
 }
 
 button.secondary {
