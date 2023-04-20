@@ -3,10 +3,9 @@
     {
         @foreach (var specimen in Specimens)
         {
-            <article style="animation-delay: @(i)ms" @onclick="@(() => Select(specimen))">
+            <article @onclick="@(() => Select(specimen))">
                 <SpecimenCard Specimen="specimen" @key=specimen.Id />
             </article>
-            i += 75;
         }
 
         @if (Specimens.Count() == 0)

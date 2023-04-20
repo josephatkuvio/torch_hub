@@ -77,7 +77,7 @@ class Specimen(Base):
         if self.images is None or len(self.images) == 0:
             return None;
 
-        sorted_images = sorted(self.images, key=lambda x: x.size)
+        sorted_images = sorted(self.images, key=lambda x: x.width or 100000)
         return sorted_images[0]
     
     def image_bytes(self):
