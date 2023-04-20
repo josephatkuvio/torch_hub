@@ -44,8 +44,10 @@
     <Compile Include="torch_web\prefect_flows\blocks\upload_credentials.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="torch_web\workflows\tasks\check_duplicate.py" />
-    <Compile Include="torch_web\workflows\workflows.py">
+    <Compile Include="workflows\tasks\check_duplicate.py" />
+    <Compile Include="workflows\tasks\get_exif_data.py" />
+    <Compile Include="workflows\tasks\recognize_text.py" />
+    <Compile Include="workflows\workflows.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="torch_web\workflows\workflow_api.py">

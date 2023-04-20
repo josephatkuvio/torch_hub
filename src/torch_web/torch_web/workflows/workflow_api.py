@@ -1,7 +1,7 @@
 from apiflask import APIBlueprint
 
 from torch_web.workflows.workflows import TorchTasksResponse, torch_task_registry
-from torch_web.workflows.tasks import check_catalog_number, check_duplicate, check_orientation, generate_derivatives, upload
+from torch_web.workflows.tasks import check_catalog_number, check_duplicate, check_orientation, generate_derivatives, upload, get_exif_data, recognize_text
 from torch_web.collections import collections
 
 workflow_bp = APIBlueprint("workflows", __name__, url_prefix="/workflows")
