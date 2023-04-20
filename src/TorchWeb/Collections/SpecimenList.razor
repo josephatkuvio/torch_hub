@@ -3,7 +3,10 @@
     {
         @foreach (var specimen in Specimens)
         {
-            <SpecimenCard Specimen="specimen" @key=specimen.Id />
+            <article style="animation-delay: @(i)ms">
+                <SpecimenCard Specimen="specimen" @key=specimen.Id />
+            </article>
+            i += 75;
         }
 
         @if (Specimens.Count() == 0)
@@ -18,4 +21,5 @@
 
 @code {
     [Parameter] public IEnumerable<SpecimenResponse> Specimens { get; set; } = null!;
+    int i = 0;
 }

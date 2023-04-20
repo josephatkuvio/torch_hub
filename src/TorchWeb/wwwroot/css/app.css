@@ -306,11 +306,23 @@
   overflow-y: auto;
   padding: 16px;
 }
+.specimen-list > article {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in forwards;
+}
 .specimen-list > aside {
   color: gray;
   font-size: 14px;
 }
 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .workflow {
   display: grid;
   height: calc(100% - 64px);
