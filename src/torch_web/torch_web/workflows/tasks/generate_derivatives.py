@@ -1,4 +1,6 @@
 import os
+import traceback
+import requests
 
 from pathlib import Path
 from typing import Optional
@@ -75,7 +77,10 @@ def generate_derivative(specimen: collections.Specimen, size, width) -> Optional
     derivative_path = str(specimen.collection_id) + '/' + str(specimen.id) + '/' + derivative_file_name
 
     try:
-        img = Image.open(specimen.image_bytes())
+        img_bytes = specimen.image_bytes()
+        if img_bytes is None:
+            img_bytes = BytesIO(requests.get(specimen.upload_path, stream=True).content)
+        img = Image.open(img_bytes)
         print('opened')
 
         if width is not None:
@@ -103,5 +108,5 @@ def generate_derivative(specimen: collections.Specimen, size, width) -> Optional
         return specimen_image
 
     except Exception as e:
-        print("Unable to create derivative:", e)
+        print("Unable to create derivative:", traceback.format_exc())
         return None

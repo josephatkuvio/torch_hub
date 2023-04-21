@@ -1,7 +1,8 @@
-﻿<article class="task @(IsRunning ? "running" : "") @(IsSelected ? "selected" : "")" @onclick=Select>
+﻿<article class="task task-@(RunState) @(IsSelected ? "selected" : "")" @onclick=Select>
     <header>
         <img src="/images/ellipse186.png" alt="" />
         <h4>@Task.Name</h4>
+        <aside>@RunState</aside>
     </header>
 
     @if (DisplayParameters.Any())
@@ -20,7 +21,7 @@
         <button class="secondary" @onclick="Delete">Delete</button>
     }
 
-    @if (Task.Run_message != null)
+    @if (RunMessage != null)
     {
         <footer>
             @if (Derivatives != null)
@@ -49,7 +50,7 @@
             }
             else
             {
-                <aside>@Task.Run_message</aside>
+                <aside>@RunMessage</aside>
             }
         </footer>
     }
@@ -61,20 +62,24 @@
     [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
     record Derivative(string url, string size, int width, int height);
-    bool IsRunning;
     bool IsSelected;
+    string? RunState;
+    string? RunMessage;
 
     protected override async Task OnInitializedAsync()
     {
+        RunState = Task.Run_state;
+        RunMessage = Task.Run_message;
         Socket.On(Task.Func_name, (response) =>
         {
-            IsRunning = response.GetValue<string>(2) == "Running";
+            RunState = response.GetValue<string>(2);
+            RunMessage = response.GetValue<string>(3);
             StateHasChanged();
         });
     }
 
-    Dictionary<string, object>? Result => Task.Run_message?.StartsWith("{") == true
-        ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(Task.Run_message)
+    Dictionary<string, object>? Result => RunMessage?.StartsWith("{") == true
+        ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(RunMessage)
         : null;
 
     List<Derivative?>? Derivatives => Task.Name == "Generate Derivatives" && Result != null

@@ -7,10 +7,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from flask_cors import CORS
+from flask_executor import Executor
 
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
 db = SQLAlchemy(metadata=metadata)
+executor = Executor()
 
 def create_app():
     load_dotenv()
@@ -24,8 +26,10 @@ def create_app():
     basedir = os.path.abspath(os.path.dirname(__file__))
 
     app.config["BASE_DIR"] = basedir
+    app.config['EXECUTOR_PROPAGATE_EXCEPTIONS'] = True
 
     db.init_app(app)
+    executor.init_app(app)
 
     from torch_web.users.users_api import users_bp, auth_bp, ExtendedRegisterForm
     from torch_web.users.roles_api import roles_bp

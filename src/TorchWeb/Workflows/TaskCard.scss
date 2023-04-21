@@ -7,6 +7,9 @@
 
         header {
             background-color: #f4ebff;
+            aside {
+                display: none;
+            }
         }
     }
 
@@ -24,6 +27,12 @@
             font-size: 13px;
             margin-left: 15px;
             color: var(--grey-800);
+        }
+
+        aside {
+            position: absolute;
+            right: 24px;
+            color: #777;
         }
     }
 

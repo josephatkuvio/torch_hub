@@ -8,8 +8,8 @@ import json
 from operator import or_
 from typing import List, Optional
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, func, exists, select
-from sqlalchemy.orm import Mapped, relationship, joinedload
-from torch_web import db, Base
+from sqlalchemy.orm import Mapped, relationship, joinedload, Session
+from torch_web import db, Base, executor
 from prefect import context
 from flask import current_app
 from io import BytesIO
@@ -129,7 +129,7 @@ class SpecimenImage(Base):
     hash_b = Column(String(16))
     hash_c = Column(String(16))
     hash_d = Column(String(16))
-    image_bytes: Optional[BytesIO]
+    image_bytes: Optional[BytesIO] = None
    
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -208,7 +208,6 @@ def update_workflow(collection_id, data):
 
 def get_collection(id):
     coll = db.session.scalars(select(Collection).where(Collection.id == id)).one_or_none()
-    print(coll.__dict__)
     return coll
 
 
@@ -237,7 +236,7 @@ def get_collection_specimens(collectionid, search_string, only_error, page=1, pe
 def retry_workflow(specimenid):
     specimen = db.session.get(Specimen, specimenid)
     collection = db.session.get(Collection, specimen.collection_id)
-    run_workflow(collection, specimen)
+    run_workflow(collection.id, specimen.id)
     return True
 
 
@@ -247,7 +246,7 @@ def upload(collectionid, files):
     for file in files:
         specimen, execute_workflow = upsert_specimen(collection, file)
         context.socketio.emit('specimen_added', specimen.id);
-        run_workflow(collection, specimen)
+        executor.submit(run_workflow, collection.id, specimen.id)
     
     return True
 
@@ -360,39 +359,42 @@ def get_specimen_img_url(specimen_images, size):
     return None
 
 
-def notify(task, specimen, state, message=None):
+def notify(session, task, specimen, state, message=None):
     task.run_state = state
     task.run_message = message
-    db.session.commit()
-    context.socketio.emit(task.func_name, (specimen.id, task.func_name, task.run_state))
+    session.commit()
+    context.socketio.emit(task.func_name, (specimen.id, task.func_name, task.run_state, task.run_message))
     context.socketio.emit('specimen_updated_' + str(specimen.id), (specimen.catalog_number, task.func_name + ': ' + task.run_state))
      
 
-def run_workflow(collection, specimen):
-    db.session.merge(specimen)
-    
-    # Preload full image into memory
-    for img in specimen.images:
-        if img.size == 'FULL':
-            img.image_bytes = BytesIO(requests.get(img.url, stream=True).content)
-        
-    for task in collection.tasks:
-        specimen_task_parameters = [SpecimenTaskParameter(name=p.name, value=p.value) for p in task.parameters]
-        specimen_task = SpecimenTask(func_name=task.func_name, name=task.name, description=task.description, sort_order=task.sort_order, parameters=specimen_task_parameters)
-        specimen.tasks.append(specimen_task)
+def run_workflow(collection_id, specimen_id):
 
-        notify(specimen_task, specimen, 'Running')
+    with Session(db.engine) as session:
+        collection = session.scalars(select(Collection).where(Collection.id == collection_id)).one_or_none()
+        specimen = session.scalars(select(Specimen).options(joinedload(Specimen.tasks)).where(Specimen.id == specimen_id)).first()
+    
+        # Preload full image into memory
+        for img in specimen.images:
+            if img.size == 'FULL':
+                img.image_bytes = BytesIO(requests.get(img.url, stream=True).content)
+        
+        for task in collection.tasks:
+            specimen_task_parameters = [SpecimenTaskParameter(name=p.name, value=p.value) for p in task.parameters]
+            specimen_task = SpecimenTask(func_name=task.func_name, name=task.name, description=task.description, sort_order=task.sort_order, parameters=specimen_task_parameters)
+            specimen.tasks.append(specimen_task)
+
+            notify(session, specimen_task, specimen, 'Running')
             
-        module = importlib.import_module('torch_web.workflows.tasks.' + task.func_name)
-        func = getattr(module, task.func_name)
-        result = func(specimen, **task.parameters_dict())
+            module = importlib.import_module('torch_web.workflows.tasks.' + task.func_name)
+            func = getattr(module, task.func_name)
+            result = func(specimen, **task.parameters_dict())
             
-        specimen_task.end_date = datetime.datetime.now()
-        if isinstance(result, str):
-            notify(specimen_task, specimen, 'Error', result)
-            break
+            specimen_task.end_date = datetime.datetime.now()
+            if isinstance(result, str):
+                notify(session, specimen_task, specimen, 'Error', result)
+                break
             
-        notify(specimen_task, specimen, 'Success', json.dumps(result))
+            notify(session, specimen_task, specimen, 'Success', json.dumps(result))
 
 
 def upsert_specimen(collection, file):
