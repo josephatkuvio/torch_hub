@@ -159,19 +159,11 @@ def get_collection_card_images(collection_id):
     return img
 
 
-def create_collection(institutionid, collection_id, name, code, default_prefix, catalog_number_regex, flow_id, workflow,
-                      collection_folder, project_ids):
+def create_collection(institutionid, name, code):
     new_collection = Collection(
-        id=collection_id,
         name=name,
         code=code,
-        default_prefix=default_prefix,
-        catalog_number_regex=catalog_number_regex,
-        institution_id=institutionid,
-        flow_id=flow_id,
-        workflow=workflow,
-        collection_folder=collection_folder,
-        project_ids=project_ids
+        institution_id=institutionid
     )
 
     local_collection = db.session.merge(new_collection)

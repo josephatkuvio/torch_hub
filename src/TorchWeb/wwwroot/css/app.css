@@ -65,6 +65,10 @@
   background: white;
 }
 
+.collections-index {
+  padding: 32px;
+}
+
 .collection {
   display: grid;
   height: 100vh;
@@ -260,6 +264,19 @@
 .specimen-list > aside {
   color: gray;
   font-size: 14px;
+}
+
+.add-collection p {
+  margin-bottom: 24px;
+}
+.add-collection label, .add-collection input {
+  display: block;
+}
+.add-collection input {
+  margin: 8px 0 16px;
+  width: 100%;
+  background: white;
+  border: 1px solid #d0d5dd;
 }
 
 .workflow {

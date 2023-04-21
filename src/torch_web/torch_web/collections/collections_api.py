@@ -49,6 +49,11 @@ class SpecimensResponse(Schema):
     specimens = List(Nested(SpecimenResponse))
 
 
+class AddCollectionRequest(Schema):
+    name = String()
+    code = String()
+
+
 class CollectionResponse(Schema):
     id = Integer()
     name = String()
@@ -104,22 +109,18 @@ def list_collections(institution_id):
     
 
 @collections_bp.post("/")
-def collections_post():
-    j_collection = request.get_json()
+@collections_bp.input(AddCollectionRequest)
+@collections_bp.output(CollectionResponse)
+@collections_bp.doc(operation_id='AddCollection')
+def collections_post(data):
+    print(data)
     new_collection = collections.create_collection(
         institutionid = current_user.institution_id,
-        collection_id=j_collection.get('id', None),
-        name=j_collection.get('name'),
-        code=j_collection.get('code', None),
-        default_prefix=j_collection.get('default_prefix', None),
-        catalog_number_regex=j_collection.get('catalog_number_regex', None),
-        flow_id=j_collection.get('flow_id', None),
-        workflow=j_collection.get('workflow', 'process_specimen'),  # todo select with workflow options
-        collection_folder=j_collection.get('collection_folder', None),
-        project_ids=j_collection.get('project_ids', None)
+        name=data['name'],
+        code=data['code']
     )
 
-    return jsonify({"collectionid": new_collection.id})
+    return new_collection
 
 
 @collections_bp.cli.command("create")
