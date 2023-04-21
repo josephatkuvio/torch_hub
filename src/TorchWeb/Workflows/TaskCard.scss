@@ -7,9 +7,26 @@
 
         header {
             background-color: #f4ebff;
+
             aside {
                 display: none;
             }
+        }
+    }
+
+    &-Error {
+        header {
+            h4 {
+                color: #c53429 !important;
+            }
+
+            aside {
+                color: #c53429 !important;
+            }
+        }
+
+        footer aside {
+            color: #c53429 !important;
         }
     }
 

@@ -7,10 +7,12 @@ import imagehash
 from PIL import Image
 
 
-def hash(image: SpecimenImage, hashfunc="average"):
+def hash(image: SpecimenImage, hash_size, hashfunc="average"):
     with Image.open(image.image_bytes) as im:
-        result = str(imagehash.average_hash(im) if hashfunc == "average" else imagehash.phash(im))
-        split_hash = [result[i:i+4] for i in range(0, len(result), 4)]
+        size = int(hash_size)
+        split_size = int(size/4)
+        result = str(imagehash.average_hash(im, size) if hashfunc == "average" else imagehash.phash(im))
+        split_hash = [result[i:i+split_size] for i in range(0, len(result), split_size)]
         image.hash_a = split_hash[0]
         image.hash_b = split_hash[1]
         image.hash_c = split_hash[2]
@@ -18,14 +20,14 @@ def hash(image: SpecimenImage, hashfunc="average"):
 
 
 @torch_task("Check for Duplicate Image")
-def check_duplicate(specimen, max_distance=35):
+def check_duplicate(specimen, max_distance=35, hash_size=8):
     """
     Hashes the incoming image and compares it against other hashes to 
     ensure uniqueness in the specimen database
     """
     for img in specimen.images:
         try:
-            hash(img)
+            hash(img, hash_size)
             split_filter = or_(SpecimenImage.hash_a == img.hash_a,
                                SpecimenImage.hash_b == img.hash_b,
                                SpecimenImage.hash_c == img.hash_c,

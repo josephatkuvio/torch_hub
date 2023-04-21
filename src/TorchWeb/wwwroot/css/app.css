@@ -347,6 +347,15 @@
 .task:hover header aside {
   display: none;
 }
+.task-Error header h4 {
+  color: #c53429 !important;
+}
+.task-Error header aside {
+  color: #c53429 !important;
+}
+.task-Error footer aside {
+  color: #c53429 !important;
+}
 .task header {
   border-radius: 32px;
   background: white;
