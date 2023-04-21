@@ -385,6 +385,8 @@ def run_workflow(collection_id, specimen_id):
             
             notify(session, specimen_task, specimen, 'Success', json.dumps(result))
 
+        context.socketio.emit('specimen_added', specimen_id);
+
 
 def upsert_specimen(collection, file):
     filename = os.path.basename(file).split(".")[0]
