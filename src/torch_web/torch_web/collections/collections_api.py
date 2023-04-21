@@ -1,6 +1,4 @@
-from datetime import timezone
 import json
-from pathlib import Path
 import click
 import os
 import uuid
@@ -16,8 +14,8 @@ from rich.progress import Progress
 from rich.prompt import Prompt
 from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
 from torch_web.workflows.workflows import TorchTask
-from werkzeug.utils import secure_filename
 from azure.storage.blob import BlobServiceClient
+from prefect import context
 
 
 home_bp = APIBlueprint("home", __name__, url_prefix="")
@@ -238,7 +236,7 @@ def upload(collectionid):
     for file in files:
         filename = str(collectionid) + '/uploads/' + batch_id + '/' + file.filename
         blob_client = blob_service_client.get_blob_client(container='torchhub', blob=filename)
-        blob_client.upload_blob(file)
+        blob_client.upload_blob(file, overwrite=True)
         collections.upload(collectionid, [blob_client.url])
     return ''
 
@@ -272,10 +270,16 @@ def retry(collectionid, specimenid):
     return ajax_response(collections.retry_workflow(specimenid, current_app.config), specimenid)
 
 
-@collections_bp.delete("/<collectionid>/specimens/<specimenid>")
+class DeleteSpecimenRequest(Schema):
+    specimen_id = Integer()
+
+
+@collections_bp.delete("/<int:collectionid>/specimens/<int:specimenid>")
+@collections_bp.doc(operation_id='DeleteSpecimen')
 def specimen_delete(collectionid, specimenid):
     collections.delete_specimen(specimenid)
-    return jsonify({"status": "ok"})
+    context.socketio.emit('specimen_added')
+    return ''
 
 
 @specimens_bp.cli.command("delete")

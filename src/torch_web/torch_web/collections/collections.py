@@ -266,13 +266,10 @@ def delete_collection(collection_id):
 def delete_specimen(specimen_id):
     specimen = db.session.scalars(select(Specimen)
                                   .options(joinedload(Specimen.images))
-                                  .where(id == specimen_id)).first()
+                                  .where(Specimen.id == specimen_id)).first()
     
+    print(specimen, specimen_id)
     if specimen:
-        for i in specimen.images:
-            delete_img_file(i.url)
-
-        delete_img_file(specimen.upload_path)
         specimen.deleted = 1
         db.session.commit()
 

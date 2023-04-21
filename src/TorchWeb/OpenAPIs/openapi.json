@@ -10,10 +10,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "code",
-          "name"
-        ],
         "type": "object"
       },
       "CollectionResponse": {
@@ -591,13 +587,14 @@
     },
     "/collections/{collectionid}/specimens/{specimenid}": {
       "delete": {
+        "operationId": "DeleteSpecimen",
         "parameters": [
           {
             "in": "path",
             "name": "collectionid",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           },
           {
@@ -605,7 +602,7 @@
             "name": "specimenid",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],

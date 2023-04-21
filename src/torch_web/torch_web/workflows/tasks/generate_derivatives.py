@@ -93,7 +93,7 @@ def generate_derivative(specimen: collections.Specimen, size, width) -> Optional
         img.save(image_stream, format='JPEG')
         print('saved')
         image_stream.seek(0)
-        blob_client.upload_blob(image_stream.read())
+        blob_client.upload_blob(image_stream.read(), overwrite=True)
         print('uploaded')
 
         specimen_image = SpecimenImage(
