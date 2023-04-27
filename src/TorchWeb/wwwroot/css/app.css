@@ -386,7 +386,7 @@
   color: #c53429 !important;
 }
 .task-Error footer aside {
-  color: #c53429 !important;
+  color: #F04438 !important;
 }
 .task header {
   border-radius: 32px;
@@ -408,7 +408,7 @@
   color: #777;
 }
 .task aside {
-  font-size: 12px;
+  font-size: 17px;
   font-weight: 400;
   color: #dfdfe3;
 }
@@ -434,7 +434,7 @@
   text-decoration: underline;
 }
 .task dl {
-  font-size: 12px;
+  font-size: 17px;
   margin: 16px 0;
   display: none;
 }
