@@ -29,7 +29,7 @@
                     <h2>Specimens</h2>
                 </header>
 
-                <SpecimenList Specimens="TheSpecimens?.Specimens" OnSelect="Select" />
+                <SpecimenList Specimens="TheSpecimens?.Specimens" @*OnSelect="Select" *@ OnSelect="@(async (specimens) => await HandleSelect(specimens))" />
             </section>
         }
 
@@ -66,6 +66,7 @@
 
 
 @inject IConfiguration Config
+@inject IJSRuntime JSRuntime
 
 @code {
     [Parameter] public int Id { get; set; }
@@ -77,6 +78,25 @@
     CollectionResponse? Model;
     SpecimensResponse? TheSpecimens;
     SpecimenResponse? SelectedSpecimen;
+
+
+
+
+
+
+    List<SpecimenResponse> SelectedSpecimens = new List<SpecimenResponse>();
+
+    async Task HandleSelect(List<SpecimenResponse> specimen)
+    {
+        SelectedSpecimens = specimen;
+        IsTaskboardActive = false;
+    }
+
+
+
+
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,11 +117,11 @@
     void GoToSpecimens() => ActiveTab = "specimens";
     void GoToCatalog() => ActiveTab = "catalog";
     void ToggleTaskboard() => IsTaskboardActive = !IsTaskboardActive;
-    void Select(SpecimenResponse specimen) 
-    {
-        SelectedSpecimen = specimen;
-        IsTaskboardActive = false;
-    }
+    //void Select(SpecimenResponse specimen) 
+    //{
+    //    SelectedSpecimen = specimen;
+    //    IsTaskboardActive = false;
+    //}
     void CloseSpecimenDetails() => SelectedSpecimen = null;
 
     async Task AddTask(TorchTask task)
