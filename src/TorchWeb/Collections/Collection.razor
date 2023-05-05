@@ -7,31 +7,31 @@
             <SpecimensIcon />
         </Bookmark>
 
-        @if (SelectedSpecimen != null)
+        @*@if (SelectedSpecimen != null)
         {
             <section>
                 <header>
                     <aside class="back" @onclick=CloseSpecimenDetails>
-                        &larr; Back 
+                        &larr; Back
                     </aside>
                     <h1>
                         <a href="/">Collections</a> &#8250; @Model?.Name &#8250; @SelectedSpecimen.Catalog_number
                     </h1>
                 </header>
-                <SpecimenDetail Specimen="SelectedSpecimen" />
+                <SpecimenDetail Specimen="SelectedSpecimen"  />
             </section>
         }
         else
-        {
+        {*@
             <section>
                 <header>
                     <h1><a href="/">Collections</a> &#8250; @Model?.Name</h1>
                     <h2>Specimens</h2>
                 </header>
 
-                <SpecimenList Specimens="TheSpecimens?.Specimens" @*OnSelect="Select" *@ OnSelect="@(async (specimens) => await HandleSelect(specimens))" />
+                <SpecimenList Specimens="TheSpecimens?.Specimens" OnSelect="Select" />
             </section>
-        }
+        @*}*@
 
         <Bookmark OnClick="GoToCatalog">
             <Catalog />
@@ -77,25 +77,14 @@
 
     CollectionResponse? Model;
     SpecimensResponse? TheSpecimens;
-    SpecimenResponse? SelectedSpecimen;
+    //SpecimenResponse? SelectedSpecimen;
+    List<SpecimenResponse> SelectedSpecimen = new();
 
-
-
-
-
-
-    List<SpecimenResponse> SelectedSpecimens = new List<SpecimenResponse>();
-
-    async Task HandleSelect(List<SpecimenResponse> specimen)
+    void Select(SpecimenResponse specimen)
     {
-        SelectedSpecimens = specimen;
+        SelectedSpecimen.Add(specimen);
         IsTaskboardActive = false;
     }
-
-
-
-
-
 
 
     protected override async Task OnInitializedAsync()
@@ -117,11 +106,13 @@
     void GoToSpecimens() => ActiveTab = "specimens";
     void GoToCatalog() => ActiveTab = "catalog";
     void ToggleTaskboard() => IsTaskboardActive = !IsTaskboardActive;
-    //void Select(SpecimenResponse specimen) 
+
+    //void Select(SpecimenResponse specimen)
     //{
     //    SelectedSpecimen = specimen;
     //    IsTaskboardActive = false;
     //}
+
     void CloseSpecimenDetails() => SelectedSpecimen = null;
 
     async Task AddTask(TorchTask task)

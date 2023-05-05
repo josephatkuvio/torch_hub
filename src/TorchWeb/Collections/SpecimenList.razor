@@ -1,9 +1,9 @@
-﻿<section class="specimen-list">
+﻿<section>
     @if (Specimens != null)
     {
         @foreach (var specimen in Specimens)
         {
-            <article @*@onclick="@(() => Select(specimen))" *@ class="@(SelectedSpecimens.Contains(specimen) ? "selected" : "")" @onclick="@(() => Select(specimen))">
+            <article @onclick="@(() => Select(specimen))">
                 <SpecimenCard Specimen="specimen" @key=specimen.Id />
             </article>
         }
@@ -22,42 +22,8 @@
 
 @code {
     [Parameter] public IEnumerable<SpecimenResponse> Specimens { get; set; } = null!;
-    [Parameter] public EventCallback<List<SpecimenResponse>> OnSelect { get; set; }
+    [Parameter] public EventCallback<SpecimenResponse> OnSelect { get; set; }
     int i = 0;
 
-    //async Task Select(SpecimenResponse specimen) => await OnSelect.InvokeAsync(specimen);
-
-
-
-
-
-
-    List<SpecimenResponse> SelectedSpecimens = new List<SpecimenResponse>();   
-
-    async Task Select(SpecimenResponse specimen)
-    {
-        if (await IsCtrlKeyPressedAsync())
-        {
-            if (SelectedSpecimens.Contains(specimen))
-            {
-                SelectedSpecimens.Remove(specimen);
-            }
-            else
-            {
-                SelectedSpecimens.Add(specimen);
-            }
-        }
-        else
-        {
-            SelectedSpecimens.Clear();
-            SelectedSpecimens.Add(specimen);
-        }
-        await OnSelect.InvokeAsync(SelectedSpecimens);
-    }
-
-    async Task<bool> IsCtrlKeyPressedAsync()
-    {
-        var ctrlKey = await JSRuntime.InvokeAsync<bool>("ctrlKeyPressed", new object[] { });
-        return ctrlKey;
-    }
+    async Task Select(SpecimenResponse specimen) => await OnSelect.InvokeAsync(specimen);
 }
