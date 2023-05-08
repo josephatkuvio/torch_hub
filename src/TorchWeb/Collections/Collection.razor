@@ -29,7 +29,7 @@
                     <h2>Specimens</h2>
                 </header>
 
-                <SpecimenList Specimens="TheSpecimens?.Specimens" @*OnSelect="Select" *@ OnSelect="@(async (specimens) => await HandleSelect(specimens))" />
+                <SpecimenList Specimens="TheSpecimens?.Specimens" OnSelect="DisplaySpecimenDetails" />
             </section>
         }
 
@@ -79,25 +79,6 @@
     SpecimensResponse? TheSpecimens;
     SpecimenResponse? SelectedSpecimen;
 
-
-
-
-
-
-    List<SpecimenResponse> SelectedSpecimens = new List<SpecimenResponse>();
-
-    async Task HandleSelect(List<SpecimenResponse> specimen)
-    {
-        SelectedSpecimens = specimen;
-        IsTaskboardActive = false;
-    }
-
-
-
-
-
-
-
     protected override async Task OnInitializedAsync()
     {
         Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
@@ -105,7 +86,6 @@
 
         Socket.On("specimen_added", async (response) =>
         {
-            Console.WriteLine("got it");
             TheSpecimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
             StateHasChanged();
         });
@@ -115,13 +95,23 @@
     }
 
     void GoToSpecimens() => ActiveTab = "specimens";
+    
     void GoToCatalog() => ActiveTab = "catalog";
+    
     void ToggleTaskboard() => IsTaskboardActive = !IsTaskboardActive;
-    //void Select(SpecimenResponse specimen) 
-    //{
-    //    SelectedSpecimen = specimen;
-    //    IsTaskboardActive = false;
-    //}
+    
+    void Select(SpecimenResponse specimen) 
+    {
+        SelectedSpecimen = specimen;
+        IsTaskboardActive = false;
+    }
+    
+    void DisplaySpecimenDetails(SpecimenResponse specimen)
+    {
+        SelectedSpecimen = specimen;
+        IsTaskboardActive = false;
+    }
+
     void CloseSpecimenDetails() => SelectedSpecimen = null;
 
     async Task AddTask(TorchTask task)
