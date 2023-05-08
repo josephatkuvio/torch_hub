@@ -1,4 +1,10 @@
-﻿<section>
+﻿@if (SelectedSpecimens.Count() >= 1)
+{
+    <header class="selectedNumber">
+        <p class="xsmall">@SelectedSpecimens.Count() Selected</p>
+    </header>
+}
+<section class="specimen-list">
     @if (Specimens != null)
     {
         @foreach (var specimen in Specimens)
@@ -25,7 +31,7 @@
     [Parameter] public EventCallback<SpecimenResponse> OnSelect { get; set; }
     int i = 0;
 
-    List<SpecimenResponse> SelectedSpecimens = new List<SpecimenResponse>();   
+    public List<SpecimenResponse> SelectedSpecimens = new List<SpecimenResponse>();
 
     async Task Select(SpecimenResponse specimen)
     {
@@ -45,14 +51,6 @@
             SelectedSpecimens.Clear();
             await OnSelect.InvokeAsync(specimen);
         }
-    }
-
-    async Task<bool> IsCtrlKeyPressedAsync()
-    {
-        var ctrlKey = await JSRuntime.InvokeAsync<bool>("ctrlKeyPressed", new object[] { });
-        return ctrlKey;
-    }
-        await OnSelect.InvokeAsync(SelectedSpecimens);
     }
 
     async Task<bool> IsCtrlKeyPressedAsync()

@@ -7,7 +7,7 @@
             <SpecimensIcon />
         </Bookmark>
 
-        @*@if (SelectedSpecimen != null)
+        @if (SelectedSpecimen != null)
         {
             <section>
                 <header>
@@ -18,11 +18,11 @@
                         <a href="/">Collections</a> &#8250; @Model?.Name &#8250; @SelectedSpecimen.Catalog_number
                     </h1>
                 </header>
-                <SpecimenDetail Specimen="SelectedSpecimen"  />
+                <SpecimenDetail Specimen="SelectedSpecimen" />
             </section>
         }
         else
-        {*@
+        {
             <section>
                 <header>
                     <h1><a href="/">Collections</a> &#8250; @Model?.Name</h1>
@@ -31,7 +31,7 @@
 
                 <SpecimenList Specimens="TheSpecimens?.Specimens" OnSelect="DisplaySpecimenDetails" />
             </section>
-        @*}*@
+        }
 
         <Bookmark OnClick="GoToCatalog">
             <Catalog />
@@ -77,8 +77,7 @@
 
     CollectionResponse? Model;
     SpecimensResponse? TheSpecimens;
-    //SpecimenResponse? SelectedSpecimen;
-    List<SpecimenResponse> SelectedSpecimen = new();
+    SpecimenResponse? SelectedSpecimen;
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,17 +95,17 @@
     }
 
     void GoToSpecimens() => ActiveTab = "specimens";
-    
+
     void GoToCatalog() => ActiveTab = "catalog";
-    
+
     void ToggleTaskboard() => IsTaskboardActive = !IsTaskboardActive;
-    
-    void Select(SpecimenResponse specimen) 
+
+    void Select(SpecimenResponse specimen)
     {
         SelectedSpecimen = specimen;
         IsTaskboardActive = false;
     }
-    
+
     void DisplaySpecimenDetails(SpecimenResponse specimen)
     {
         SelectedSpecimen = specimen;

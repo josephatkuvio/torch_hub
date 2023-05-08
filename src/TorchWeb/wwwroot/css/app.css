@@ -266,6 +266,16 @@
   object-fit: contain;
 }
 
+.selectedNumber {
+  justify-content: flex-end;
+  display: flex;
+  bottom: 37px;
+  position: relative;
+}
+.selectedNumber p {
+  color: #7F56D9;
+}
+
 .specimen-list {
   display: flex;
   flex-direction: row;
@@ -279,6 +289,18 @@
 .specimen-list > aside {
   color: gray;
   font-size: 14px;
+}
+.specimen-list .selected .specimen-card {
+  filter: drop-shadow(0px 0px 1px #7F56D9) drop-shadow(0px 0px 9px #7F56D9);
+}
+.specimen-list .selected .specimen-card figcaption {
+  background-color: #7F56D9;
+}
+.specimen-list .selected .specimen-card figcaption h3 {
+  color: #FFFFFF;
+}
+.specimen-list .selected .specimen-card figcaption time {
+  color: #CEBCF8;
 }
 
 .add-collection p {

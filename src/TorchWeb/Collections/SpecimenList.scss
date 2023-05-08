@@ -1,3 +1,14 @@
+.selectedNumber {
+    justify-content: flex-end;
+    display: flex;
+    bottom: 37px;
+    position: relative;
+
+    p {
+        color: #7F56D9;
+    }
+}
+
 .specimen-list {
     display: flex;
     flex-direction: row;
@@ -11,5 +22,21 @@
     > aside {
         color: gray;
         font-size: 14px;
+    }
+
+    .selected .specimen-card {
+        filter: drop-shadow(0px 0px 1px #7F56D9) drop-shadow(0px 0px 9px #7F56D9);
+
+        figcaption {
+            background-color: #7F56D9;
+
+            h3 {
+                color: #FFFFFF;
+            }
+
+            time {
+                color: #CEBCF8;
+            }
+        }
     }
 }
