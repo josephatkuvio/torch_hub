@@ -35,7 +35,7 @@ def decrypt(password):
     return cipher.decrypt(ciphertext).rstrip(' ')
 
 
-@torch_task("Upload")
+@torch_task("Transfer")
 def upload(specimen: Specimen, upload_folder: str, upload_type='sftp', host=None, username=None, password=None):
     # password = decrypt(password)
     try:

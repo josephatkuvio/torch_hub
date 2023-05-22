@@ -27,6 +27,7 @@
                 <header>
                     <h1><a href="/">Collections</a> &#8250; @Model?.Name</h1>
                     <h2>Specimens</h2>
+                    <button class="deleteCollectionBtn" @onclick=Delete>Delete Collection</button>
                 </header>
 
                 <SpecimenList Specimens="TheSpecimens?.Specimens" OnSelect="DisplaySpecimenDetails" />
@@ -128,5 +129,19 @@
     public void Dispose()
     {
         Socket.Dispose();
+    }
+
+    async Task Delete()
+    {
+        //Model = await TorchCommands.GetCollectionsAsync();
+        //if (Model.Deleted_date == null)
+        //{
+        //    Model = await TorchCommands.GetCollectionsAsync();
+        //}
+        
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this collection?");
+        if (confirm)
+            await TorchCommands.DeleteCollectionAsync(Model.Id);
+        Model = await TorchCommands.GetCollectionAsync(Id);
     }
 }

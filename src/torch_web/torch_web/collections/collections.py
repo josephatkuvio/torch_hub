@@ -18,8 +18,9 @@ from io import BytesIO
 class Collection(Base):
     __tablename__ = "collection"
     id = Column(Integer, primary_key=True)
-    name = Column(String(150), unique=True)
-    code = Column(String(10), unique=True)
+    name = Column(String(150))
+    code = Column(String(10))
+    deleted_date = Column(DateTime(timezone=True), nullable=True)
     institution_id = Column(Integer, ForeignKey("institution.id"))
     tasks: Mapped[List["CollectionTask"]] = relationship("CollectionTask", back_populates="collection", lazy="selectin")
     specimens: Mapped[List["Specimen"]] = relationship("Specimen", back_populates="collection")
@@ -248,6 +249,20 @@ def get_specimen(specimenid):
     return specimen
 
 
+#def delete_collection(collection_id):
+#    collection = db.session.get(Collection, collection_id)
+
+#    if collection:
+#        specimens = db.session.scalars(select(Specimen).filter(Specimen.collection_id == collection_id)).all()
+#        print(specimens)
+#        if len(specimens) > 0:
+#            return False
+
+#        db.session.delete(collection)
+#        db.session.commit()
+
+#    return True
+
 def delete_collection(collection_id):
     collection = db.session.get(Collection, collection_id)
 
@@ -257,7 +272,7 @@ def delete_collection(collection_id):
         if len(specimens) > 0:
             return False
 
-        db.session.delete(collection)
+        collection.deleted_date = datetime.datetime.now()
         db.session.commit()
 
     return True

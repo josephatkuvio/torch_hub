@@ -97,6 +97,9 @@
 .collection > section {
   padding: 32px 0;
 }
+.collection .deleteCollectionBtn {
+  margin-bottom: 15px;
+}
 .collection .back {
   color: var(--grey-500);
   cursor: pointer;

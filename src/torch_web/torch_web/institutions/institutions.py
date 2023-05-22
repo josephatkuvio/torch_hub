@@ -6,8 +6,8 @@ from torch_web import Base, db
 class Institution(Base):
     __tablename__ = "institution"
     id = Column(Integer, primary_key=True)
-    name = Column(String(150), unique=True)
-    code = Column(String(10), unique=True)
+    name = Column(String(150))
+    code = Column(String(10))
     created_date = Column(DateTime(timezone=True), default=func.now())
     # users = relationship("User")
     collections = relationship("Collection")

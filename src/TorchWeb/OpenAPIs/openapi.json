@@ -23,6 +23,11 @@
           "code": {
             "type": "string"
           },
+          "deleted_date": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
           "id": {
             "type": "integer"
           },
@@ -362,13 +367,14 @@
     },
     "/collections/{collection_id}": {
       "delete": {
+        "operationId": "DeleteCollection",
         "parameters": [
           {
             "in": "path",
             "name": "collection_id",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],

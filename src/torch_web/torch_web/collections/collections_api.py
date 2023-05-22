@@ -56,6 +56,7 @@ class CollectionResponse(Schema):
     id = Integer()
     name = String()
     code = String()
+    deleted_date = DateTime(timezone=True, nullable=True)
     cardimg = List(Nested(SpecimenImageResponse))
     specimencount = Integer()
     tasks = List(Nested(TorchTask))
@@ -163,9 +164,17 @@ def collections_cli_update_credentials(id):
 
     credentials.save(name=str(id))
     console.print(f'Credentials for collection [bold cyan]{id}[/bold cyan] updated!')
-    
 
-@collections_bp.delete("/<collection_id>")
+
+
+
+
+
+class DeleteCollectionRequest(Schema):
+    collection_id = Integer()    
+
+@collections_bp.delete("/<int:collection_id>")
+@collections_bp.doc(operation_id='DeleteCollection')
 def collection_delete(collection_id):
     result = collections.delete_collection(collection_id)
     if not result:
@@ -179,6 +188,13 @@ def collection_delete(collection_id):
 def collection_delete_cli(id):
     collections.delete_collection(id)
     Console().print(f'Collection ID [bold cyan]{id}[/bold cyan] deleted!')
+
+
+
+
+
+
+
 
 
 @collections_bp.get("/<int:collectionid>")
