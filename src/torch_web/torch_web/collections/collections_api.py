@@ -166,10 +166,6 @@ def collections_cli_update_credentials(id):
     console.print(f'Credentials for collection [bold cyan]{id}[/bold cyan] updated!')
 
 
-
-
-
-
 class DeleteCollectionRequest(Schema):
     collection_id = Integer()    
 
@@ -189,14 +185,7 @@ def collection_delete_cli(id):
     collections.delete_collection(id)
     Console().print(f'Collection ID [bold cyan]{id}[/bold cyan] deleted!')
 
-
-
-
-
-
-
-
-
+    
 @collections_bp.get("/<int:collectionid>")
 @collections_bp.output(CollectionResponse)
 @collections_bp.doc(operation_id='GetCollection')

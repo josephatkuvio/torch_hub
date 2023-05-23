@@ -13,7 +13,10 @@
         <section>
             @foreach (var collection in Model.Collections)
             {
-                <CollectionCard Collection="collection" />
+                @if (collection.Deleted_date == null)
+                {
+                    <CollectionCard Collection="collection" />
+                }
             }
         </section>
     }

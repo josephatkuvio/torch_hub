@@ -249,28 +249,12 @@ def get_specimen(specimenid):
     return specimen
 
 
-#def delete_collection(collection_id):
-#    collection = db.session.get(Collection, collection_id)
-
-#    if collection:
-#        specimens = db.session.scalars(select(Specimen).filter(Specimen.collection_id == collection_id)).all()
-#        print(specimens)
-#        if len(specimens) > 0:
-#            return False
-
-#        db.session.delete(collection)
-#        db.session.commit()
-
-#    return True
-
 def delete_collection(collection_id):
     collection = db.session.get(Collection, collection_id)
 
     if collection:
         specimens = db.session.scalars(select(Specimen).filter(Specimen.collection_id == collection_id)).all()
         print(specimens)
-        if len(specimens) > 0:
-            return False
 
         collection.deleted_date = datetime.datetime.now()
         db.session.commit()
