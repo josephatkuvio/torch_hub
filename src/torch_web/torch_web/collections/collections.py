@@ -393,22 +393,11 @@ def upsert_specimen(collection, file):
 
     execute_workflow = True
 
-    specimen = db.session.scalars(select(Specimen).filter(Specimen.name == filename)).first()
-
-    if specimen is not None:
-        if extension.lower() == "dng":
-            specimen.has_dng = 1
-            execute_workflow = False
-
-        else:
-            execute_workflow = specimen.flow_run_id is not None
-
-    else:
-        specimen = Specimen(
-            name=filename, upload_path=file, collection_id=collection.id
-        )
-        db.session.add(specimen)
-        db.session.commit()
+    specimen = Specimen(
+        name=filename, upload_path=file, collection_id=collection.id
+    )
+    db.session.add(specimen)
+    db.session.commit()
 
     upsert_specimen_image(specimen, file, extension.lower())
 
