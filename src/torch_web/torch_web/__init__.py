@@ -17,7 +17,7 @@ executor = Executor()
 def create_app():
     load_dotenv()
 
-    app = APIFlask(__name__, template_folder=".", title="TorchHub API", version="1.0")
+    app = APIFlask(__name__, template_folder=".", title="TorchHub API", version="1.0", docs_ui='swagger-ui', docs_path='/swagger')
     app.config.from_prefixed_env()
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("TORCH_HUB_DATABASE_URI")
     app.config["VALIDATION_ERROR_SCHEMA"] = { 'properties': { 'error_message': { 'type': 'string' } }, 'type': 'object' }

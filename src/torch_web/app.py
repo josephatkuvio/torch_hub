@@ -3,10 +3,15 @@ from flask_mail import Mail
 from flask_socketio import SocketIO
 from torch_web import create_app
 from prefect import context
+from flask import render_template
 
 
 app = create_app()
 socketio = SocketIO(app)
+
+@app.route('/swagger')
+def swagger_ui():
+    return render_template('swagger.html')
 
 if __name__ == "__main__":
     freeze_support()
@@ -23,3 +28,5 @@ else:
 
     app.app_context().push()
     context.socketio = socketio
+
+    
