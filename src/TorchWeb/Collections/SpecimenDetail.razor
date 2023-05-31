@@ -41,10 +41,10 @@
     //    //SelectedImage = FullSpecimen.Images.FirstOrDefault();
     //}
 
-    string? ImageUrl => (FullSpecimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
-        + FullSpecimen.Card_image?.External_url;
+    string? ImageUrl => (FullSpecimen.Card_image?.Url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
+        + FullSpecimen.Card_image?.Url;
 
-    string? SelectedImageUrl => SelectedImage?.External_url ?? ImageUrl;
+    string? SelectedImageUrl => SelectedImage?.Url ?? ImageUrl;
 
     void Select(SpecimenImageResponse img) => SelectedImage = img;
 }

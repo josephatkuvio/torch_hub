@@ -31,8 +31,8 @@
         });
     }
 
-    string? ImageUrl => (Specimen.Card_image?.External_url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
-        + Specimen.Card_image?.External_url;
+    string? ImageUrl => (Specimen.Card_image?.Url?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
+        + Specimen.Card_image?.Url;
 
     void Go() => Nav.NavigateTo($"/collections/{Specimen.Collection_id}/{Specimen.Id}");
 
