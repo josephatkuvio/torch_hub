@@ -44,7 +44,18 @@
                     @foreach (var item in Result)
                     {
                         <dt>@item.Key</dt>
-                        <dd>@item.Value</dd>
+                        @if (item.Value.ToString()?.StartsWith("http") == true)
+                        {
+                            <dd>
+                                <a href="@item.Value.ToString()" target="_blank">@item.Value</a>
+                            </dd>
+                        }
+                        else
+                        {
+                            <dd>
+                                @item.Value
+                            </dd>
+                        }
                     }
                 </dl>
             }

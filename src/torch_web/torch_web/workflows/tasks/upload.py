@@ -73,25 +73,22 @@ def upload_via_paramiko_sftp(collection_folder, path, host, username, password):
 
 
 def upload_via_s3(collection_folder, path, host, username, password):
-    amazon_config = Config(
-        region_name=host,
-    )
-
     s3 = boto3.client(
         "s3",
-        config=amazon_config,
         aws_access_key_id=username,
         aws_secret_access_key=password,
+        endpoint_url='https://' + host,
     )
+    print('transferring...')
+    image_bytes = BytesIO(requests.get(path, stream=True).content)
+    s3.upload_fileobj(image_bytes, collection_folder, os.path.basename(path))
 
-    try:
-        image_bytes = BytesIO(requests.get(path, stream=True).content)
-        response = s3.upload_fileobj(
-            image_bytes, collection_folder, os.path.basename(path)
-        )
-        return response
-    except ClientError:
-        return None
+    #files = s3.list_objects_v2(Bucket=collection_folder)
+    #for file in files["Contents"]:
+    #    print(file)
+
+    hostnoport = host.split(":")[0]
+    return f"https://{hostnoport}/{collection_folder}/{os.path.basename(path)}"
 
 
 def upload_via_minio(collection_folder, path, host, username, password):
@@ -107,11 +104,18 @@ def upload_via_minio(collection_folder, path, host, username, password):
     else:
         print(f"Bucket {collection_folder} already exists")
 
-    image = requests.get(path, stream=True).content
-    image_bytes = BytesIO(image)
-    result = client.put_object(collection_folder, os.path.basename(path), image_bytes, len(image))
+    r = requests.get(path, stream=True)
+    image_bytes = BytesIO(r.content)
+    image_size = image_bytes.getbuffer().nbytes
+    
+    client.put_object(collection_folder, os.path.basename(path), image_bytes, image_size, content_type='image/jpeg')
+    hostnoport = host.split(":")[0]
 
-    return 'https://' + result.location
+    #files = client.list_objects(collection_folder, recursive=True)
+    #for file in files:
+    #    print(file)
+
+    return f"https://{hostnoport}/{collection_folder}/{os.path.basename(path)}"
 
 
 def mkdir_p(sftp, remote_directory):
