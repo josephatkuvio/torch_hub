@@ -3,6 +3,7 @@ from flask_security import RoleMixin, SQLAlchemyUserDatastore
 from sqlalchemy import Column, Integer, String, select
 from torch_web.users import user
 from torch_web import db, Base
+from torch_web.users.user import User
 
 
 class Role(db.Model, RoleMixin):

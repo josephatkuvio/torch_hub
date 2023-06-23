@@ -1,8 +1,10 @@
 import click
 
-from apiflask import APIBlueprint
+from apiflask import APIBlueprint, Schema
+from apiflask.fields import Integer, String, List, Nested, DateTime
 from flask import jsonify, render_template, request
 from flask_security import current_user
+from torch_web.collections.collections_api import CollectionResponse
 from torch_web.institutions import institutions
 from rich.console import Console
 from rich.table import Table
@@ -10,12 +12,43 @@ from rich.table import Table
 
 institutions_bp = APIBlueprint("institutions", __name__, url_prefix="/institutions")
 
+class AddInstitutionRequest(Schema):
+    name = String()
+    code = String()
+
+class InstitutionResponse(Schema):
+    id = Integer()
+    name = String()
+    code = String()
+    deleted_date = DateTime(timezone=True, nullable=True)
+    collections = List(Nested(CollectionResponse))
+    #users = List(Nested(UserResponse))   commented while there is no creation of the UserResponse class
+
+class InstitutionsResponse(Schema):
+    institutions = List(Nested(InstitutionResponse))
+
+class DeleteInstitutionRequest(Schema):
+    institution_id = Integer() 
+    
 
 @institutions_bp.get("/")
+@institutions_bp.output(InstitutionsResponse)
+@institutions_bp.doc(operation_id='GetInstitutions')
 def institutions_get():
-    return render_template(
-        "/institutions/institutions.html", user=current_user, institutions=institutions.get_institutions()
-    )
+    result = institutions.get_institutions(institutions)
+    return {
+        "institutions": result
+    }
+    #return render_template(
+    #    "/institutions/institutions.html", user=current_user, institutions=institutions.get_institutions()
+    #)
+
+@institutions_bp.get("/<int:institutionid>")
+@institutions_bp.output(InstitutionResponse)
+@institutions_bp.doc(operation_id='GetInstitution')
+def collection_get(institutionid):
+    result = institutions.get_institution(institutionid)
+    return result
 
 
 @institutions_bp.cli.command("list")
@@ -33,11 +66,17 @@ def list_institutions():
     
 
 @institutions_bp.post("/")
-def post_institution():
-    name = request.form.get("institution")
-    code = request.form.get("code")
-    institutions.create_institution(name, code)
-    return institutions.get_institutions()
+@institutions_bp.input(AddInstitutionRequest)
+@institutions_bp.output(InstitutionResponse)
+@institutions_bp.doc(operation_id='AddInstitution')
+def institutions_post(data):
+    print(data)
+    new_institution = institutions.create_institution(
+        name=data['name'],
+        code=data['code']
+    )
+
+    return new_institution
 
 
 @institutions_bp.cli.command("create")
@@ -48,10 +87,14 @@ def create_institution(name, code):
     Console().print(f'Institution [bold cyan]{name}[/bold cyan] created! ID is [bold magenta]{result.id}[/bold magenta].')
 
 
-@institutions_bp.delete("/<institution_id>")
+@institutions_bp.delete("/<int:institution_id>")
+@institutions_bp.doc(operation_id='DeleteInstitution')
 def delete(institution_id):
-    institutions.delete_institution(institution_id)
-    return jsonify({})
+    result = institutions.delete_institution(institution_id)
+    if not result:
+        return jsonify({"status": "error", "statusText": "Institution not deleted."})
+
+    return jsonify({"status": "ok"})
 
 
 @institutions_bp.cli.command("delete")

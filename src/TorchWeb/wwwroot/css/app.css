@@ -68,6 +68,16 @@
 .collections-index {
   padding: 32px;
 }
+.collections-index .nav-header {
+  display: flex;
+}
+.collections-index .nav-header .nav-admin-opt {
+  cursor: pointer;
+  margin-left: 40px;
+}
+.collections-index .nav-header .nav-admin-opt:hover {
+  color: var(--primary-500);
+}
 
 .collection {
   display: grid;
