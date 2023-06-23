@@ -22,8 +22,7 @@ class InstitutionResponse(Schema):
     code = String()
     deleted_date = DateTime(timezone=True, nullable=True)
     collections = List(Nested(CollectionResponse))
-    #users = List(Nested(UserResponse))   commented while there is no creation of the UserResponse class
-
+    #users = List(Nested(UserResponse))   commented for now
 class InstitutionsResponse(Schema):
     institutions = List(Nested(InstitutionResponse))
 
@@ -39,9 +38,7 @@ def institutions_get():
     return {
         "institutions": result
     }
-    #return render_template(
-    #    "/institutions/institutions.html", user=current_user, institutions=institutions.get_institutions()
-    #)
+
 
 @institutions_bp.get("/<int:institutionid>")
 @institutions_bp.output(InstitutionResponse)

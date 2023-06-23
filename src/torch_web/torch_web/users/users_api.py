@@ -35,6 +35,10 @@ def userinfo():
         "UserName": current_user.email
     }
 
+@auth_bp.get("/register")
+def register():
+    return redirect("/register")
+
 
 @users_bp.get("/")
 @roles_accepted("admin")

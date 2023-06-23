@@ -66,6 +66,9 @@ class CollectionsResponse(Schema):
     collections = List(Nested(CollectionResponse))
 
 
+class DeleteSpecimenRequest(Schema):
+    specimen_id = Integer()
+
 
 @home_bp.route("/")
 def home():
@@ -273,10 +276,6 @@ def specimen_get(collectionid, specimenid):
 @collections_bp.put("/<collectionid>/specimens/<specimenid>")
 def retry(collectionid, specimenid):
     return ajax_response(collections.retry_workflow(specimenid, current_app.config), specimenid)
-
-
-class DeleteSpecimenRequest(Schema):
-    specimen_id = Integer()
 
 
 @collections_bp.delete("/<int:collectionid>/specimens/<int:specimenid>")

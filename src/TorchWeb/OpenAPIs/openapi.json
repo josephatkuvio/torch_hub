@@ -12,6 +12,17 @@
         },
         "type": "object"
       },
+      "AddInstitutionRequest": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "CollectionResponse": {
         "properties": {
           "cardimg": {
@@ -64,6 +75,42 @@
           },
           "message": {
             "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "InstitutionResponse": {
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "collections": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionResponse"
+            },
+            "type": "array"
+          },
+          "deleted_date": {
+            "format": "date-time",
+            "nullable": true,
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "InstitutionsResponse": {
+        "properties": {
+          "institutions": {
+            "items": {
+              "$ref": "#/components/schemas/InstitutionResponse"
+            },
+            "type": "array"
           }
         },
         "type": "object"
@@ -280,6 +327,25 @@
           }
         },
         "summary": "Logout",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/_auth/register": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Register",
         "tags": [
           "Auth"
         ]
@@ -731,12 +797,15 @@
     },
     "/institutions/": {
       "get": {
+        "operationId": "GetInstitutions",
         "parameters": [],
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/InstitutionsResponse"
+                }
               }
             },
             "description": "Successful response"
@@ -748,18 +817,40 @@
         ]
       },
       "post": {
+        "operationId": "AddInstitution",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddInstitutionRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/InstitutionResponse"
+                }
               }
             },
             "description": "Successful response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            },
+            "description": "Validation error"
           }
         },
-        "summary": "Post Institution",
+        "summary": "Institutions Post",
         "tags": [
           "Institutions"
         ]
@@ -767,13 +858,14 @@
     },
     "/institutions/{institution_id}": {
       "delete": {
+        "operationId": "DeleteInstitution",
         "parameters": [
           {
             "in": "path",
             "name": "institution_id",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer"
             }
           }
         ],
@@ -798,6 +890,47 @@
           }
         },
         "summary": "Delete",
+        "tags": [
+          "Institutions"
+        ]
+      }
+    },
+    "/institutions/{institutionid}": {
+      "get": {
+        "operationId": "GetInstitution",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "institutionid",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InstitutionResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          }
+        },
+        "summary": "Collection Get",
         "tags": [
           "Institutions"
         ]
@@ -856,6 +989,22 @@
         "tags": [
           "Roles"
         ]
+      }
+    },
+    "/swagger": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "summary": "Swagger Ui"
       }
     },
     "/users/": {

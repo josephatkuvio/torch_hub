@@ -4,8 +4,9 @@ from typing import Collection, List
 from sqlalchemy import func, Column, Integer, String, DateTime, ForeignKey, select
 from sqlalchemy.orm import Mapped, relationship
 from torch_web import Base, db
-from torch_web.users.user import User
 
+
+#from torch_web.users.user import User     
 
 class Institution(Base):
     __tablename__ = "institution"
@@ -14,10 +15,12 @@ class Institution(Base):
     code = Column(String(10))
     created_date = Column(DateTime(timezone=True), default=func.now())    
     deleted_date = Column(DateTime(timezone=True), nullable=True)
-    #collection_id = Column(Integer, ForeignKey("collection.id"))
-    collections: Mapped[List["Collection"]] = relationship("Collection", back_populates="institution")
-    #users = relationship("User")
-    users: Mapped[List["User"]] = relationship("User", back_populates="institution")
+    collections = relationship("Collection")
+    #collections: Mapped[List["Collection"]] = relationship("Collection", back_populates="institution")    it didn't work 
+
+    #users: Mapped[List["User"]] = relationship("User", back_populates="institution")          
+    #users = relationship("User")    
+
 
 
 def get_institutions():
@@ -43,8 +46,6 @@ def delete_institution(institution_id):
     institution = db.session.get(Institution, institution_id)
 
     if institution:
-        #db.session.delete(institution)
-        #db.session.commit()
         institution.deleted_date = datetime.datetime.now()
         db.session.commit()
 
