@@ -1,10 +1,9 @@
 from flask_security import UserMixin
-from torch_web import db, Base
+from torch_web import db, Base, mail
 from sqlalchemy import Table, Integer, Column, String, Boolean, DateTime, ForeignKey, select
 from sqlalchemy.orm import relationship, backref, joinedload
 from flask_mail import Message
 from flask import app
-#from app import mail
 
 from torch_web.institutions.institutions import Institution
 

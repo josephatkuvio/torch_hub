@@ -8,11 +8,14 @@ from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from flask_cors import CORS
 from flask_executor import Executor
+from flask_mail import Mail
+
 
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
 db = SQLAlchemy(metadata=metadata)
 executor = Executor()
+mail = Mail()
 
 def create_app():
     load_dotenv()
@@ -30,6 +33,7 @@ def create_app():
 
     db.init_app(app)
     executor.init_app(app)
+    mail.init_app(app)
 
     from torch_web.users.users_api import users_bp, auth_bp, ExtendedRegisterForm
     from torch_web.users.roles_api import roles_bp
