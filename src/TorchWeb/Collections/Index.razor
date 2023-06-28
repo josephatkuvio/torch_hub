@@ -6,7 +6,7 @@
     <header>
         <div class="nav-header">
         <h1>All Collections</h1>
-        <h1 @onclick=Go class="nav-admin-opt">Manage</h1>
+        <h1 @onclick=Go class="nav-admin-opt">Admin Page</h1>
         </div>
         <button @onclick=Add>Add New Collection</button>
     </header>
@@ -41,5 +41,5 @@
         Model = await TorchCommands.GetCollectionsAsync();
     }
 
-    void Go() => Nav.NavigateTo($"/manage");
+    void Go() => Nav.NavigateTo($"/admin-page");
 }
