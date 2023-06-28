@@ -4,13 +4,16 @@ from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested, DateTime
 from flask import jsonify, render_template, request
 from flask_security import current_user
-from torch_web.collections.collections_api import CollectionResponse
+from torch_web.collections.collections_api import CollectionsResponse
+from torch_web.users.users_api import UsersResponse
 from torch_web.institutions import institutions
 from rich.console import Console
 from rich.table import Table
 
 
 institutions_bp = APIBlueprint("institutions", __name__, url_prefix="/institutions")
+
+
 
 class AddInstitutionRequest(Schema):
     name = String()
@@ -21,14 +24,15 @@ class InstitutionResponse(Schema):
     name = String()
     code = String()
     deleted_date = DateTime(timezone=True, nullable=True)
-    collections = List(Nested(CollectionResponse))
-    #users = List(Nested(UserResponse))   commented for now
+    collections = List(Nested(CollectionsResponse))
+    users = List(Nested(UsersResponse))   
+
 class InstitutionsResponse(Schema):
     institutions = List(Nested(InstitutionResponse))
 
 class DeleteInstitutionRequest(Schema):
     institution_id = Integer() 
-    
+
 
 @institutions_bp.get("/")
 @institutions_bp.output(InstitutionsResponse)

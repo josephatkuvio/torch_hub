@@ -1,4 +1,5 @@
-from apiflask import APIBlueprint
+from apiflask import APIBlueprint, Schema
+from apiflask.fields import Integer, String
 from flask import render_template, request
 from flask_security import current_user, roles_accepted
 from torch_web.users import role
@@ -6,12 +7,27 @@ from torch_web.users import role
 
 roles_bp = APIBlueprint("roles", __name__, url_prefix="/roles")
 
+class RolesResponse(Schema):
+    id = Integer()
+    name = String()
+    
+
+
 
 @roles_bp.get("/")
-@roles_accepted("admin")
+@roles_bp.output(RolesResponse)
+@roles_bp.doc(operation_id='GetRoles')
+@roles_accepted("admin", "supervisor")  
 def roles_get():
-    roles = role.get_roles()
-    return render_template("/users/roles.html", user=current_user, roles=roles)
+    if current_user.has_role("admin"):
+        roles = role.get_roles()
+    elif current_user.has_role("supervisor"):
+        roles = role.get_roles_by_name("basic")
+    else:
+        roles = []  
+
+    return roles
+
 
 
 @roles_bp.post("/")

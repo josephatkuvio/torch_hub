@@ -17,6 +17,10 @@ def get_roles() -> List[Role]:
     return db.session.scalars(select(Role)).all()
 
 
+def get_roles_by_name(name: str) -> List[Role]:
+    return db.session.scalars(Role).filter_by(name=name).all()
+
+
 def add_role(name, description):
     new_role = Role(name=name, description=description)
     db.session.add(new_role)

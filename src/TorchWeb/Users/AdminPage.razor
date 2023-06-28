@@ -1,0 +1,68 @@
+﻿@page "/admin-page"
+
+<h1> @Model?.Name &#8250; @Model?.Code</h1>
+
+<section>
+    <h4>Users List</h4>
+    <button @onclick="OpenInviteModal">Invite User</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>     
+            @if (Users != null)
+            {
+                @foreach (var user in Users)
+                {
+                    <tr>
+                        <td>@user.Name</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                        <td><button @onclick="() => RemoveUser(user.Id)">Remove User</button></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</section>
+
+
+@inject IModalService Modal
+@inject IJSRuntime JSRuntime
+@code {
+    [Parameter] public int InstitutionId { get; set; }
+
+    InstitutionResponse? Model;
+    UserResponse? User;
+    UsersResponse? Users;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //var userInfo = await TorchCommands.GetUserInfoAsync();
+        //var userId = int.Parse(userInfo);
+
+        //User = await TorchCommands.GetUserAsync(userId.ToString());
+        Model = await TorchCommands.GetInstitutionAsync(InstitutionId);
+        Users = await TorchCommands.GetUsersAsync();
+    }
+
+    async Task OpenInviteModal()
+    {
+        var modal = Modal.Show<InviteUser>();
+        await modal.Result;
+        //Users = await TorchCommands.GetUsersAsync(InstitutionId);
+    }
+
+    async Task RemoveUser()
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user?");
+        if (confirm)
+            await TorchCommands.RemoveUserAsync(User.Id);
+    }
+}

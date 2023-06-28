@@ -2,6 +2,11 @@ from flask_security import UserMixin
 from torch_web import db, Base
 from sqlalchemy import Table, Integer, Column, String, Boolean, DateTime, ForeignKey, select
 from sqlalchemy.orm import relationship, backref, joinedload
+from flask_mail import Message
+from flask import app
+#from app import mail
+
+from torch_web.institutions.institutions import Institution
 
 
 roles_users = Table(
@@ -60,3 +65,24 @@ def toggle_user_active(user_id):
     user.active = 0 if user.active == 1 else 1
 
     db.session.commit()
+
+
+
+def send_email(to, subject, template):
+    msg = Message(
+        subject,
+        recipients=[to],
+        html=template,
+        sender=app.config["FLASK_MAIL_DEFAULT_SENDER"],
+        
+    )
+    mail.send(msg)
+
+
+def remove_user(user_id):
+    user = db.session.get(User, user_id)
+
+    user.institution_id = None
+    db.session.commit()
+
+    return True

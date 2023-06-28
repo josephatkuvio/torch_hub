@@ -3,6 +3,7 @@ from apiflask import APIBlueprint
 from torch_web.workflows.workflows import TorchTasksResponse, torch_task_registry
 from torch_web.workflows.tasks import check_catalog_number, check_duplicate, check_orientation, generate_derivatives, upload, get_exif_data, recognize_text
 from torch_web.collections import collections
+from flask_security import roles_accepted
 
 workflow_bp = APIBlueprint("workflows", __name__, url_prefix="/workflows")
 
@@ -18,6 +19,7 @@ def workflows_getall():
 @workflow_bp.input(TorchTasksResponse)
 @workflow_bp.output({}, status_code=200)
 @workflow_bp.doc(operation_id='UpdateWorkflow')
+@roles_accepted("admin")
 def workflow_save(collectionid: int, data: TorchTasksResponse):
     # Encrypt passwords as necessary
     #for task in data['tasks']:

@@ -86,7 +86,7 @@
           },
           "collections": {
             "items": {
-              "$ref": "#/components/schemas/CollectionResponse"
+              "$ref": "#/components/schemas/CollectionsResponse"
             },
             "type": "array"
           },
@@ -100,6 +100,12 @@
           },
           "name": {
             "type": "string"
+          },
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/UsersResponse"
+            },
+            "type": "array"
           }
         },
         "type": "object"
@@ -111,6 +117,28 @@
               "$ref": "#/components/schemas/InstitutionResponse"
             },
             "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "RolesResponse": {
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "SendInviteRequest": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "integer"
           }
         },
         "type": "object"
@@ -259,6 +287,43 @@
         },
         "type": "object"
       },
+      "UserResponse": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "institution_id": {
+            "type": "integer"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/RolesResponse"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "UsersResponse": {
+        "properties": {
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/UserResponse"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
       "ValidationError": {
         "properties": {
           "error_message": {
@@ -333,8 +398,18 @@
       }
     },
     "/_auth/register": {
-      "get": {
+      "post": {
+        "operationId": "SendInvite",
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendInviteRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "content": {
@@ -343,6 +418,16 @@
               }
             },
             "description": "Successful response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            },
+            "description": "Validation error"
           }
         },
         "summary": "Register",
@@ -957,12 +1042,15 @@
     },
     "/roles/": {
       "get": {
+        "operationId": "GetRoles",
         "parameters": [],
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/RolesResponse"
+                }
               }
             },
             "description": "Successful response"
@@ -1009,12 +1097,15 @@
     },
     "/users/": {
       "get": {
+        "operationId": "GetUsers",
         "parameters": [],
         "responses": {
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/UsersResponse"
+                }
               }
             },
             "description": "Successful response"
@@ -1026,8 +1117,48 @@
         ]
       }
     },
+    "/users/{user_id}": {
+      "delete": {
+        "operationId": "RemoveUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          }
+        },
+        "summary": "User Remove",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
     "/users/{userid}": {
       "get": {
+        "operationId": "GetUser",
         "parameters": [
           {
             "in": "path",
@@ -1042,7 +1173,9 @@
           "200": {
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
               }
             },
             "description": "Successful response"

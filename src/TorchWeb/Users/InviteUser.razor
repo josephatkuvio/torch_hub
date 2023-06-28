@@ -1,0 +1,46 @@
+﻿@inherits SparcModal
+
+<div class="add-collection">
+    <p>
+        Invite a user.
+    </p>
+
+    <label>
+        User email
+        <input @*@bind=Request.Name*@ />
+    </label>
+
+    <label>
+        User role
+        <select @*@bind=Request.Roles*@>
+            @foreach (var role in Roles)
+            {
+                <option value="@role.Name">@role.Name</option>
+            }
+        </select>
+    </label>
+
+    <button @*@onclick=Send*@>Send invite</button>
+</div>
+
+@code {
+    [Parameter] public int UserId { get; set; }
+
+    UserResponse? User;
+    RolesResponse? Roles;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        User = await TorchCommands.GetUserAsync(UserId.ToString());
+        Roles = await TorchCommands.GetRolesAsync();
+    }
+
+    SendInviteRequest Request = new();
+
+    async Task Send()
+    {
+        await TorchCommands.SendInviteAsync(Request);
+        await Ok();
+    }
+}

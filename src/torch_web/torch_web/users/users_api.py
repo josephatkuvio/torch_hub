@@ -1,9 +1,12 @@
 import json
-from apiflask import APIBlueprint
+from tkinter import CURRENT
+from apiflask import APIBlueprint, Schema
+from apiflask.fields import Integer, String, List, Nested
 from flask import flash, jsonify, render_template, request, redirect, abort
 from flask_security import current_user, RegisterForm, roles_accepted
 from wtforms import StringField
 from torch_web.users import user, role
+from torch_web.users.roles_api import RolesResponse
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -13,6 +16,30 @@ class ExtendedRegisterForm(RegisterForm):
 
 users_bp = APIBlueprint("users", __name__, url_prefix="/users")
 auth_bp = APIBlueprint("auth", __name__, url_prefix="/_auth")
+
+
+class SendInviteRequest(Schema):
+    email = String()
+    roles = Integer()
+
+
+class UserResponse(Schema):
+    id = Integer()
+    email = String()
+    first_name = String()
+    last_name = String()
+    institution_id = Integer()    
+    roles = List(Nested(RolesResponse))
+
+
+class UsersResponse(Schema):
+    users = List(Nested(UserResponse))
+
+
+class RemoveUserRequest(Schema):   
+    institution_id = Integer() 
+    collection_id = Integer()
+
 
 
 @auth_bp.get("/login")
@@ -35,24 +62,44 @@ def userinfo():
         "UserName": current_user.email
     }
 
-@auth_bp.get("/register")
+@auth_bp.post("/register")
+@users_bp.input(SendInviteRequest)
+@roles_accepted("admin", "supervisor")
+@users_bp.doc(operation_id='SendInvite')
 def register():
+    subject = "Invitation to register on Torch"
+    html = render_template("templates/invite.html")
+    send_email(inviteduser.email, subject, html)    #get inviteduser.email from modal
     return redirect("/register")
 
 
+#@users_bp.get("/")
+#@roles_accepted("admin")
+#def users_getall():
+#    users = user.get_users(current_user.institution_id)
+#    roles = role.get_roles()
+#    return render_template(
+#        "/users/users.html", user=current_user, users=users, roles=roles
+#    )
+
 @users_bp.get("/")
 @roles_accepted("admin")
+@users_bp.output(UsersResponse)
+@users_bp.doc(operation_id='GetUsers')
 def users_getall():
-    users = user.get_users(current_user.institution_id)
     roles = role.get_roles()
-    return render_template(
-        "/users/users.html", user=current_user, users=users, roles=roles
-    )
+    result = user.get_users(current_user.institution_id)
+    return {
+        "users": result
+    }
 
 
 @users_bp.get("/<userid>")
+@users_bp.output(UserResponse)
+@users_bp.doc(operation_id="GetUser")
 def users_get(userid):
-    return render_template("/users/profile.html", user=user.get_user(userid))
+    result = user.get_user(userid)
+    return result
 
 
 @users_bp.post("/<userid>")
@@ -98,3 +145,13 @@ def delete_role_user(userid):
     print(data)
     user.unassign_role_from_user(userid, data["role"])
     return jsonify({})
+
+@users_bp.delete("/<int:user_id>")
+@users_bp.doc(operation_id='RemoveUser')
+@roles_accepted("admin", "supervisor")
+def user_remove(user_id):
+    result = user.remove_user(user_id)
+    if not result:
+        return jsonify({"status": "error", "statusText": "Could not remove user."})
+
+    return jsonify({"status": "ok"})
