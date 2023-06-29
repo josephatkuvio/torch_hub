@@ -7,8 +7,7 @@
             <a href="/">&larr; Home</a>
         </aside>
         <h1 class="page-name">Admin Page</h1>
-        @*<h1>@Model?.Name - @Model?.Code</h1>*@
-        <h1>BRIT - BRIT</h1>
+        <h1>@Model?.Name - @Model?.Code</h1>
     </header>
 
     <div class="container">
@@ -22,30 +21,24 @@
         </div>
         <div class="container-body">
             <table>
-                @*                @if (Users != null)
-                {*@
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th></th>
-                </tr>
-                @*                    @foreach (var user in Users)
+                @if (Users != null)
                 {
-                <tr>
-                <td>@user.Name</td>
-                <td>@user.Email</td>
-                <td>@user.Role</td>
-                <td><button @onclick="() => RemoveUser(user.Id)">Remove User</button></td>
-                </tr>
-                }*@
-                <tr>
-                    <td>Lorena ?Granja</td>
-                    <td>lorena@gmail.com</td>
-                    <td>Supervisor</td>
-                    <td class="btn"><button>Remove</button></td>
-                </tr>
-                @* }*@
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th></th>
+                    </tr>
+                    @foreach (var user in Users)
+                    {
+                        <tr>
+                            <td>@user.Name</td>
+                            <td>@user.Email</td>
+                            <td>@user.Role</td>
+                            <td><button @onclick="() => RemoveUser(user.Id)">Remove User</button></td>
+                        </tr>
+                    }
+                }
             </table>
         </div>
     </div>
