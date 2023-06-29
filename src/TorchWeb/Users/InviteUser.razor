@@ -2,21 +2,21 @@
 
 <div class="add-collection">
     <p>
-        Invite a user.
+        Invite new team member
     </p>
 
     <label>
-        User email
+        Member Email
         <input @*@bind=Request.Name*@ />
     </label>
 
     <label>
-        User role
+        Member Role
         <select @*@bind=Request.Roles*@>
-            @foreach (var role in Roles)
+            @*@foreach (var role in Roles)
             {
-                <option value="@role.Name">@role.Name</option>
-            }
+            <option value="@role.Name">@role.Name</option>
+            }*@
         </select>
     </label>
 

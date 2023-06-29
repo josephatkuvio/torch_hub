@@ -1,40 +1,63 @@
 ﻿@page "/admin-page"
 
-<h1> @Model?.Name &#8250; @Model?.Code</h1>
 
-<section>
-    <h4>Users List</h4>
-    <button @onclick="OpenInviteModal">Invite User</button>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>     
-            @if (Users != null)
-            {
-                @foreach (var user in Users)
+<div class="admin-div">
+    <header>
+        <aside class="back">
+            <a href="/">&larr; Home</a>
+        </aside>
+        <h1 class="page-name">Admin Page</h1>
+        @*<h1>@Model?.Name - @Model?.Code</h1>*@
+        <h1>BRIT - BRIT</h1>
+    </header>
+
+    <div class="container">
+        <div class="container-top">
+            <div class="left">
+                <h2>Users List</h2>
+            </div>
+            <div class="right">
+                <button @onclick="OpenInviteModal">Invite User</button>
+            </div>
+        </div>
+        <div class="container-body">
+            <table>
+                @*                @if (Users != null)
+                {*@
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+                @*                    @foreach (var user in Users)
                 {
-                    <tr>
-                        <td>@user.Name</td>
-                        <td>@user.Email</td>
-                        <td>@user.Role</td>
-                        <td><button @onclick="() => RemoveUser(user.Id)">Remove User</button></td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-</section>
+                <tr>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td><button @onclick="() => RemoveUser(user.Id)">Remove User</button></td>
+                </tr>
+                }*@
+                <tr>
+                    <td>Lorena ?Granja</td>
+                    <td>lorena@gmail.com</td>
+                    <td>Supervisor</td>
+                    <td class="btn"><button>Remove</button></td>
+                </tr>
+                @* }*@
+            </table>
+        </div>
+    </div>
+
+</div>
+
 
 
 @inject IModalService Modal
 @inject IJSRuntime JSRuntime
 @code {
+    [Parameter] public int UserId { get; set; }
     [Parameter] public int InstitutionId { get; set; }
 
     InstitutionResponse? Model;
@@ -47,6 +70,7 @@
         //var userInfo = await TorchCommands.GetUserInfoAsync();
         //var userId = int.Parse(userInfo);
 
+        User = await TorchCommands.GetUserAsync(UserId.ToString());
         //User = await TorchCommands.GetUserAsync(userId.ToString());
         Model = await TorchCommands.GetInstitutionAsync(InstitutionId);
         Users = await TorchCommands.GetUsersAsync();
@@ -61,7 +85,7 @@
 
     async Task RemoveUser()
     {
-        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user?");
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
         if (confirm)
             await TorchCommands.RemoveUserAsync(User.Id);
     }
