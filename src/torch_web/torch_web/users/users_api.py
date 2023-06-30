@@ -58,7 +58,7 @@ def userinfo():
     
     claims = {}
     if current_user.roles:
-        claims["roles"] = current_user.roles[0].name
+        claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] = current_user.roles[0].name
     if current_user.institution_id:
         claims["institution_id"] = current_user.institution_id
 
