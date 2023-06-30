@@ -5,10 +5,13 @@
 <div class="collections-index">
     <header>
         <div class="nav-header">
-        <h1>All Collections</h1>
-        <h1 @onclick=Go class="nav-admin-opt">Admin Page</h1>
-        </div>
-        <button @onclick=Add>Add New Collection</button>
+            <h1>All Collections</h1>
+            @*@if (User.Roles.Name == "admin")
+            {*@
+                <h1 @onclick=Go class="nav-admin-opt">Admin Page</h1>
+            </div>
+            <button @onclick=Add>Add New Collection</button>
+           @* }*@
     </header>
 
     @if (Model != null)

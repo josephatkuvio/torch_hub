@@ -40,6 +40,7 @@
     <Content Include="torch_web\static\uploads\Default\BRIT337760.jpg" />
     <Content Include="torch_web\static\uploads\Default\BRIT342753.jpg" />
     <Content Include="torch_web\templates\emails\invite.html" />
+    <Content Include="torch_web\templates\profile.html" />
     <Content Include="torch_web\templates\swagger.html" />
   </ItemGroup>
   <ItemGroup>

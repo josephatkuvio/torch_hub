@@ -3,10 +3,13 @@ from tkinter import CURRENT
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested
 from flask import flash, jsonify, render_template, request, redirect, abort
-from flask_security import current_user, RegisterForm, roles_accepted
+from flask_security import current_user, RegisterForm, roles_accepted,  roles_required
 from wtforms import StringField
 from torch_web.users import user, role
 from torch_web.users.roles_api import RolesResponse
+from torch_web.users.user import (
+    get_user,
+)
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -64,7 +67,7 @@ def userinfo():
 
 @auth_bp.post("/register")
 @users_bp.input(SendInviteRequest)
-@roles_accepted("admin", "supervisor")
+@roles_required("admin", "supervisor")
 @users_bp.doc(operation_id='SendInvite')
 def register():
     subject = "Invitation to register on Torch"
@@ -74,7 +77,7 @@ def register():
 
 
 #@users_bp.get("/")
-#@roles_accepted("admin")
+#@roles_required("admin")
 #def users_getall():
 #    users = user.get_users(current_user.institution_id)
 #    roles = role.get_roles()
@@ -83,7 +86,7 @@ def register():
 #    )
 
 @users_bp.get("/")
-@roles_accepted("admin")
+@roles_required("admin")
 @users_bp.output(UsersResponse)
 @users_bp.doc(operation_id='GetUsers')
 def users_getall():
@@ -119,7 +122,7 @@ def users_post(userid):
 
 
 @users_bp.post("/<userid>/active")
-@roles_accepted("admin")
+@roles_required("admin")
 def deactivate_user(userid):
     user.toggle_user_active(userid)
     return jsonify({})
@@ -131,7 +134,7 @@ def user_add_role(userid):
 
 
 @users_bp.post("/<userid>/roles")
-@roles_accepted("admin")
+@roles_required("admin")
 def assign_role(userid):
     data = json.loads(request.data)
     user.assign_role_to_user(userid, data["role"])
@@ -139,7 +142,7 @@ def assign_role(userid):
 
 
 @users_bp.delete("/<userid>/roles")
-@roles_accepted("admin")
+@roles_required("admin")
 def delete_role_user(userid):
     data = json.loads(request.data)
     print(data)
@@ -148,7 +151,7 @@ def delete_role_user(userid):
 
 @users_bp.delete("/<int:user_id>")
 @users_bp.doc(operation_id='RemoveUser')
-@roles_accepted("admin", "supervisor")
+@roles_required("admin", "supervisor")
 def user_remove(user_id):
     result = user.remove_user(user_id)
     if not result:

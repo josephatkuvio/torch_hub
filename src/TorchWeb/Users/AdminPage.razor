@@ -1,5 +1,50 @@
 ﻿@page "/admin-page"
 
+@*@if (User.Roles == "admin")
+{
+    <div class="admin-div">
+        <header>
+            <aside class="back">
+                <a href="/">&larr; Home</a>
+            </aside>
+            <h1 class="page-name">Admin Page</h1>
+            <h1>@Model?.Name - @Model?.Code</h1>
+        </header>
+
+        <div class="container">
+            <div class="container-top">
+                <div class="left">
+                    <h2>Users List</h2>
+                </div>
+                <div class="right">
+                    <button @onclick="OpenInviteModal">Invite Member</button>
+                </div>
+            </div>
+            <div class="container-body">
+                <table>
+                    @if (Users != null)
+                    {
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var user in Users)
+                        {
+                            <tr>
+                                <td>@user.Name</td>
+                                <td>@user.Email</td>
+                                <td>@user.Role</td>
+                                <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
+                            </tr>
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+}*@
 
 <div class="admin-div">
     <header>
@@ -7,7 +52,7 @@
             <a href="/">&larr; Home</a>
         </aside>
         <h1 class="page-name">Admin Page</h1>
-        <h1>@Model?.Name - @Model?.Code</h1>
+        <h1>BRIT - BRIT</h1>
     </header>
 
     <div class="container">
@@ -16,70 +61,95 @@
                 <h2>Users List</h2>
             </div>
             <div class="right">
-                <button @onclick="OpenInviteModal">Invite User</button>
+                <button @onclick="OpenInviteModal">Invite Member</button>
             </div>
         </div>
         <div class="container-body">
             <table>
-                @if (Users != null)
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in items)
                 {
                     <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th></th>
+                        <td>@item.Name</td>
+                        <td>@item.Email</td>
+                        <td>@item.Role</td>
+                        <td class="btn"><button onclick="@(() => RemoveItem(item))">Remove Member</button></td>
                     </tr>
-                    @foreach (var user in Users)
-                    {
-                        <tr>
-                            <td>@user.Name</td>
-                            <td>@user.Email</td>
-                            <td>@user.Role</td>
-                            <td><button @onclick="() => RemoveUser(user.Id)">Remove User</button></td>
-                        </tr>
-                    }
                 }
             </table>
         </div>
     </div>
-
 </div>
-
 
 
 @inject IModalService Modal
 @inject IJSRuntime JSRuntime
 @code {
-    [Parameter] public int UserId { get; set; }
-    [Parameter] public int InstitutionId { get; set; }
+    //[Parameter] public int UserId { get; set; }
+    //[Parameter] public int InstitutionId { get; set; }
 
-    InstitutionResponse? Model;
-    UserResponse? User;
-    UsersResponse? Users;
+    //InstitutionResponse? Model;
+    //UserResponse? User;
+    //UsersResponse? Users;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    User = await TorchCommands.GetUserAsync(UserId.ToString());
+    //    Model = await TorchCommands.GetInstitutionAsync(InstitutionId);
+    //    Users = await TorchCommands.GetUsersAsync();
+    //}
+
+    //async Task OpenInviteModal()
+    //{
+    //    var modal = Modal.Show<InviteUser>();
+    //    await modal.Result;
+    //    Model = await TorchCommands.GetInstitutionAsync(InstitutionId);
+    //}
+
+    //async Task RemoveUser()
+    //{
+    //    var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
+    //    if (confirm)
+    //        await TorchCommands.RemoveUserAsync(User.Id);
+    //}
 
 
-    protected override async Task OnInitializedAsync()
+
+    public class Item
     {
-        //var userInfo = await TorchCommands.GetUserInfoAsync();
-        //var userId = int.Parse(userInfo);
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+    }
 
-        User = await TorchCommands.GetUserAsync(UserId.ToString());
-        //User = await TorchCommands.GetUserAsync(userId.ToString());
-        Model = await TorchCommands.GetInstitutionAsync(InstitutionId);
-        Users = await TorchCommands.GetUsersAsync();
+    private List<Item> items = new List<Item>();
+
+    protected override void OnInitialized()
+    {
+        items.Add(new Item { Name = "Jason Best", Email = "jbest@brit.org", Role = "admin" });
+        items.Add(new Item { Name = "Diego Barroso", Email = "dbarroso@brit.org", Role = "admin" });
     }
 
     async Task OpenInviteModal()
     {
         var modal = Modal.Show<InviteUser>();
         await modal.Result;
-        //Users = await TorchCommands.GetUsersAsync(InstitutionId);
     }
 
-    async Task RemoveUser()
+    private async Task RemoveItem(string itemId)
     {
-        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
-        if (confirm)
-            await TorchCommands.RemoveUserAsync(User.Id);
+        await JSRuntime.InvokeVoidAsync("removeRow", itemId);
+    }
+
+    async Task RemoveItem(Item item)
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this member from this institution?");
+            if (confirm)
+            items.Remove(item);
     }
 }

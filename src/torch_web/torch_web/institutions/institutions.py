@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, relationship
 from torch_web import Base, db
 
 
-#from torch_web.users.user import User     
+     
 
 class Institution(Base):
     __tablename__ = "institution"
@@ -17,7 +17,7 @@ class Institution(Base):
     deleted_date = Column(DateTime(timezone=True), nullable=True)
     collections = relationship("Collection")
     #collections: Mapped[List["Collection"]] = relationship("Collection", back_populates="institution")    it didn't work 
-
+    #users = relationship("torch_web.users.user.User", backref="institution")
     #users: Mapped[List["User"]] = relationship("User", back_populates="institution")          
     #users = relationship("User")    
 

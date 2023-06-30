@@ -13,9 +13,20 @@
     <label>
         Member Role
         <select @*@bind=Request.Roles*@>
-            @*@foreach (var role in Roles)
+@*            @if (User.Roles.Name == "admin")
             {
-            <option value="@role.Name">@role.Name</option>
+                @foreach (var role in Roles)
+                {
+                    <option value="@role.Name">@role.Name</option>
+                }
+            }
+            else if (User.Roles.Name == "supervisor")
+            {
+                var basicRole = Roles.FirstOrDefault(r => r.Name == "basic");
+                if (basicRole != null)
+                {
+                    <option value="@basicRole.Name">@basicRole.Name</option>
+                }
             }*@
         </select>
     </label>
@@ -30,11 +41,11 @@
     RolesResponse? Roles;
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        User = await TorchCommands.GetUserAsync(UserId.ToString());
-        Roles = await TorchCommands.GetRolesAsync();
-    }
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    User = await TorchCommands.GetUserAsync(UserId.ToString());
+    //    Roles = await TorchCommands.GetRolesAsync();
+    //}
 
     SendInviteRequest Request = new();
 

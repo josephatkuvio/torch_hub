@@ -36,8 +36,11 @@ def get_users(institution_id):
     return db.session.scalars(select(User).options(joinedload(User.roles)).filter(institution_id=institution_id)).all()
 
 
-def get_user(user_id) -> User:
-    return db.session.get(User, user_id)
+#def get_user(user_id) -> User:
+#    return db.session.get(User, user_id)
+
+def get_user(id) -> User:
+    return db.session.query(User).filter_by(id=id).first()
 
 
 def save_user(user_id, first_name, last_name, institution_id):
