@@ -1,32 +1,29 @@
 ﻿@inherits SparcModal
 
-
-<div class="add-institution ">
+<div class="add-collection">
     <p>
-        Add a new institution.
+        Set up your institution
     </p>
 
     <label>
         Institution Name
-        @*<input @bind=Request.Name />*@
+        <input @bind=Request.Name />
     </label>
 
     <label>
         Institution Code
-        @*<input @bind=Request.Code />*@
+        <input @bind=Request.Code />
     </label>
 
-    @*<button @onclick=Save>Create Institution</button>*@
+    <button @*@onclick=Send*@>Save</button>
 </div>
 
-
-
 @code {
-    //AddInstitutionRequest Request = new();
+    AddInstitutionRequest Request = new();
 
-    //async Task Save()
-    //{
-    //    await TorchCommands.AddInstitutionAsync(Request);
-    //    await Ok();
-    //}
+    async Task Send()
+    {
+        await TorchCommands.AddInstitutionAsync(Request);
+        Nav.NavigateTo("/", true);
+    }
 }

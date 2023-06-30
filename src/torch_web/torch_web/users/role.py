@@ -1,17 +1,8 @@
 from typing import List
-from flask_security import RoleMixin, SQLAlchemyUserDatastore
-from sqlalchemy import Column, Integer, String, select
-from sqlalchemy.orm import mapped_column
-from torch_web.users import user
-from torch_web import db, Base
-from torch_web.users.user import User
-
-
-class Role(db.Model, RoleMixin):
-    __tablename__ = 'role'
-    id = mapped_column(Integer, primary_key=True)
-    name = mapped_column(String(80), unique=True)
-    description = mapped_column(String(255))
+from flask_security import SQLAlchemyUserDatastore
+from sqlalchemy import select
+from torch_web.model import Role, User
+from torch_web import db
 
 
 def get_roles() -> List[Role]:

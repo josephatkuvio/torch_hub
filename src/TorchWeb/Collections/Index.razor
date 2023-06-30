@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization;
+@using System.Security.Claims;
 @attribute [Authorize]
 @page "/"
 
@@ -6,12 +8,12 @@
     <header>
         <div class="nav-header">
             <h1>All Collections</h1>
-            @*@if (User.Roles.Name == "admin")
-            {*@
+            @if (User?.IsInRole("admin") == true)
+            {
                 <h1 @onclick=Go class="nav-admin-opt">Admin Page</h1>
-            </div>
-            <button @onclick=Add>Add New Collection</button>
-           @* }*@
+                <button @onclick=Add>Add New Collection</button>
+            }
+        </div>
     </header>
 
     @if (Model != null)
@@ -29,11 +31,16 @@
 </div>
 
 @inject IModalService Modal
+@inject AuthenticationStateProvider Auth
 @code {
-
+    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
     CollectionsResponse? Model;
+
     protected override async Task OnInitializedAsync()
     {
+        if (User?.Claims.Any(x => x.Type == "institution_id") == false)
+            Modal.Show<Torch.Web.Institutions.AddInstitution>();
+
         Model = await TorchCommands.GetCollectionsAsync();
     }
 

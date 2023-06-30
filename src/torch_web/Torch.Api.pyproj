@@ -44,6 +44,7 @@
     <Content Include="torch_web\templates\swagger.html" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="torch_web\model.py" />
     <Compile Include="torch_web\prefect_flows\blocks\upload_credentials.py">
       <SubType>Code</SubType>
     </Compile>
@@ -58,8 +59,6 @@
     <Compile Include="app.py" />
     <Compile Include="torch_web\collections\collections_api.py" />
     <Compile Include="torch_web\collections\collections.py" />
-    <Compile Include="torch_web\config\watchdog\watchdog_cli.py" />
-    <Compile Include="torch_web\config\watchdog\watchdog_handler.py" />
     <Compile Include="torch_web\institutions\institutions_api.py" />
     <Compile Include="torch_web\institutions\institutions.py" />
     <Compile Include="torch_web\notifications\notifications_api.py" />
@@ -79,8 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="torch_web\collections\" />
-    <Folder Include="torch_web\config\" />
-    <Folder Include="torch_web\config\watchdog\" />
     <Folder Include="torch_web\institutions\" />
     <Folder Include="torch_web\" />
     <Folder Include="torch_web\templates\" />

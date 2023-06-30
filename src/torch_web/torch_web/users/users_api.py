@@ -54,11 +54,11 @@ def logout():
 @auth_bp.get("/userinfo")
 def userinfo():
     if not current_user.is_authenticated:
-        abort(401, description="Not logged in.")
+        return None
     
     claims = {}
     if current_user.roles:
-        claims["roles"] = current_user.roles[0]
+        claims["roles"] = current_user.roles[0].name
     if current_user.institution_id:
         claims["institution_id"] = current_user.institution_id
 

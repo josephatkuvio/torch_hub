@@ -1,9 +1,8 @@
 import functools
 import inspect
-from os import name
 
 from apiflask import Schema
-from apiflask.fields import Integer, String, List, Nested, Dict, DateTime
+from apiflask.fields import Integer, String, List, Nested, DateTime
 
 torch_task_registry = []
 

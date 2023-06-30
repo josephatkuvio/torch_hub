@@ -2,18 +2,16 @@ import click
 
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested, DateTime
-from flask import jsonify, render_template, request
+from flask import jsonify
 from flask_security import current_user
 from torch_web.collections.collections_api import CollectionsResponse
 from torch_web.users.users_api import UsersResponse
-from torch_web.users import user
 from torch_web.institutions import institutions
 from rich.console import Console
 from rich.table import Table
 
 
 institutions_bp = APIBlueprint("institutions", __name__, url_prefix="/institutions")
-
 
 
 class AddInstitutionRequest(Schema):

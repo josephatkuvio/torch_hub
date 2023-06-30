@@ -1,6 +1,6 @@
 ﻿@page "/admin-page"
 
-@*@if (User.Roles == "admin")
+@if (User?.IsInRole("admin") == true)
 {
     <div class="admin-div">
         <header>
@@ -8,7 +8,6 @@
                 <a href="/">&larr; Home</a>
             </aside>
             <h1 class="page-name">Admin Page</h1>
-            <h1>@Model?.Name - @Model?.Code</h1>
         </header>
 
         <div class="container">
@@ -30,12 +29,12 @@
                             <th>Role</th>
                             <th></th>
                         </tr>
-                        @foreach (var user in Users)
+                        @foreach (var user in Users.Users)
                         {
                             <tr>
-                                <td>@user.Name</td>
+                                <td>@user.First_name @user.Last_name</td>
                                 <td>@user.Email</td>
-                                <td>@user.Role</td>
+                                <td>@user.Roles.FirstOrDefault()</td>
                                 <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
                             </tr>
                         }
@@ -44,7 +43,7 @@
             </div>
         </div>
     </div>
-}*@
+}
 
 <div class="admin-div">
     <header>
@@ -90,35 +89,27 @@
 @inject IModalService Modal
 @inject IJSRuntime JSRuntime
 @code {
-    //[Parameter] public int UserId { get; set; }
-    //[Parameter] public int InstitutionId { get; set; }
+    [Parameter] public int UserId { get; set; }
+    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
+    UsersResponse? Users;
 
-    //InstitutionResponse? Model;
-    //UserResponse? User;
-    //UsersResponse? Users;
+    protected override async Task OnInitializedAsync()
+    {
+        Users = await TorchCommands.GetUsersAsync();
+    }
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    User = await TorchCommands.GetUserAsync(UserId.ToString());
-    //    Model = await TorchCommands.GetInstitutionAsync(InstitutionId);
-    //    Users = await TorchCommands.GetUsersAsync();
-    //}
+    async Task OpenInviteModal()
+    {
+        var modal = Modal.Show<InviteUser>();
+        await modal.Result;
+    }
 
-    //async Task OpenInviteModal()
-    //{
-    //    var modal = Modal.Show<InviteUser>();
-    //    await modal.Result;
-    //    Model = await TorchCommands.GetInstitutionAsync(InstitutionId);
-    //}
-
-    //async Task RemoveUser()
-    //{
-    //    var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
-    //    if (confirm)
-    //        await TorchCommands.RemoveUserAsync(User.Id);
-    //}
-
-
+    async Task RemoveUser(int id)
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
+        if (confirm)
+            await TorchCommands.RemoveUserAsync(id);
+    }
 
     public class Item
     {
@@ -133,12 +124,6 @@
     {
         items.Add(new Item { Name = "Jason Best", Email = "jbest@brit.org", Role = "admin" });
         items.Add(new Item { Name = "Diego Barroso", Email = "dbarroso@brit.org", Role = "admin" });
-    }
-
-    async Task OpenInviteModal()
-    {
-        var modal = Modal.Show<InviteUser>();
-        await modal.Result;
     }
 
     private async Task RemoveItem(string itemId)

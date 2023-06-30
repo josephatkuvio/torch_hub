@@ -23,12 +23,7 @@
 
 @inject BlossomAuthenticationStateProvider Auth
 @code {
-    ClaimsPrincipal? User;
-    protected override async Task OnInitializedAsync()
-    {
-        var user = await Auth.GetAuthenticationStateAsync();
-        User = user?.User;
-    }
+    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
 
     async Task LogoutAsync()
     {

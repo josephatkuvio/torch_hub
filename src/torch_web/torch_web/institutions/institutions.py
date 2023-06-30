@@ -1,23 +1,8 @@
 import datetime
 from flask import flash
-from typing import List
-from sqlalchemy import func, Integer, String, DateTime, select
-from sqlalchemy.orm import Mapped, relationship, mapped_column
-from torch_web import Base, db
-from torch_web.users import User
-
-     
-
-class Institution(Base):
-    __tablename__ = "institution"
-    id = mapped_column(Integer, primary_key=True)
-    name = mapped_column(String(150))
-    code = mapped_column(String(10))
-    created_date = mapped_column(DateTime(timezone=True), default=func.now())    
-    deleted_date = mapped_column(DateTime(timezone=True), nullable=True)
-    collections = relationship("Collection")
-    users: Mapped[List["User"]] = relationship(back_populates="institution")
-
+from sqlalchemy import select
+from torch_web import db
+from torch_web.model import Institution
 
 
 def get_institutions():

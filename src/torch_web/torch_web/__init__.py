@@ -34,6 +34,7 @@ def create_app():
     db.init_app(app)
     executor.init_app(app)
     mail.init_app(app)
+    Base.query = db.session.query_property()
 
     from torch_web.users.users_api import users_bp, auth_bp, ExtendedRegisterForm
     from torch_web.users.roles_api import roles_bp

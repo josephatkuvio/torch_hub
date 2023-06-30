@@ -30,4 +30,10 @@
     <PackageReference Include="Sparc.Blossom.Client" Version="8.0.0-pre.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Institutions\AddInstitution.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

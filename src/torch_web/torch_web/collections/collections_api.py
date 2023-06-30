@@ -6,7 +6,7 @@ import uuid
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested, DateTime
 from flask import request, current_app, jsonify, make_response, redirect
-from flask_security import current_user, roles_accepted, roles_required
+from flask_security import current_user, roles_required
 from torch_web.collections import collections
 from rich.console import Console
 from rich.table import Table
