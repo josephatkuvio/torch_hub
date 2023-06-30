@@ -17,7 +17,7 @@
 
         @if (User != null)
         {
-            <h1>Hi!!!!! YOU ARE @User.Identity.Name AND YOU ARE IN ROLE @User.Claims.FirstOrDefault(x => x.Type == "role")?.Value. YOUR CLAIMS ARE</h1>
+            <h1>Hi!!!!! YOU ARE @User.Identity.Name AND YOU ARE IN ROLE @User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value. YOUR CLAIMS ARE</h1>
             @foreach (var claim in User.Claims)
             {
                 <p>@claim.Type: @claim.Value</p>
