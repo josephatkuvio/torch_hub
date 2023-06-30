@@ -6,6 +6,7 @@ from flask import jsonify, render_template, request
 from flask_security import current_user
 from torch_web.collections.collections_api import CollectionsResponse
 from torch_web.users.users_api import UsersResponse
+from torch_web.users import user
 from torch_web.institutions import institutions
 from rich.console import Console
 from rich.table import Table
@@ -74,7 +75,8 @@ def institutions_post(data):
     print(data)
     new_institution = institutions.create_institution(
         name=data['name'],
-        code=data['code']
+        code=data['code'],
+        admin_user=current_user
     )
 
     return new_institution

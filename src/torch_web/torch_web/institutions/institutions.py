@@ -1,25 +1,22 @@
 import datetime
 from flask import flash
-from typing import Collection, List
-from sqlalchemy import func, Column, Integer, String, DateTime, ForeignKey, select
-from sqlalchemy.orm import Mapped, relationship
+from typing import List
+from sqlalchemy import func, Integer, String, DateTime, select
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 from torch_web import Base, db
-
+from torch_web.users import User
 
      
 
 class Institution(Base):
     __tablename__ = "institution"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(150))
-    code = Column(String(10))
-    created_date = Column(DateTime(timezone=True), default=func.now())    
-    deleted_date = Column(DateTime(timezone=True), nullable=True)
+    id = mapped_column(Integer, primary_key=True)
+    name = mapped_column(String(150))
+    code = mapped_column(String(10))
+    created_date = mapped_column(DateTime(timezone=True), default=func.now())    
+    deleted_date = mapped_column(DateTime(timezone=True), nullable=True)
     collections = relationship("Collection")
-    #collections: Mapped[List["Collection"]] = relationship("Collection", back_populates="institution")    it didn't work 
-    #users = relationship("torch_web.users.user.User", backref="institution")
-    #users: Mapped[List["User"]] = relationship("User", back_populates="institution")          
-    #users = relationship("User")    
+    users: Mapped[List["User"]] = relationship(back_populates="institution")
 
 
 
@@ -31,12 +28,13 @@ def get_institution(id):
     return inst
 
 
-def create_institution(name, code):
+def create_institution(name, code, admin_user):
     if len(name) < 1:
         flash("Name is too short!", category="error")
         return None
 
     new_institution = Institution(name=name, code=code)
+    new_institution.users.add(admin_user)
     db.session.add(new_institution)
     db.session.commit()
     return new_institution

@@ -7,8 +7,8 @@ import json
 
 from operator import or_
 from typing import List, Optional
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, func, exists, select
-from sqlalchemy.orm import Mapped, relationship, joinedload, Session
+from sqlalchemy import Integer, String, ForeignKey, DateTime, Text, func, exists, select
+from sqlalchemy.orm import Mapped, relationship, joinedload, Session, mapped_column
 from torch_web import db, Base, executor
 from prefect import context
 from flask import current_app
@@ -17,11 +17,11 @@ from io import BytesIO
 
 class Collection(Base):
     __tablename__ = "collection"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(150))
-    code = Column(String(10))
-    deleted_date = Column(DateTime(timezone=True), nullable=True)
-    institution_id = Column(Integer, ForeignKey("institution.id"))
+    id = mapped_column(Integer, primary_key=True)
+    name = mapped_column(String(150))
+    code = mapped_column(String(10))
+    deleted_date = mapped_column(DateTime(timezone=True), nullable=True)
+    institution_id = mapped_column(Integer, ForeignKey("institution.id"))
     tasks: Mapped[List["CollectionTask"]] = relationship("CollectionTask", back_populates="collection", lazy="selectin")
     specimens: Mapped[List["Specimen"]] = relationship("Specimen", back_populates="collection")
 
@@ -31,12 +31,12 @@ class Collection(Base):
 
 class CollectionTask(Base):
     __tablename__ = "collection_tasks"
-    id = Column(Integer, primary_key=True)
-    collection_id = Column(Integer, ForeignKey("collection.id"))
-    func_name = Column(String(50))
-    name = Column(String(100))
-    sort_order = Column(Integer())
-    description = Column(String())
+    id = mapped_column(Integer, primary_key=True)
+    collection_id = mapped_column(Integer, ForeignKey("collection.id"))
+    func_name = mapped_column(String(50))
+    name = mapped_column(String(100))
+    sort_order = mapped_column(Integer())
+    description = mapped_column(String())
     collection: Mapped["Collection"] = relationship("Collection", back_populates="tasks")
     parameters: Mapped[List["CollectionTaskParameter"]] = relationship("CollectionTaskParameter", back_populates="task", lazy="selectin")
 
@@ -46,27 +46,27 @@ class CollectionTask(Base):
 
 class CollectionTaskParameter(Base):
     __tablename__ = "collection_tasks_parameters"
-    id = Column(Integer, primary_key=True)
-    collection_task_id = Column(Integer, ForeignKey("collection_tasks.id"))
-    name = Column(String())
-    value = Column(String())
+    id = mapped_column(Integer, primary_key=True)
+    collection_task_id = mapped_column(Integer, ForeignKey("collection_tasks.id"))
+    name = mapped_column(String())
+    value = mapped_column(String())
     task: Mapped["CollectionTask"] = relationship("CollectionTask", back_populates="parameters")
 
 
 class Specimen(Base):
     __tablename__ = "specimen"
-    id = Column(Integer, primary_key=True)
-    name = Column(String(150))
-    create_date = Column(DateTime(timezone=True), default=func.now())
-    upload_path = Column(Text)
-    barcode = Column(String(20))
-    collection_id = Column(Integer, ForeignKey("collection.id"))
-    catalog_number = Column(String(150))
-    flow_run_id = Column(String(150))
-    flow_run_state = Column(String(150))
-    failed_task = Column(String(150))
-    deleted = Column(Integer, default=0)
-    has_dng = Column(Integer, default=0)
+    id = mapped_column(Integer, primary_key=True)
+    name = mapped_column(String(150))
+    create_date = mapped_column(DateTime(timezone=True), default=func.now())
+    upload_path = mapped_column(Text)
+    barcode = mapped_column(String(20))
+    collection_id = mapped_column(Integer, ForeignKey("collection.id"))
+    catalog_number = mapped_column(String(150))
+    flow_run_id = mapped_column(String(150))
+    flow_run_state = mapped_column(String(150))
+    failed_task = mapped_column(String(150))
+    deleted = mapped_column(Integer, default=0)
+    has_dng = mapped_column(Integer, default=0)
     images: Mapped[List["SpecimenImage"]] = relationship("SpecimenImage", back_populates="specimen", lazy="selectin")
     tasks: Mapped[List["SpecimenTask"]] = relationship("SpecimenTask", back_populates="specimen")
     collection: Mapped["Collection"] = relationship("Collection", back_populates="specimens")
@@ -91,45 +91,45 @@ class Specimen(Base):
 
 class SpecimenTask(Base):
     __tablename__ = "specimen_tasks"
-    id = Column(Integer, primary_key=True)
-    specimen_id = Column(Integer, ForeignKey("specimen.id"))
-    func_name = Column(String())
-    name = Column(String())
-    sort_order = Column(Integer())
-    description = Column(String())
-    batch_id = Column(String())
-    start_date = Column(DateTime(timezone=True), default=func.now())
-    end_date = Column(DateTime(timezone=True))
-    run_state = Column(String())
-    run_message = Column(String())
+    id = mapped_column(Integer, primary_key=True)
+    specimen_id = mapped_column(Integer, ForeignKey("specimen.id"))
+    func_name = mapped_column(String())
+    name = mapped_column(String())
+    sort_order = mapped_column(Integer())
+    description = mapped_column(String())
+    batch_id = mapped_column(String())
+    start_date = mapped_column(DateTime(timezone=True), default=func.now())
+    end_date = mapped_column(DateTime(timezone=True))
+    run_state = mapped_column(String())
+    run_message = mapped_column(String())
     specimen: Mapped["Specimen"] = relationship("Specimen", back_populates="tasks")
     parameters: Mapped[List["SpecimenTaskParameter"]] = relationship("SpecimenTaskParameter", back_populates="task", lazy="selectin")
 
 
 class SpecimenTaskParameter(Base):
     __tablename__ = "specimen_tasks_parameters"
-    id = Column(Integer, primary_key=True)
-    specimen_task_id = Column(Integer, ForeignKey("specimen_tasks.id"))
-    name = Column(String())
-    value = Column(String())
+    id = mapped_column(Integer, primary_key=True)
+    specimen_task_id = mapped_column(Integer, ForeignKey("specimen_tasks.id"))
+    name = mapped_column(String())
+    value = mapped_column(String())
     task: Mapped["SpecimenTask"] = relationship("SpecimenTask", back_populates="parameters")
 
 
 class SpecimenImage(Base):
     __tablename__ = "specimenimage"
-    id = Column(Integer, primary_key=True)
-    size = Column(String(20))
-    height = Column(Integer)
-    width = Column(Integer)
-    url = Column(Text)
-    create_date = Column(DateTime(timezone=True), default=func.now())
-    specimen_id = Column(Integer, ForeignKey("specimen.id"))
+    id = mapped_column(Integer, primary_key=True)
+    size = mapped_column(String(20))
+    height = mapped_column(Integer)
+    width = mapped_column(Integer)
+    url = mapped_column(Text)
+    create_date = mapped_column(DateTime(timezone=True), default=func.now())
+    specimen_id = mapped_column(Integer, ForeignKey("specimen.id"))
     specimen: Mapped["Specimen"] = relationship("Specimen", back_populates="images")
-    external_url = Column(Text)
-    hash_a = Column(String(16))
-    hash_b = Column(String(16))
-    hash_c = Column(String(16))
-    hash_d = Column(String(16))
+    external_url = mapped_column(Text)
+    hash_a = mapped_column(String(16))
+    hash_b = mapped_column(String(16))
+    hash_c = mapped_column(String(16))
+    hash_d = mapped_column(String(16))
     image_bytes: Optional[BytesIO] = None
    
     def as_dict(self):

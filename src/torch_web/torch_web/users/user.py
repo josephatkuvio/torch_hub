@@ -1,7 +1,7 @@
 from flask_security import UserMixin
 from torch_web import db, Base, mail
 from sqlalchemy import Table, Integer, Column, String, Boolean, DateTime, ForeignKey, select
-from sqlalchemy.orm import relationship, backref, joinedload
+from sqlalchemy.orm import relationship, backref, joinedload, mapped_column
 from flask_mail import Message
 from flask import app
 
@@ -11,22 +11,23 @@ from torch_web.institutions.institutions import Institution
 roles_users = Table(
     "roles_users",
     Base.metadata,
-    Column("user_id", Integer, ForeignKey("user.id")),
-    Column("role_id", Integer, ForeignKey("role.id")),
+    mapped_column("user_id", Integer, ForeignKey("user.id")),
+    mapped_column("role_id", Integer, ForeignKey("role.id")),
 )
 
 
 class User(db.Model, UserMixin):
     __tablename__ = "user"
-    id = Column(Integer, primary_key=True)
-    email = Column(String(150), unique=True)
-    password = Column(String(150))
-    first_name = Column(String(150))
-    last_name = Column(String(150))
-    active = Column(Boolean)
-    confirmed_at = Column(DateTime)
-    institution_id = Column(Integer, ForeignKey("institution.id"))
-    fs_uniquifier = Column(String(255), unique=True, nullable=False)
+    id = mapped_column(Integer, primary_key=True)
+    email = mapped_column(String(150), unique=True)
+    password = mapped_column(String(150))
+    first_name = mapped_column(String(150))
+    last_name = mapped_column(String(150))
+    active = mapped_column(Boolean)
+    confirmed_at = mapped_column(DateTime)
+    institution_id = mapped_column(Integer, ForeignKey("institution.id"))
+    institution: relationship("Institution", back_populates="users")
+    fs_uniquifier = mapped_column(String(255), unique=True, nullable=False)
     roles = relationship(
         "Role", secondary=roles_users, backref=backref("users", lazy="dynamic")
     )

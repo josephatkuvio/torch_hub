@@ -1,6 +1,7 @@
 from typing import List
 from flask_security import RoleMixin, SQLAlchemyUserDatastore
 from sqlalchemy import Column, Integer, String, select
+from sqlalchemy.orm import mapped_column
 from torch_web.users import user
 from torch_web import db, Base
 from torch_web.users.user import User
@@ -8,9 +9,9 @@ from torch_web.users.user import User
 
 class Role(db.Model, RoleMixin):
     __tablename__ = 'role'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), unique=True)
-    description = Column(String(255))
+    id = mapped_column(Integer, primary_key=True)
+    name = mapped_column(String(80), unique=True)
+    description = mapped_column(String(255))
 
 
 def get_roles() -> List[Role]:

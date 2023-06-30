@@ -1,15 +1,11 @@
 import json
-from tkinter import CURRENT
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested
 from flask import flash, jsonify, render_template, request, redirect, abort
-from flask_security import current_user, RegisterForm, roles_accepted,  roles_required
+from flask_security import current_user, RegisterForm, roles_required
 from wtforms import StringField
 from torch_web.users import user, role
 from torch_web.users.roles_api import RolesResponse
-from torch_web.users.user import (
-    get_user,
-)
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -60,9 +56,16 @@ def userinfo():
     if not current_user.is_authenticated:
         abort(401, description="Not logged in.")
     
+    claims = {}
+    if current_user.roles:
+        claims["roles"] = current_user.roles[0]
+    if current_user.institution_id:
+        claims["institution_id"] = current_user.institution_id
+
     return {
         "Id": str(current_user.id),
-        "UserName": current_user.email
+        "UserName": current_user.email,
+        "Claims": claims
     }
 
 @auth_bp.post("/register")
