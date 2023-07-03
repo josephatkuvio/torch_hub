@@ -8,6 +8,7 @@
                 <a href="/">&larr; Home</a>
             </aside>
             <h1 class="page-name">Admin Page</h1>
+            <h1></h1>
         </header>
 
         <div class="container">
@@ -20,32 +21,33 @@
                 </div>
             </div>
             <div class="container-body">
-                <table>
-                    @if (Users != null)
-                    {
+                @if (User != null)
+                {
+                    <table>
+
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th></th>
                         </tr>
-                        @foreach (var user in Users.Users)
+                        @foreach (var claim in User.Claims)
                         {
                             <tr>
-                                <td>@user.First_name @user.Last_name</td>
-                                <td>@user.Email</td>
-                                <td>@user.Roles.FirstOrDefault()</td>
-                                <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
+                                <td>@User.Identity.Name</td>
+                                <td>@User.Claims.FirstOrDefault(x => x.Type == "email")?.Value</td>
+                                <td>@User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value</td>
+                                <td class="btn"><button @*@onclick="() => RemoveUser(user.Id)" *@>Remove Member</button></td>
                             </tr>
                         }
-                    }
-                </table>
+                    </table>
+                }
             </div>
         </div>
     </div>
 }
 
-<div class="admin-div">
+@*<div class="admin-div">
     <header>
         <aside class="back">
             <a href="/">&larr; Home</a>
@@ -83,7 +85,7 @@
             </table>
         </div>
     </div>
-</div>
+</div>*@
 
 
 @inject IModalService Modal
@@ -134,7 +136,7 @@
     async Task RemoveItem(Item item)
     {
         var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this member from this institution?");
-            if (confirm)
+        if (confirm)
             items.Remove(item);
     }
 }

@@ -25,6 +25,9 @@
             <p>ARE U IN THE ADMIN ROLE? @User.IsInRole("admin")</p>
             <p>ARE U IN THE SUPERVISOR ROLE? @User.IsInRole("supervisor")</p>
             <p>ARE U IN THE BASIC ROLE? @User.IsInRole("basic")</p>
+            <p>Your email is: @User.Claims.FirstOrDefault(x => x.Type == "email")?.Value</p>
+            <p>Your institution_id is: @User.Claims.FirstOrDefault(x => x.Type == "institution_id")?.Value</p>
+            <p>Your user id is: @User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value</p>
         }
     </header>
 

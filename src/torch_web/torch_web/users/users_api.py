@@ -2,7 +2,7 @@ import json
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested
 from flask import flash, jsonify, render_template, request, redirect, abort
-from flask_security import current_user, RegisterForm, roles_required
+from flask_security import current_user, RegisterForm, roles_accepted
 from wtforms import StringField
 from torch_web.users import user, role
 from torch_web.users.roles_api import RolesResponse
@@ -59,18 +59,22 @@ def userinfo():
     claims = {}
     if current_user.roles:
         claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] = current_user.roles[0].name
-    if current_user.institution_id:
-        claims["institution_id"] = current_user.institution_id
+    #if current_user.institution_id:
+    #    claims["institution_id"] = str(current_user.institution_id)
+    if current_user.institution:
+        claims["institution_id"] = str(current_user.institution.id)
+    if current_user.email:
+        claims["email"] = current_user.email
 
     return {
         "Id": str(current_user.id),
-        "UserName": current_user.email,
+        "UserName": current_user.first_name + " " + current_user.last_name,
         "Claims": claims
     }
 
 @auth_bp.post("/register")
 @users_bp.input(SendInviteRequest)
-@roles_required("admin", "supervisor")
+@roles_accepted("admin", "supervisor")
 @users_bp.doc(operation_id='SendInvite')
 def register():
     subject = "Invitation to register on Torch"
@@ -80,7 +84,7 @@ def register():
 
 
 #@users_bp.get("/")
-#@roles_required("admin")
+#@roles_accepted("admin")
 #def users_getall():
 #    users = user.get_users(current_user.institution_id)
 #    roles = role.get_roles()
@@ -89,7 +93,7 @@ def register():
 #    )
 
 @users_bp.get("/")
-@roles_required("admin")
+@roles_accepted("admin")
 @users_bp.output(UsersResponse)
 @users_bp.doc(operation_id='GetUsers')
 def users_getall():
@@ -125,7 +129,7 @@ def users_post(userid):
 
 
 @users_bp.post("/<userid>/active")
-@roles_required("admin")
+@roles_accepted("admin")
 def deactivate_user(userid):
     user.toggle_user_active(userid)
     return jsonify({})
@@ -137,7 +141,7 @@ def user_add_role(userid):
 
 
 @users_bp.post("/<userid>/roles")
-@roles_required("admin")
+@roles_accepted("admin")
 def assign_role(userid):
     data = json.loads(request.data)
     user.assign_role_to_user(userid, data["role"])
@@ -145,7 +149,7 @@ def assign_role(userid):
 
 
 @users_bp.delete("/<userid>/roles")
-@roles_required("admin")
+@roles_accepted("admin")
 def delete_role_user(userid):
     data = json.loads(request.data)
     print(data)
@@ -154,7 +158,7 @@ def delete_role_user(userid):
 
 @users_bp.delete("/<int:user_id>")
 @users_bp.doc(operation_id='RemoveUser')
-@roles_required("admin", "supervisor")
+@roles_accepted("admin", "supervisor")
 def user_remove(user_id):
     result = user.remove_user(user_id)
     if not result:
