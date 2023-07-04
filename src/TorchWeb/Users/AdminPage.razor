@@ -37,7 +37,7 @@
                                 <td>@user.First_name @user.Last_name</td>
                                 <td>@user.Email</td>
                                 <td>@(user.Roles.FirstOrDefault()?.Name)</td>
-                                <td class="btn"><button @onclick="() => RemoveUser(user.Id)" >Remove Member</button></td>
+                                <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
                             </tr>
                         }
                     </table>
@@ -84,5 +84,6 @@
         var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
         if (confirm)
             await TorchCommands.RemoveUserAsync(id);
+        await LoadUsers();
     }
 }
