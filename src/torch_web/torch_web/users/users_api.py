@@ -63,6 +63,8 @@ def userinfo():
     #    claims["institution_id"] = str(current_user.institution_id)
     if current_user.institution:
         claims["institution_id"] = str(current_user.institution.id)
+        claims["institution_name"] = current_user.institution.name
+        claims["institution_code"] = current_user.institution.code
     if current_user.email:
         claims["email"] = current_user.email
 

@@ -8,7 +8,16 @@ from torch_web.model import Institution, User
 
 
 def get_users(institution_id):
-    return db.session.scalars(select(User).options(joinedload(User.roles)).filter(institution_id=institution_id)).all()
+    return (
+        db.session.scalars(
+            select(User)
+            .options(joinedload(User.roles))
+            .join(User.institution)
+            .filter(User.institution_id == institution_id)
+        )
+        .unique()
+        .all()
+    )
 
 
 #def get_user(user_id) -> User:
