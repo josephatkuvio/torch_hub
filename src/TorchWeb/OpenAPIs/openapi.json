@@ -121,13 +121,24 @@
         },
         "type": "object"
       },
-      "RolesResponse": {
+      "RoleResponse": {
         "properties": {
           "id": {
             "type": "integer"
           },
           "name": {
             "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "RolesResponse": {
+        "properties": {
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/RoleResponse"
+            },
+            "type": "array"
           }
         },
         "type": "object"
@@ -306,7 +317,7 @@
           },
           "roles": {
             "items": {
-              "$ref": "#/components/schemas/RolesResponse"
+              "$ref": "#/components/schemas/RoleResponse"
             },
             "type": "array"
           }

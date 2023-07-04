@@ -7,27 +7,27 @@
 
     <label>
         Member Email
-        <input @*@bind=Request.Email*@ />
+        <input @bind=Request.Email />
     </label>
 
     <label>
         Member Role
-        <select @*@bind=Request.Roles*@>
-@*            @if (User.Roles.Name == "admin")
+        <select @bind="@Request.Roles">             
+            @if (User?.IsInRole("admin") == true)
             {
-                @foreach (var role in Roles)
+                @foreach (var role in Roles.Roles)
                 {
-                    <option value="@role.Name">@role.Name</option>
+                    <option value="@role.Id">@role.Name</option>
                 }
             }
-            else if (User.Roles.Name == "supervisor")
+            else if (User?.IsInRole("supervisor") == true)
             {
-                var basicRole = Roles.FirstOrDefault(r => r.Name == "basic");
+                var basicRole = Roles.Roles.FirstOrDefault(r => r.Name == "basic");
                 if (basicRole != null)
                 {
-                    <option value="@basicRole.Name">@basicRole.Name</option>
+                    <option value="@basicRole.Id">@basicRole.Name</option>
                 }
-            }*@
+            }
         </select>
     </label>
 
@@ -35,17 +35,14 @@
 </div>
 
 @code {
-    [Parameter] public int UserId { get; set; }
+    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
 
-    UserResponse? User;
     RolesResponse? Roles;
 
-
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    User = await TorchCommands.GetUserAsync(UserId.ToString());
-    //    Roles = await TorchCommands.GetRolesAsync();
-    //}
+    protected override async Task OnInitializedAsync()
+    {
+        Roles = await TorchCommands.GetRolesAsync();
+    }
 
     SendInviteRequest Request = new();
 

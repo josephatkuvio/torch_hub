@@ -1,5 +1,5 @@
 from apiflask import APIBlueprint, Schema
-from apiflask.fields import Integer, String
+from apiflask.fields import Integer, String, List, Nested
 from flask import request
 from flask_security import current_user, roles_accepted
 from torch_web.users import role
@@ -7,11 +7,12 @@ from torch_web.users import role
 
 roles_bp = APIBlueprint("roles", __name__, url_prefix="/roles")
 
-class RolesResponse(Schema):
+class RoleResponse(Schema):
     id = Integer()
     name = String()
     
-
+class RolesResponse(Schema):
+    roles = List(Nested(RoleResponse))
 
 
 @roles_bp.get("/")
@@ -19,14 +20,17 @@ class RolesResponse(Schema):
 @roles_bp.doc(operation_id='GetRoles')
 @roles_accepted("admin", "supervisor")  
 def roles_get():
-    if current_user.has_role("admin"):
-        roles = role.get_roles()
-    elif current_user.has_role("supervisor"):
-        roles = role.get_roles_by_name("basic")
-    else:
-        roles = []  
+    result = role.get_roles()
+    return {
+        "roles": result
+    }
 
-    return roles
+    #if current_user.has_role("admin"):
+    #    roles = role.get_roles()
+    #elif current_user.has_role("supervisor"):
+    #    roles = role.get_roles_by_name("basic")
+    #else:
+    #    roles = []  
 
 
 

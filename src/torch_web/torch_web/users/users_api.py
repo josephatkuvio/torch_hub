@@ -5,7 +5,7 @@ from flask import flash, jsonify, render_template, request, redirect, abort
 from flask_security import current_user, RegisterForm, roles_accepted
 from wtforms import StringField
 from torch_web.users import user, role
-from torch_web.users.roles_api import RolesResponse
+from torch_web.users.roles_api import RoleResponse
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -28,7 +28,7 @@ class UserResponse(Schema):
     first_name = String()
     last_name = String()
     institution_id = Integer()    
-    roles = List(Nested(RolesResponse))
+    roles = List(Nested(RoleResponse))
 
 
 class UsersResponse(Schema):
