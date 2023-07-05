@@ -31,20 +31,18 @@
         </select>
     </label>
 
-    <button @*@onclick=Send*@>Send invite</button>
+    <button @onclick=Send>Send invite</button>
 </div>
 
 @code {
     [CascadingParameter] public ClaimsPrincipal? User { get; set; }
-
     RolesResponse? Roles;
+    SendInviteRequest Request = new();
 
     protected override async Task OnInitializedAsync()
     {
         Roles = await TorchCommands.GetRolesAsync();
     }
-
-    SendInviteRequest Request = new();
 
     async Task Send()
     {

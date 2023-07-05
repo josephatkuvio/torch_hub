@@ -6,6 +6,8 @@ from flask_security import current_user, RegisterForm, roles_accepted
 from wtforms import StringField
 from torch_web.users import user, role
 from torch_web.users.roles_api import RoleResponse
+from torch_web.model import User
+from torch_web import db
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -59,8 +61,6 @@ def userinfo():
     claims = {}
     if current_user.roles:
         claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] = current_user.roles[0].name
-    #if current_user.institution_id:
-    #    claims["institution_id"] = str(current_user.institution_id)
     if current_user.institution:
         claims["institution_id"] = str(current_user.institution.id)
         claims["institution_name"] = current_user.institution.name
@@ -78,21 +78,20 @@ def userinfo():
 @users_bp.input(SendInviteRequest)
 @roles_accepted("admin", "supervisor")
 @users_bp.doc(operation_id='SendInvite')
-def register():
+def register(request: SendInviteRequest):
+    user = User(email=request.email, role=request.role, institution_id=current_user.institution_id)
+    db.session.add(user)
+    db.session.commit()
+
+    registration_url = f"/register?email={request.email}"
+
     subject = "Invitation to register on Torch"
-    html = render_template("templates/invite.html")
-    send_email(inviteduser.email, subject, html)    #get inviteduser.email from modal
+    html = render_template("templates/invite.html", registration_url=registration_url)
+    user.send_email(request.email, subject, html)    
+
     return redirect("/register")
 
 
-#@users_bp.get("/")
-#@roles_accepted("admin")
-#def users_getall():
-#    users = user.get_users(current_user.institution_id)
-#    roles = role.get_roles()
-#    return render_template(
-#        "/users/users.html", user=current_user, users=users, roles=roles
-#    )
 
 @users_bp.get("/")
 @roles_accepted("admin")
