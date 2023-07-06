@@ -19,7 +19,7 @@ def create_institution(name, code, admin_user):
         return None
 
     new_institution = Institution(name=name, code=code)
-    new_institution.users.add(admin_user)
+    new_institution.users.append(admin_user)
     db.session.add(new_institution)
     db.session.commit()
     return new_institution
