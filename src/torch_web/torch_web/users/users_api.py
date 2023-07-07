@@ -1,14 +1,13 @@
 import json
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested
-from flask import flash, jsonify, render_template, request, redirect, url_for
+from flask import flash, jsonify, render_template, request, redirect, url_for, session
 from flask_security import current_user, RegisterForm, roles_accepted
 from wtforms import StringField
 from torch_web.users import user, role
 from torch_web.users.roles_api import RoleResponse
-#from torch_web.model import User, Role
-#from torch_web import db
 from itsdangerous import URLSafeSerializer
+from urllib.parse import urlencode
 
 
 class ExtendedRegisterForm(RegisterForm):
@@ -75,70 +74,47 @@ def userinfo():
         "Claims": claims
     }
 
-#@auth_bp.post("/register")
-#@users_bp.input(SendInviteRequest)
-#@roles_accepted("admin", "supervisor")
-#@users_bp.doc(operation_id='SendInvite')
-#def register(data: dict):
-#    email = data.get("email")
-#    role_id = data.get("roles")
-    
-#    if not email:
-#        abort(400, description="Email is required")
-
-#    role = db.session.query(Role).get(role_id)
-
-#    fs_uniquifier = "TEMPORARY_UNIQUE_VALUE"
-
-#    user = User(email=email, roles=[role], institution_id=current_user.institution.id, fs_uniquifier=fs_uniquifier)
-#    user.roles.append(role)
-#    db.session.add(user)
-#    db.session.commit()
-
-#    registration_url = f"/register?email={email}"
-
-#    subject = "Invitation to register on Torch"
-#    html = render_template("templates/invite.html", registration_url=registration_url)
-#    user.send_email(email, subject, html)    
-
-#    return redirect("/register")
-
-
-
 
 
 secret_key = "your-secret-key"
 serializer = URLSafeSerializer(secret_key)
 
-@auth_bp.post("/register")
+
+@users_bp.post("/register-user")
 @users_bp.input(SendInviteRequest)
-@roles_accepted("admin", "supervisor")
+@users_bp.output(UserResponse)
 @users_bp.doc(operation_id='SendInvite')
-def register(request: SendInviteRequest):
+@roles_accepted("admin", "supervisor")
+def register_user(data: dict):
     token = serializer.dumps({
-        'email': request.email,
-        'role': request.role,
+        'email': data.get("email"),
+        'role_id': data.get("roles"),
         'institution_id': current_user.institution_id
     })
 
-    registration_url = url_for('users_bp.register_user', token=token, _external=True)
+    registration_url = url_for('auth.register', token=token, _external=True)
 
     subject = "Invitation to register on Torch"
-    html = render_template("templates/invite.html", registration_url=registration_url)
-    user.send_email(request.email, subject, html)    
+    html = render_template("templates/emails/invite.html", registration_url=registration_url)
+    user.send_email(data.get("email"), subject, html)    
 
-    return redirect("/register")
+    return {"message": "Action completed successfully"}
 
-@users_bp.get("/register-user")    #check if should use users_bp or auth_bp
-def register_user():
+
+@auth_bp.get("/register")
+def register():
     token = request.args.get("token")
     try:
         data = serializer.loads(token)
         email = data['email']
-        role = data['role']
+        role_id = data['role_id']
         institution_id = data['institution_id']
 
-        return render_template("security/register_user.html", email=email, role=role, institution_id=institution_id)
+        query_params = urlencode({"email": email, "role_id": role_id, "institution_id": institution_id})
+
+        redirect_url = f"/register?{query_params}"
+
+        return redirect(redirect_url)
     except Exception:
         return "Invalid or expired token"
 

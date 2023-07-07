@@ -23,6 +23,7 @@ def create_app():
     app = APIFlask(__name__, template_folder=".", title="TorchHub API", version="1.0", docs_ui='swagger-ui', docs_path='/swagger')
     app.config.from_prefixed_env()
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("TORCH_HUB_DATABASE_URI")
+    app.config["FLASK_MAIL_DEFAULT_SENDER"] = os.environ.get("FLASK_MAIL_DEFAULT_SENDER")
     app.config["VALIDATION_ERROR_SCHEMA"] = { 'properties': { 'error_message': { 'type': 'string' } }, 'type': 'object' }
     CORS(app)
 

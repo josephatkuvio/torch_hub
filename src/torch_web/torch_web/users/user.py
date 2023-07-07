@@ -2,7 +2,8 @@ from torch_web import db, mail
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 from flask_mail import Message
-from flask import app
+from flask import current_app
+
 
 from torch_web.model import Institution, User
 
@@ -59,8 +60,7 @@ def send_email(to, subject, template):
         subject,
         recipients=[to],
         html=template,
-        sender=app.config["FLASK_MAIL_DEFAULT_SENDER"],
-        
+        sender= current_app.config["FLASK_MAIL_DEFAULT_SENDER"],
     )
     mail.send(msg)
 

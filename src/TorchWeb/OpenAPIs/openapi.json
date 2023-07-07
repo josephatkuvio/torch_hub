@@ -409,18 +409,8 @@
       }
     },
     "/_auth/register": {
-      "post": {
-        "operationId": "SendInvite",
+      "get": {
         "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendInviteRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -429,16 +419,6 @@
               }
             },
             "description": "Successful response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationError"
-                }
-              }
-            },
-            "description": "Validation error"
           }
         },
         "summary": "Register",
@@ -1123,6 +1103,47 @@
           }
         },
         "summary": "Users Getall",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/register-user": {
+      "post": {
+        "operationId": "SendInvite",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendInviteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            },
+            "description": "Validation error"
+          }
+        },
+        "summary": "Register User",
         "tags": [
           "Users"
         ]
