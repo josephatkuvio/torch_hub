@@ -32,21 +32,48 @@
     </label>
 
     <button @onclick=Send>Send invite</button>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">
+            @errorMessage
+        </div>
+    }
 </div>
 
 @code {
     [CascadingParameter] public ClaimsPrincipal? User { get; set; }
     RolesResponse? Roles;
-    SendInviteRequest Request = new();
+    SendInviteRequest Request = new SendInviteRequest(); 
+    string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
         Roles = await TorchCommands.GetRolesAsync();
     }
 
+    //async Task Send()
+    //{
+    //    await TorchCommands.SendInviteAsync(Request);
+    //    await Ok();
+    //}
+
+
     async Task Send()
     {
-        await TorchCommands.SendInviteAsync(Request);
-        await Ok();
+        object responseObj = await TorchCommands.SendInviteAsync(Request);
+        HttpResponseMessage response = (HttpResponseMessage)responseObj;
+
+        if (!response.IsSuccessStatusCode)
+        {
+            errorMessage = await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            string token = await response.Content.ReadAsStringAsync();
+            string registrationUrl = $"/register-user?token={token}";
+            Nav.NavigateTo(registrationUrl);
+            await Ok();
+        }
     }
 }
