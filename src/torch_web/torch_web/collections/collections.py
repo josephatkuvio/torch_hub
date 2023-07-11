@@ -79,6 +79,11 @@ def get_collection(id):
     return coll
 
 
+def get_collection_by_code(code):
+    collec = db.session.scalars(select(Collection).where(Collection.code == code)).one_or_none()
+    return collec
+
+
 def get_collection_specimens(collectionid, search_string, only_error, page=1, per_page=14):
     specimens = select(Specimen).where(Specimen.collection_id == collectionid).where(Specimen.deleted == 0)
 
@@ -122,6 +127,13 @@ def upload(collectionid, files):
 def get_specimen(specimenid):
     specimen = db.session.scalars(select(Specimen).options(joinedload(Specimen.tasks)).where(Specimen.id == specimenid)).first()
     return specimen
+
+
+def get_specimen_by_catalog_number(collectionid, catalog_number):
+    return db.session.scalars(select(Specimen).options(joinedload(Specimen.images)).where(
+        Specimen.collection_id == collectionid,
+        Specimen.catalog_number == catalog_number
+    )).first()
 
 
 def delete_collection(collection_id):

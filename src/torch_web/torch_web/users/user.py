@@ -1,8 +1,6 @@
-from torch_web import db, mail
+from torch_web import db
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
-from flask_mail import Message
-from flask import current_app
 
 
 from torch_web.model import Institution, User
@@ -52,17 +50,6 @@ def toggle_user_active(user_id):
     user.active = 0 if user.active == 1 else 1
 
     db.session.commit()
-
-
-
-def send_email(to, subject, template):
-    msg = Message(
-        subject,
-        recipients=[to],
-        html=template,
-        sender= current_app.config["FLASK_MAIL_DEFAULT_SENDER"],
-    )
-    mail.send(msg)
 
 
 def remove_user(user_id):

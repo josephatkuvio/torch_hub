@@ -6,7 +6,7 @@ import uuid
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested, DateTime
 from flask import request, current_app, jsonify, make_response, redirect
-from flask_security import current_user, roles_accepted
+from flask_security import current_user
 from torch_web.collections import collections
 from rich.console import Console
 from rich.table import Table
@@ -16,6 +16,7 @@ from torch_web.prefect_flows.blocks.upload_credentials import UploadCredentials
 from torch_web.workflows.workflows import TorchTask
 from azure.storage.blob import BlobServiceClient
 from prefect import context
+from torch_web import db
 
 
 home_bp = APIBlueprint("home", __name__, url_prefix="")
@@ -28,6 +29,11 @@ class SpecimenImageResponse(Schema):
     external_url = String(nullable=True)
     url = String(nullable=True)
     size = String()
+
+
+class UpdateExternalUrlRequest(Schema):
+    catalog_number = String()
+    url = String()
 
 
 class SpecimenResponse(Schema):
@@ -124,7 +130,6 @@ def list_collections(institution_id):
 @collections_bp.input(AddCollectionRequest)
 @collections_bp.output(CollectionResponse)
 @collections_bp.doc(operation_id='AddCollection')
-@roles_accepted("admin")
 def collections_post(data):
     print(data)
     new_collection = collections.create_collection(
@@ -140,7 +145,6 @@ def collections_post(data):
 @click.argument("institutionid")
 @click.argument("name")
 @click.argument("code")
-@roles_accepted("admin")
 def collections_cli_create(institutionid, name, code):
     console = Console()
     default_prefix = console.input('Enter the [bold cyan]default prefix[/bold cyan] for specimen files: ')
@@ -164,7 +168,6 @@ def collections_cli_create(institutionid, name, code):
 
 @collections_bp.cli.command("update-credentials")
 @click.argument("id")
-@roles_accepted("admin")
 def collections_cli_update_credentials(id):
     console = Console()
     type = Prompt.ask('Choose the upload type: ', choices=["sftp", "s3", "minio"])
@@ -184,7 +187,6 @@ def collections_cli_update_credentials(id):
   
 @collections_bp.delete("/<int:collection_id>")
 @collections_bp.doc(operation_id='DeleteCollection')
-@roles_accepted("admin")
 def collection_delete(collection_id):
     result = collections.delete_collection(collection_id)
     if not result:
@@ -195,7 +197,6 @@ def collection_delete(collection_id):
 
 @collections_bp.cli.command("delete")
 @click.argument("id")
-@roles_accepted("admin")
 def collection_delete_cli(id):
     collections.delete_collection(id)
     Console().print(f'Collection ID [bold cyan]{id}[/bold cyan] deleted!')
@@ -284,9 +285,43 @@ def retry(collectionid, specimenid):
     return ajax_response(collections.retry_workflow(specimenid, current_app.config), specimenid)
 
 
+@specimens_bp.put("/<collection_code>/specimens/external-url")
+@specimens_bp.output(SpecimenImageResponse)
+def update_specimen_external_url(collection_code):
+    data = request.get_json()
+    if not data or not isinstance(data, list):
+        return {"message": "Invalid request body"}, 400
+
+    collection = collections.get_collection_by_code(collection_code)
+    if not collection:
+        return {"message": "Collection not found"}, 404
+
+    updated_specimens = []
+    for item in data:
+        catalog_number = item.get("catalog_number")
+        external_url = item.get("url")
+
+        if not catalog_number or not external_url:
+            return {"message": "Invalid request body"}, 400
+
+        specimen = collections.get_specimen_by_catalog_number(collection.id, catalog_number)
+        if not specimen:
+            return {"message": f"Specimen with catalog number '{catalog_number}' not found"}, 404
+
+        specimen_image = next((image for image in specimen.images if image.size == "FULL"), None)
+        if not specimen_image:
+            return {"message": f"Specimen with catalog number '{catalog_number}' does not have a full-size image"}, 404
+
+        specimen_image.external_url = external_url
+        updated_specimens.append(specimen)
+
+        db.session.commit()  
+
+    return {"updated_specimens": updated_specimens}, 200
+
+
 @collections_bp.delete("/<int:collectionid>/specimens/<int:specimenid>")
 @collections_bp.doc(operation_id='DeleteSpecimen')
-@roles_accepted("admin")
 def specimen_delete(collectionid, specimenid):
     collections.delete_specimen(specimenid)
     context.socketio.emit('specimen_added')
@@ -295,14 +330,12 @@ def specimen_delete(collectionid, specimenid):
 
 @specimens_bp.cli.command("delete")
 @click.argument("id")
-@roles_accepted("admin")
 def specimen_delete_cli(id):
     collections.delete_specimen(id)
     Console().print(f'Specimen ID [bold cyan]{id}[/bold cyan] deleted!')
 
 
 @collections_bp.get('/<collectionid>/csv')
-@roles_accepted("admin")
 def collection_export_csv(collectionid):
     output = make_response(collections.export_csv(collectionid))
     output.headers["Content-Disposition"] = "attachment; filename=export.csv"

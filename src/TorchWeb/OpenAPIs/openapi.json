@@ -143,17 +143,6 @@
         },
         "type": "object"
       },
-      "SendInviteRequest": {
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "roles": {
-            "type": "integer"
-          }
-        },
-        "type": "object"
-      },
       "SpecimenImageResponse": {
         "properties": {
           "external_url": {
@@ -1108,47 +1097,6 @@
         ]
       }
     },
-    "/users/register-user": {
-      "post": {
-        "operationId": "SendInvite",
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendInviteRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResponse"
-                }
-              }
-            },
-            "description": "Successful response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationError"
-                }
-              }
-            },
-            "description": "Validation error"
-          }
-        },
-        "summary": "Register User",
-        "tags": [
-          "Users"
-        ]
-      }
-    },
     "/users/{user_id}": {
       "delete": {
         "operationId": "RemoveUser",
@@ -1485,6 +1433,46 @@
         "summary": "Workflow Save",
         "tags": [
           "Workflows"
+        ]
+      }
+    },
+    "/{collection_code}/specimens/external-url": {
+      "put": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecimenImageResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          }
+        },
+        "summary": "Update Specimen External Url",
+        "tags": [
+          "Specimens"
         ]
       }
     }
