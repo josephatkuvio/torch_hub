@@ -55,3 +55,11 @@
         color: white;
         text-align: center;
     }
+
+.hidden-field {
+    display:none;
+}
+
+.hidden-field label {
+    display:none;
+}

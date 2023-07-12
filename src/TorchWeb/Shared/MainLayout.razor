@@ -1,10 +1,24 @@
-﻿@inherits LayoutComponentBase
+﻿@using Sparc.Blossom.Authentication;
+@inherits LayoutComponentBase
 
 
-<div class="main-layout">
-    <main>
-        @Body
-    </main>
-</div>
+<CascadingValue Value="User">
+    <div class="main-layout">
+        <main>
+            @Body
+        </main>
+    </div>
+    <CascadingBlazoredModal></CascadingBlazoredModal>
+</CascadingValue>
+
+@inject BlossomAuthenticationStateProvider Auth
+@code {
+    ClaimsPrincipal? User;
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await Auth.GetAuthenticationStateAsync();
+        User = user?.User;
+    }
+}
 
 

@@ -68,6 +68,16 @@
 .collections-index {
   padding: 32px;
 }
+.collections-index .nav-header {
+  display: flex;
+}
+.collections-index .nav-header .nav-admin-opt {
+  cursor: pointer;
+  margin-left: 40px;
+}
+.collections-index .nav-header .nav-admin-opt:hover {
+  color: var(--primary-500);
+}
 
 .collection {
   display: grid;
@@ -511,6 +521,76 @@
   display: block;
 }
 .task-parameters input {
+  margin: 8px 0 16px;
+  width: 100%;
+  background: white;
+  border: 1px solid #d0d5dd;
+}
+
+.admin-div {
+  padding: 32px;
+  margin: 30px;
+}
+.admin-div header aside {
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.admin-div header aside a {
+  color: var(--grey-500);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: normal;
+}
+.admin-div header .page-name {
+  color: var(--primary-700);
+}
+
+.container {
+  max-width: 1200px;
+  margin-top: 80px;
+}
+.container-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.container-top h2 {
+  margin-bottom: 0;
+}
+.container-top .right button:hover {
+  opacity: 0.75;
+}
+.container-body {
+  margin-top: 2rem;
+}
+.container table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.container table tr {
+  border-bottom: 1px solid #ddd;
+}
+.container table td,
+.container table th {
+  text-align: left;
+  padding: 8px;
+  vertical-align: baseline;
+}
+.container table .btn {
+  text-align: center;
+}
+.container table .btn button {
+  background: transparent;
+  color: var(--primary-500);
+}
+
+.add-collection p {
+  margin-bottom: 24px;
+}
+.add-collection label, .add-collection input {
+  display: block;
+}
+.add-collection input, .add-collection select {
   margin: 8px 0 16px;
   width: 100%;
   background: white;

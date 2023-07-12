@@ -6,7 +6,7 @@ import uuid
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested, DateTime
 from flask import request, current_app, jsonify, make_response, redirect
-from flask_security import current_user
+from flask_security import current_user, roles_accepted
 from torch_web.collections import collections
 from rich.console import Console
 from rich.table import Table
@@ -130,6 +130,7 @@ def list_collections(institution_id):
 @collections_bp.input(AddCollectionRequest)
 @collections_bp.output(CollectionResponse)
 @collections_bp.doc(operation_id='AddCollection')
+@roles_accepted("admin")
 def collections_post(data):
     print(data)
     new_collection = collections.create_collection(
@@ -145,6 +146,7 @@ def collections_post(data):
 @click.argument("institutionid")
 @click.argument("name")
 @click.argument("code")
+@roles_accepted("admin")
 def collections_cli_create(institutionid, name, code):
     console = Console()
     default_prefix = console.input('Enter the [bold cyan]default prefix[/bold cyan] for specimen files: ')
@@ -168,6 +170,7 @@ def collections_cli_create(institutionid, name, code):
 
 @collections_bp.cli.command("update-credentials")
 @click.argument("id")
+@roles_accepted("admin")
 def collections_cli_update_credentials(id):
     console = Console()
     type = Prompt.ask('Choose the upload type: ', choices=["sftp", "s3", "minio"])
@@ -187,6 +190,7 @@ def collections_cli_update_credentials(id):
   
 @collections_bp.delete("/<int:collection_id>")
 @collections_bp.doc(operation_id='DeleteCollection')
+@roles_accepted("admin")
 def collection_delete(collection_id):
     result = collections.delete_collection(collection_id)
     if not result:
@@ -197,6 +201,7 @@ def collection_delete(collection_id):
 
 @collections_bp.cli.command("delete")
 @click.argument("id")
+@roles_accepted("admin")
 def collection_delete_cli(id):
     collections.delete_collection(id)
     Console().print(f'Collection ID [bold cyan]{id}[/bold cyan] deleted!')
@@ -322,6 +327,7 @@ def update_specimen_external_url(collection_code):
 
 @collections_bp.delete("/<int:collectionid>/specimens/<int:specimenid>")
 @collections_bp.doc(operation_id='DeleteSpecimen')
+@roles_accepted("admin")
 def specimen_delete(collectionid, specimenid):
     collections.delete_specimen(specimenid)
     context.socketio.emit('specimen_added')
@@ -330,12 +336,14 @@ def specimen_delete(collectionid, specimenid):
 
 @specimens_bp.cli.command("delete")
 @click.argument("id")
+@roles_accepted("admin")
 def specimen_delete_cli(id):
     collections.delete_specimen(id)
     Console().print(f'Specimen ID [bold cyan]{id}[/bold cyan] deleted!')
 
 
 @collections_bp.get('/<collectionid>/csv')
+@roles_accepted("admin")
 def collection_export_csv(collectionid):
     output = make_response(collections.export_csv(collectionid))
     output.headers["Content-Disposition"] = "attachment; filename=export.csv"

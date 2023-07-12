@@ -1,3 +1,16 @@
 .collections-index {
     padding: 32px;
+
+    .nav-header {
+        display: flex;
+
+        .nav-admin-opt {
+            cursor: pointer;
+            margin-left: 40px;
+
+            &:hover {
+                color: var(--primary-500);
+            }
+        }
+    }
 }

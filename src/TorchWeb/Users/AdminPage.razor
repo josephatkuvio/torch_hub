@@ -1,0 +1,89 @@
+﻿@page "/admin-page"
+
+@if (User?.IsInRole("admin") == true)
+{
+    <div class="admin-div">
+        <header>
+            <aside class="back">
+                <a href="/">&larr; Home</a>
+            </aside>
+            <h1 class="page-name">Admin Page</h1>
+            <h1>@InstitutionName - @InstitutionCode</h1>
+        </header>
+
+        <div class="container">
+            <div class="container-top">
+                <div class="left">
+                    <h2>Users List</h2>
+                </div>
+                <div class="right">
+                    <button @onclick="OpenInviteModal">Invite Member</button>
+                </div>
+            </div>
+            <div class="container-body">
+                @if (Users != null)
+                {
+                    <table>
+
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var user in Users.Users)
+                        {
+                            <tr>
+                                <td>@user.First_name @user.Last_name</td>
+                                <td>@user.Email</td>
+                                <td>@(user.Roles.FirstOrDefault()?.Name)</td>
+                                <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@inject IModalService Modal
+@inject IJSRuntime JSRuntime
+@code {
+    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
+    UsersResponse? Users;
+    public string InstitutionName { get; set; }
+    public string InstitutionCode { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (User != null)
+        {
+            InstitutionName = User.Claims.FirstOrDefault(c => c.Type == "institution_name")?.Value;
+            InstitutionCode = User.Claims.FirstOrDefault(c => c.Type == "institution_code")?.Value;
+            await LoadUsers();
+        }
+    }
+
+    private async Task LoadUsers()
+    {
+        Users = await TorchCommands.GetUsersAsync();
+    }
+
+    async Task OpenInviteModal()
+    {
+        var modal = Modal.Show<InviteUser>();
+        await modal.Result;
+    }
+
+    async Task RemoveUser(int id)
+    {
+        var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
+        if (confirm)
+            await TorchCommands.RemoveUserAsync(id);
+        await LoadUsers();
+    }
+}

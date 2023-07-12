@@ -1,7 +1,7 @@
 from apiflask import APIBlueprint, Schema
 from apiflask.fields import Integer, String, List, Nested
 from flask import request
-from flask_security import current_user
+from flask_security import current_user, roles_accepted
 from torch_web.users import role
 
 
@@ -18,6 +18,7 @@ class RolesResponse(Schema):
 @roles_bp.get("/")
 @roles_bp.output(RolesResponse)
 @roles_bp.doc(operation_id='GetRoles') 
+@roles_accepted("admin", "supervisor")
 def roles_get():
     result = role.get_roles()
     return {
@@ -26,6 +27,7 @@ def roles_get():
 
 
 @roles_bp.post("/")
+@roles_accepted("admin")
 def roles_post():
     role.add_role(request.form.get("name"), request.form.get("description"))
     return role.roles_get()
