@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Torch.Web", "TorchWeb\Torch
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Torch.Api", "torch_web\Torch.Api.pyproj", "{A21B8773-30BD-4ADC-9CD3-986092994965}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmptyBlazorApp1", "EmptyBlazorApp1\EmptyBlazorApp1.csproj", "{933F77F9-7976-4017-97AD-7903406DDDC5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{A21B8773-30BD-4ADC-9CD3-986092994965}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A21B8773-30BD-4ADC-9CD3-986092994965}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A21B8773-30BD-4ADC-9CD3-986092994965}.Release|Any CPU.Build.0 = Release|Any CPU
-		{933F77F9-7976-4017-97AD-7903406DDDC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{933F77F9-7976-4017-97AD-7903406DDDC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{933F77F9-7976-4017-97AD-7903406DDDC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{933F77F9-7976-4017-97AD-7903406DDDC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,6 +2,7 @@
 using Torch.Web.Collections;
 using Torch.Web.Institutions;
 using Torch.Web.Users;
+using Torch.Web.Workflows;
 
 namespace Torch.Web._Plugins;
 
@@ -11,6 +12,9 @@ public class TorchContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder model)
     {
+        model.Entity<TorchTask>().UseTpcMappingStrategy();
+        model.Entity<TorchParameter>().UseTpcMappingStrategy();
+        
         model.Entity<Institution>().ToTable("institution");
         model.Entity<Collection>().ToTable("collection");
         model.Entity<CollectionTask>().ToTable("collection_tasks");
@@ -26,5 +30,7 @@ public class TorchContext : DbContext
             .HasMany(x => x.Roles)
             .WithMany(x => x.Users)
             .UsingEntity("roles_users");
+
+        model.Entity<Specimen>().Navigation(x => x.Images).AutoInclude();
     }
 }

@@ -1,19 +1,19 @@
 ﻿<article class="collection-card" @onclick=Go>
     <header>
         <h2>@Collection.Name</h2>
-        <aside>@Collection.Specimencount images</aside>    
+        <aside>@Collection.Specimens.Count images</aside>    
     </header>
     <section>
-        @foreach (var img in Collection.Cardimg)
+        @foreach (var img in Collection.Specimens.Take(4).SelectMany(x => x.Images))
         {
-            <img src="@img.External_url" alt="Image @img.Id" />
+            <img src="@img.ExternalUrl" alt="Image @img.Id" />
         }
     </section>
 </article>
 
 @code {
     [Parameter]
-    public CollectionResponse Collection { get; set; } = null!;
+    public Collection Collection { get; set; } = null!;
 
     void Go() => Nav.NavigateTo($"/collections/{Collection.Id}");
 }

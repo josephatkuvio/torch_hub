@@ -15,7 +15,7 @@
                         &larr; Back
                     </aside>
                     <h1>
-                        <a href="/">Collections</a> &#8250; @Model?.Name &#8250; @SelectedSpecimen.Catalog_number
+                        <a href="/">Collections</a> &#8250; @Model?.Name &#8250; @SelectedSpecimen.CatalogNumber
                     </h1>
                 </header>
                 <SpecimenDetail Specimen="SelectedSpecimen" />
@@ -77,23 +77,30 @@
     bool IsTaskboardActive = true;
     string ActiveTabClass => $"collection-{ActiveTab}{(IsTaskboardActive ? "-taskboard" : "")}";
 
-    CollectionResponse? Model;
-    SpecimensResponse? TheSpecimens;
-    SpecimenResponse? SelectedSpecimen;
+    Collection? Model;
+    List<Specimen>? TheSpecimens;
+    Specimen? SelectedSpecimen;
 
     protected override async Task OnInitializedAsync()
     {
         Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
         await Socket.ConnectAsync();
 
-        Socket.On("specimen_added", async (response) =>
-        {
-            TheSpecimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
-            StateHasChanged();
-        });
+        Socket.On("specimen_added", response => RefreshSpecimens());
 
-        Model = await TorchCommands.GetCollectionAsync(Id);
-        TheSpecimens = await TorchCommands.GetSpecimensAsync(Id, null, 1, 50);
+        Model = await Collections.FindAsync(Id);
+        RefreshSpecimens();
+    }
+
+    void RefreshSpecimens()
+    {
+        TheSpecimens = Specimens.Query
+               .Where(x => x.CollectionId == Id)
+               .OrderByDescending(x => x.CreateDate)
+               .Take(50)
+               .ToList();
+
+        StateHasChanged();
     }
 
     void GoToSpecimens() => ActiveTab = "specimens";
@@ -102,13 +109,13 @@
 
     void ToggleTaskboard() => IsTaskboardActive = !IsTaskboardActive;
 
-    void Select(SpecimenResponse specimen)
+    void Select(Specimen specimen)
     {
         SelectedSpecimen = specimen;
         IsTaskboardActive = false;
     }
 
-    void DisplaySpecimenDetails(SpecimenResponse specimen)
+    void DisplaySpecimenDetails(Specimen specimen)
     {
         SelectedSpecimen = specimen;
         IsTaskboardActive = false;
@@ -118,11 +125,7 @@
 
     async Task AddTask(TorchTask task)
     {
-        Model!.Tasks.Add(task);
-        await TorchCommands.UpdateWorkflowAsync(Id, new TorchTasksResponse
-            {
-                Tasks = Model.Tasks
-            });
+        await Collections.ExecuteAsync(Model, x => x.AddTask(task));
         IsTaskboardActive = true;
         StateHasChanged();
     }
@@ -136,7 +139,9 @@
     {        
         var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this collection?");
         if (confirm)
-            await TorchCommands.DeleteCollectionAsync(Model.Id);
+        {
+            await Collections.ExecuteAsync(Model, x => x.Delete());
             NavigationManager.NavigateTo("/");
+        }
     }
 }

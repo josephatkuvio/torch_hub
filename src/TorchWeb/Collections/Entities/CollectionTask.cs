@@ -1,20 +1,21 @@
-﻿namespace Torch.Web.Collections;
+﻿using Torch.Web.Workflows;
 
-public class CollectionTask
+namespace Torch.Web.Collections;
+
+public class CollectionTask : TorchTask
 {
     public CollectionTask(int collectionId, string funcName, string name, int sortOrder)
+        : base(funcName, name, sortOrder)
     {
         CollectionId = collectionId;
-        FuncName = funcName;
-        Name = name;
     }
 
-    public int Id { get; private set; }
+    public CollectionTask(int collectionId, TorchTask baseTask)
+        : this(collectionId, baseTask.FuncName, baseTask.Name, baseTask.SortOrder)
+    {
+    }
+
     public int CollectionId { get; private set; }
-    public string FuncName { get; private set; }
-    public string Name { get; private set; }
-    public int SortOrder { get; private set; }
-    public string? Description { get; private set; }
     public Collection Collection { get; private set; } = null!;
-    public List<CollectionTaskParameter> Parameters { get; private set; } = new();
+    public List<TorchParameter> CollectionParameters { get; private set; } = new();
 }

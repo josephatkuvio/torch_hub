@@ -1,4 +1,5 @@
 ﻿using Sparc.Blossom.Data;
+using Torch.Web.Workflows;
 
 namespace Torch.Web.Collections;
 
@@ -17,5 +18,8 @@ public class Collection : Entity<int>
     public int InstitutionId { get; private set; }
     public List<CollectionTask> Tasks { get; private set; } = new();
     public List<Specimen> Specimens { get; private set; } = new();
+
+    public void Delete() => DeletedDate = DateTime.UtcNow;
+    public void AddTask(TorchTask task) => Tasks.Add(new(Id, task));
 }
 

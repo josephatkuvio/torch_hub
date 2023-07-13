@@ -7,23 +7,25 @@
 
     <label>
         Collection Name
-        <input @bind=Request.Name />
+        <input @bind=Name />
     </label>
 
     <label>
         Collection Code
-        <input @bind=Request.Code />
+        <input @bind=Code />
     </label>
 
     <button @onclick=Save>Create Collection</button>
 </div>
 
 @code {
-    AddCollectionRequest Request = new();
+    [CascadingParameter] public ClaimsPrincipal User { get; set; } = null!;
+    string Name = "";
+    string Code = ""; 
 
     async Task Save()
     {
-        await TorchCommands.AddCollectionAsync(Request);
+        await Collections.AddAsync(new Collection(User!.InstitutionId()!.Value, Name, Code));
         await Ok();
     }
 }

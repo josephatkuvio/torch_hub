@@ -22,4 +22,8 @@ public class SpecimenImage
     public string? Hash_B { get; private set; }
     public string? Hash_C { get; private set; }
     public string? Hash_D { get; private set; }
+
+    public string? AbsoluteUrl(string? baseUrl) =>
+        (ExternalUrl?.StartsWith("http") == true ? "" : baseUrl)
+        + ExternalUrl;
 }

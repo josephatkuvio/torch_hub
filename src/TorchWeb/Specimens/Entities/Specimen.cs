@@ -1,4 +1,5 @@
-﻿using Sparc.Blossom.Data;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Sparc.Blossom.Data;
 
 namespace Torch.Web.Collections;
 
@@ -25,5 +26,8 @@ public class Specimen : Entity<int>
     public List<SpecimenImage> Images { get; private set; } = new();
     public List<SpecimenTask> Tasks { get; private set; } = new();
     public Collection Collection { get; private set; } = null!;
+    public void Delete() => Deleted = 1;
+
+    public SpecimenImage? CardImage => Images.OrderBy(x => x.Width ?? 1000000).FirstOrDefault();
 }
 

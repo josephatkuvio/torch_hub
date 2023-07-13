@@ -19,5 +19,7 @@ public class User : Entity<int>
     public int? InstitutionId { get; private set; }
     public Institution Institution { get; private set; } = null!;
     public List<Role> Roles { get; private set; } = new();
+
+    public void SetInstitution(int? id) => InstitutionId = id;
 }
 

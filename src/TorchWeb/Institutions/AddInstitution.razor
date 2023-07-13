@@ -7,23 +7,24 @@
 
     <label>
         Institution Name
-        <input @bind=Request.Name />
+        <input @bind=Name />
     </label>
 
     <label>
         Institution Code
-        <input @bind=Request.Code />
+        <input @bind=Code />
     </label>
 
     <button @onclick=Send>Save</button>
 </div>
 
 @code {
-    AddInstitutionRequest Request = new();
+    string Name = "";
+    string Code = "";
 
     async Task Send()
     {
-        await TorchCommands.AddInstitutionAsync(Request);
+        await Institutions.AddAsync(new Institution(Name, Code));
         Nav.NavigateTo("/", true);
     }
 }

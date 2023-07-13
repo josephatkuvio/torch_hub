@@ -23,7 +23,7 @@
 
 @inject BlossomAuthenticationStateProvider Auth
 @code {
-    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
+    [CascadingParameter] public ClaimsPrincipal User { get; set; } = null!;
 
     async Task LogoutAsync()
     {

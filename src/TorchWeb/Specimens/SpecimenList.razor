@@ -5,16 +5,16 @@
     </header>
 }
 <section class="specimen-list">
-    @if (Specimens != null)
+    @if (AllSpecimens != null)
     {
-        @foreach (var specimen in Specimens)
+        @foreach (var specimen in AllSpecimens)
         {
             <article @onclick="@(() => Select(specimen))" class="@(SelectedSpecimens.Contains(specimen) ? "selected" : "")">
                 <SpecimenCard Specimen="specimen" @key=specimen.Id />
             </article>
         }
 
-        @if (Specimens.Count() == 0)
+        @if (AllSpecimens.Count() == 0)
         {
             <aside>
                 No specimens have been added to this collection yet.
@@ -27,13 +27,12 @@
 @inject IJSRuntime JSRuntime
 
 @code {
-    [Parameter] public IEnumerable<SpecimenResponse> Specimens { get; set; } = null!;
-    [Parameter] public EventCallback<SpecimenResponse> OnSelect { get; set; }
-    int i = 0;
+    [Parameter] public IEnumerable<Specimen> AllSpecimens { get; set; } = null!;
+    [Parameter] public EventCallback<Specimen> OnSelect { get; set; }
 
-    public List<SpecimenResponse> SelectedSpecimens = new List<SpecimenResponse>();
+    public List<Specimen> SelectedSpecimens = new List<Specimen>();
 
-    async Task Select(SpecimenResponse specimen)
+    async Task Select(Specimen specimen)
     {
         if (await IsCtrlKeyPressedAsync())
         {

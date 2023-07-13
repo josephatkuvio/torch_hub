@@ -1,7 +1,6 @@
 using Blazored.Modal;
 using Microsoft.EntityFrameworkCore;
 using Sparc.Blossom;
-using Torch.Api;
 using Torch.Web._Plugins;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +10,7 @@ builder.Services.AddBlazoredModal();
 builder.Services.AddDbContext<TorchContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database"))
            .UseSnakeCaseNamingConvention());
-builder.Services.AddBlossom<TorchApi>(builder.Configuration);
+//builder.Services.AddBlossom<TorchApi>(builder.Configuration);
 
 var app = builder.Build();
 
