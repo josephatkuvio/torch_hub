@@ -1,4 +1,6 @@
-﻿@using Sparc.Blossom.Authentication;
+﻿@using Microsoft.AspNetCore.Components.Authorization;
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+@using Sparc.Blossom.Authentication;
 @using System.Security.Claims;
 
 <nav class="nav-menu">
@@ -21,12 +23,11 @@
     </div>
 </nav>
 
-@inject BlossomAuthenticationStateProvider Auth
 @code {
     [CascadingParameter] public ClaimsPrincipal User { get; set; } = null!;
 
-    async Task LogoutAsync()
+    void LogoutAsync()
     {
-        await Auth.LogoutAsync();
+        Nav.NavigateToLogout("/");
     }
 }

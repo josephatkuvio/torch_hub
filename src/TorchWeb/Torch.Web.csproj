@@ -14,8 +14,10 @@
   </ItemGroup>-->
 
   <ItemGroup>
+    <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.2.0" />
     <PackageReference Include="Blazored.Modal" Version="7.1.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.9" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,6 +31,7 @@
     <PackageReference Include="SocketIOClient" Version="3.0.8" />
     <PackageReference Include="Sparc.Blossom.Client" Version="8.0.0-pre.5" />
     <PackageReference Include="Sparc.Blossom.Core" Version="8.0.0-pre.5" />
+    <PackageReference Include="Sparc.Blossom.Data.SqlServer" Version="8.0.0-pre.1" />
   </ItemGroup>
 
 </Project>
