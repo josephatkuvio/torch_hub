@@ -22,6 +22,33 @@ from torch_web import db
 home_bp = APIBlueprint("home", __name__, url_prefix="")
 collections_bp = APIBlueprint("collections", __name__, url_prefix="/collections")
 specimens_bp = APIBlueprint("specimens", __name__)
+collection_users_bp = APIBlueprint("collection_users", __name__, url_prefix="/collection_users")
+
+
+class AddUserRequest(Schema):
+    user_id = Integer()
+    role = String()
+
+
+class UpdateRoleRequest(Schema):
+    user_id = Integer()
+    role = String()
+
+
+class CollectionUserResponse(Schema):
+    id = Integer()
+    collection_id = Integer()
+    user_id = Integer()
+    role = String()
+
+
+class CollectionUsersResponse(Schema):
+    users = List(Nested(CollectionUserResponse))
+
+
+class RemoveCollectionUserRequest(Schema):
+    collection_id = Integer()  
+    user_id = Integer()
 
 
 class SpecimenImageResponse(Schema):
@@ -359,3 +386,54 @@ def ajax_response(status, msg):
             msg=msg,
         )
     )
+
+
+@collection_users_bp.get("/<int:collection_id>")
+@collection_users_bp.output(CollectionUsersResponse)
+@collection_users_bp.doc(operation_id='GetCollectionUsers')
+def get_collection_users(collection_id):
+    result = collections.get_collection_users(collection_id)
+    return {
+        "users": result
+    }
+
+
+@collection_users_bp.post("/<int:collection_id>/add")
+@collection_users_bp.input(AddUserRequest)
+@collection_users_bp.doc(operation_id='AddUserToCollection')
+def add_user_to_collection(collection_id, data):
+    user_id = data["user_id"]
+    role = data["role"]
+
+    new_collection_user = collections.add_user_to_collection(collection_id, user_id, role)
+
+    return new_collection_user
+
+
+@collection_users_bp.post("/<int:collection_id>/remove")
+@collection_users_bp.input(RemoveCollectionUserRequest)
+@collection_users_bp.doc(operation_id='RemoveUserFromCollection')
+def remove_user_from_collection(collection_id, data):
+    user_id = data["user_id"]
+
+    result = collections.remove_user_from_collection(collection_id, user_id)
+
+    if not result:
+        return jsonify({"status": "error", "statusText": "Impossible to user from collection."})
+
+    return jsonify({"status": "ok"})
+
+
+@collection_users_bp.put("/<int:collection_id>/update-role")
+@collection_users_bp.input(UpdateRoleRequest)
+@collection_users_bp.doc(operation_id='UpdateCollectionUserRole')
+def update_user_role(collection_id, data):
+    user_id = data["user_id"]
+    role = data["role"]
+    
+    result = collections.update_user_role(collection_id, user_id, role)   
+
+    if not result:
+        return jsonify({"status": "error", "statusText": "Impossible to update collection user role."})
+
+    return jsonify({"status": "ok"})

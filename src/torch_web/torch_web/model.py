@@ -171,4 +171,13 @@ class User(Base, UserMixin):
     institution = relationship("Institution", back_populates="users")
     fs_uniquifier = mapped_column(String(255), unique=True, nullable=False)
     roles: Mapped[List[Role]] = relationship(secondary=roles_users)
+
     
+
+class CollectionUser(Base):
+    __tablename__ = "collection_users"
+    id = mapped_column(Integer, primary_key=True)
+    collection_id = mapped_column(Integer, ForeignKey("collection.id"))
+    user_id = mapped_column(Integer, ForeignKey("user.id"))
+    role = mapped_column(String(50))
+    date_added = mapped_column(DateTime(timezone=True), default=func.now())

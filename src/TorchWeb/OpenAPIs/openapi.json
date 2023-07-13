@@ -23,6 +23,17 @@
         },
         "type": "object"
       },
+      "AddUserRequest": {
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
       "CollectionResponse": {
         "properties": {
           "cardimg": {
@@ -51,6 +62,34 @@
           "tasks": {
             "items": {
               "$ref": "#/components/schemas/TorchTask"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "CollectionUserResponse": {
+        "properties": {
+          "collection_id": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "role": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "CollectionUsersResponse": {
+        "properties": {
+          "users": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionUserResponse"
             },
             "type": "array"
           }
@@ -117,6 +156,17 @@
               "$ref": "#/components/schemas/InstitutionResponse"
             },
             "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "RemoveCollectionUserRequest": {
+        "properties": {
+          "collection_id": {
+            "type": "integer"
+          },
+          "user_id": {
+            "type": "integer"
           }
         },
         "type": "object"
@@ -298,6 +348,17 @@
         },
         "type": "object"
       },
+      "UpdateRoleRequest": {
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
       "UserResponse": {
         "properties": {
           "email": {
@@ -443,6 +504,221 @@
         "summary": "Userinfo",
         "tags": [
           "Auth"
+        ]
+      }
+    },
+    "/collection_users/{collection_id}": {
+      "get": {
+        "operationId": "GetCollectionUsers",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionUsersResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          }
+        },
+        "summary": "Get Collection Users",
+        "tags": [
+          "Collection_Users"
+        ]
+      }
+    },
+    "/collection_users/{collection_id}/add": {
+      "post": {
+        "operationId": "AddUserToCollection",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            },
+            "description": "Validation error"
+          }
+        },
+        "summary": "Add User To Collection",
+        "tags": [
+          "Collection_Users"
+        ]
+      }
+    },
+    "/collection_users/{collection_id}/remove": {
+      "post": {
+        "operationId": "RemoveUserFromCollection",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveCollectionUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            },
+            "description": "Validation error"
+          }
+        },
+        "summary": "Remove User From Collection",
+        "tags": [
+          "Collection_Users"
+        ]
+      }
+    },
+    "/collection_users/{collection_id}/update-role": {
+      "put": {
+        "operationId": "UpdateCollectionUserRole",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPError"
+                }
+              }
+            },
+            "description": "Not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            },
+            "description": "Validation error"
+          }
+        },
+        "summary": "Update User Role",
+        "tags": [
+          "Collection_Users"
         ]
       }
     },
@@ -1561,6 +1837,9 @@
     },
     {
       "name": "Workflows"
+    },
+    {
+      "name": "Collection_Users"
     }
   ]
 }

@@ -11,7 +11,7 @@ from torch_web import db, executor
 from prefect import context
 from flask import current_app
 from io import BytesIO
-from torch_web.model import Collection, Specimen, SpecimenImage, CollectionTask, CollectionTaskParameter, SpecimenTask, SpecimenTaskParameter
+from torch_web.model import Collection, Specimen, SpecimenImage, CollectionTask, CollectionTaskParameter, SpecimenTask, SpecimenTaskParameter, CollectionUser, User
 
 
 def get_collections(institutionid):
@@ -307,3 +307,47 @@ def upsert_specimen_image(specimen, destination, extension):
         si.url = web_url
     
     db.session.commit()
+
+
+def get_collection_users(collection_id):
+    collection_users = db.session.scalars(select(CollectionUser).join(User).filter(CollectionUser.collection_id == collection_id)).all()
+  
+    return collection_users
+
+
+def add_user_to_collection(collection_id, user_id, role):
+    add_collection_user = CollectionUser(collection_id=collection_id, user_id=user_id, role=role)
+
+    db.session.add(add_collection_user)
+    db.session.commit()
+
+    return add_collection_user
+
+
+def remove_user_from_collection(collection_id, user_id):
+    remove_collection_user = db.session.scalars(select(CollectionUser)
+                                         .filter(CollectionUser.collection_id == collection_id, CollectionUser.user_id == user_id)).one_or_none()
+    
+    if remove_collection_user:
+        #db.session.delete(remove_collection_user)                 option to delete data in database
+
+        #the following option just changes the value of collection_id to NULL
+        remove_collection_user.collection_id = None                
+        db.session.commit()
+
+        return True
+
+    return False
+
+
+def update_user_role(collection_id, user_id, role):
+    collection_user_role = db.session.scalars(select(CollectionUser)
+                                         .filter(CollectionUser.collection_id == collection_id, CollectionUser.user_id == user_id)).one_or_none()
+    
+    if collection_user_role:
+        collection_user_role.role = role
+        db.session.commit()
+
+        return collection_user_role
+
+    return None
