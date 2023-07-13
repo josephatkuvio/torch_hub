@@ -1,0 +1,99 @@
+﻿@page "/manage-page/{collectionId:int}"
+
+@if (User?.IsInRole("admin") == true)
+{
+    <div class="admin-div">
+        <header>
+            <aside class="back">
+                <a href="/collections/@CollectionId">&larr; Back</a>
+            </aside>
+            <h1 class="page-name">Manage Page</h1>
+            <h1>@CollectionName - @CollectionCode</h1>
+        </header>
+
+        <div class="container">
+            <div class="container-top">
+                <div class="left">
+                    <h2>Users List</h2>
+                </div>
+                <div class="right">
+                    <button @onclick="OpenInviteModal">Invite Member</button>    @*is redirecting, but still not the correct invite*@
+                </div>
+            </div>
+            <div class="container-body">
+                @if (CollectionUsers != null)
+                {
+                    <table>
+
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th></th>
+                        </tr>
+                        @foreach (var user in CollectionUsers.Users)
+                        {
+                            @*<tr>
+                                <td>@user.First_name @user.Last_name</td>
+                                <td>@user.Email</td>
+                                <td>@(user.Roles.FirstOrDefault()?.Name)</td>
+                                <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
+                            </tr>*@
+                        }
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@inject IModalService Modal
+@inject IJSRuntime JSRuntime
+@code {
+    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
+
+    [Parameter] public int CollectionId { get; set; }
+    CollectionUsersResponse? CollectionUsers;
+    public string? CollectionName { get; set; }
+    public string? CollectionCode { get; set; }
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCollectionInfo();
+        await LoadCollectionUsers();
+    }
+
+    private async Task LoadCollectionInfo()
+    {
+        var collection = await TorchCommands.GetCollectionAsync(CollectionId);
+        if (collection != null)
+        {
+            CollectionName = collection.Name;
+            CollectionCode = collection.Code;
+        }
+    }
+
+    private async Task LoadCollectionUsers()
+    {
+        CollectionUsers = await TorchCommands.GetCollectionUsersAsync(CollectionId);
+    }
+
+    async Task OpenInviteModal()
+    {
+        var modal = Modal.Show<InviteUser>();
+        await modal.Result;
+    }
+
+    //async Task RemoveUser(int userId)
+    //{
+    //    var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from the collection?");
+    //    if (confirm)
+    //    {
+    //        await TorchCommands.RemoveUserFromCollectionAsync(CollectionId, userId);
+    //        await LoadCollectionUsers();
+    //    }
+    //}
+}

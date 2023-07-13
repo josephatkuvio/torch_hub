@@ -26,6 +26,7 @@
             <section>
                 <header>
                     <h1><a href="/">Collections</a> &#8250; @Model?.Name</h1>
+                    <h1 @onclick=Go class="nav-manage-opt">Manage Page</h1>
                     <h2>Specimens</h2>
                     <button class="deleteCollectionBtn" @onclick=Delete>Delete Collection</button>
                 </header>
@@ -139,4 +140,6 @@
             await TorchCommands.DeleteCollectionAsync(Model.Id);
             NavigationManager.NavigateTo("/");
     }
+
+    void Go() => Nav.NavigateTo($"/manage-page/{Id}");
 }

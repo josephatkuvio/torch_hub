@@ -43,4 +43,14 @@
         line-height: 20px;
         margin-bottom: 10px;
     }
+
+    .nav-manage-opt {
+        cursor: pointer;
+        float: right;
+        margin-top: -66px;
+
+        &:hover {
+            color: var(--primary-500);
+        }
+    }
 }
