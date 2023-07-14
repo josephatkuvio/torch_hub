@@ -13,4 +13,13 @@
             }
         }
     }
+
+    .nav-admin-opt2 {
+        cursor: pointer;
+        margin-left: 40px;
+
+        &:hover {
+            color: var(--primary-500);
+        }
+    }
 }

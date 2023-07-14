@@ -78,6 +78,13 @@
 .collections-index .nav-header .nav-admin-opt:hover {
   color: var(--primary-500);
 }
+.collections-index .nav-admin-opt2 {
+  cursor: pointer;
+  margin-left: 40px;
+}
+.collections-index .nav-admin-opt2:hover {
+  color: var(--primary-500);
+}
 
 .collection {
   display: grid;
@@ -405,6 +412,37 @@
   width: 100%;
   background: white;
   border: 1px solid #d0d5dd;
+}
+
+.new-ui-section {
+  display: grid;
+  height: 100vh;
+  width: 100vw;
+  padding: 32px;
+  grid-template-columns: 1fr 447px;
+  gap: 4px;
+  background: #29324A;
+  transition: 0.3s ease-in-out;
+}
+.new-ui-section .tab-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-height: 960px;
+  overflow-y: auto;
+  background-color: #FFFFFF;
+  border-radius: 20px;
+}
+.new-ui-section .tab {
+  display: flex;
+  gap: 35px;
+  margin-left: 20px;
+  margin-top: 16px;
+}
+.new-ui-section .tab .first-icon {
+  width: 32px;
+  height: 32px;
+  padding: 6px;
 }
 
 .workflow {

@@ -13,6 +13,7 @@
                 <h1 @onclick=Go class="nav-admin-opt">Admin Page</h1>
                 <button @onclick=Add>Add New Collection</button>
             }
+            <h1 @onclick=GoNewUI class="nav-admin-opt2">New UI page</h1>
         </div>
 
         @if (User != null)
@@ -67,4 +68,6 @@
     }
 
     void Go() => Nav.NavigateTo($"/admin-page");
+
+    void GoNewUI() => Nav.NavigateTo($"/new-ui-page");
 }

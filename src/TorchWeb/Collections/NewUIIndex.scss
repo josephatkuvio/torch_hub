@@ -1,0 +1,33 @@
+.new-ui-section {
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    padding: 32px;
+    grid-template-columns: 1fr 447px;
+    gap: 4px;
+    background: #29324A;
+    transition: 0.3s ease-in-out;
+
+    .tab-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        max-height: 960px;
+        overflow-y: auto;
+        background-color: #FFFFFF;
+        border-radius: 20px;
+    }
+
+    .tab {
+        display: flex;
+        gap: 35px;
+        margin-left: 20px;
+        margin-top: 16px;
+
+        .first-icon {
+            width: 32px;
+            height: 32px;
+            padding: 6px;
+        }
+    }
+}
