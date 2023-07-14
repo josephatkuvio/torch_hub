@@ -1,6 +1,6 @@
 ﻿@page "/manage-page/{collectionId:int}"
 
-@if (User?.IsInRole("admin") == true)
+@if (User?.IsInRole("admin") == true || User?.IsInRole("supervisor") == true)
 {
     <div class="admin-div">
         <header>
@@ -29,16 +29,25 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
-                            <th></th>
+                            @if (User?.IsInRole("admin") == true)
+                            {
+                                <th></th>
+                            }
                         </tr>
                         @foreach (var user in CollectionUsers.Users)
                         {
-                            @*<tr>
-                                <td>@user.First_name @user.Last_name</td>
-                                <td>@user.Email</td>
-                                <td>@(user.Roles.FirstOrDefault()?.Name)</td>
-                                <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
-                            </tr>*@
+                            @if (User?.IsInRole("admin") == true || User?.IsInRole("supervisor") == true && user.Role == "basic")
+                            {
+                                @*<tr>
+                                    <td>@user.First_Name @user.Last_name</td>
+                                    <td>@user.Email</td>
+                                    <td>@(user.Roles.FirstOrDefault()?.Name)</td>
+                                    @if (User?.IsInRole("admin") == true)
+                                    {
+                                        <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
+                                    }
+                                </tr>*@
+                            }
                         }
                     </table>
                 }
@@ -58,7 +67,7 @@
     CollectionUsersResponse? CollectionUsers;
     public string? CollectionName { get; set; }
     public string? CollectionCode { get; set; }
-    
+
 
     protected override async Task OnInitializedAsync()
     {

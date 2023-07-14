@@ -26,7 +26,10 @@
             <section>
                 <header>
                     <h1><a href="/">Collections</a> &#8250; @Model?.Name</h1>
-                    <h1 @onclick=Go class="nav-manage-opt">Manage Page</h1>
+                    @if (User?.IsInRole("admin") == true || User?.IsInRole("supervisor") == true)
+                    {
+                        <h1 @onclick=Go class="nav-manage-opt">Manage Page</h1>
+                    }
                     <h2>Specimens</h2>
                     <button class="deleteCollectionBtn" @onclick=Delete>Delete Collection</button>
                 </header>
@@ -72,6 +75,7 @@
 @inject NavigationManager NavigationManager
 
 @code {
+    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
     [Parameter] public int Id { get; set; }
     public SocketIOClient.SocketIO Socket { get; set; } = null!;
     string ActiveTab = "specimens";
@@ -134,11 +138,11 @@
     }
 
     async Task Delete()
-    {        
+    {
         var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this collection?");
         if (confirm)
             await TorchCommands.DeleteCollectionAsync(Model.Id);
-            NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/");
     }
 
     void Go() => Nav.NavigateTo($"/manage-page/{Id}");
