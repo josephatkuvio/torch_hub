@@ -1,0 +1,33 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #FFFFFF;
+
+    .header-left {
+        flex-grow: 1;
+    }
+
+    .sort-button {
+        margin-right: 10px;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+
+        .search-box input[type="text"] {
+            padding: 5px;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .span {
+            padding: 5px;
+            background-color: transparent;
+            border: none;
+        }
+    }
+}

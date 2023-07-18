@@ -1,11 +1,73 @@
 ﻿@page "/new-ui-page"
 
 <section class="new-ui-section">
+
     <section class="tab-section">
-        <ul class="tab">
-            <li class="first-icon"><a href="#" name="tab1"><img src="/images/Flowchart.svg" /></a></li>
-            <li><a href="#" name="tab2"><img src="/images/ProgressIcon.svg" /></a></li>
-            <li><a href="#" name="tab3"><img src="/images/ManageIcon.svg" /></a></li>
+
+        <ul class="tab-list">
+            <li class="tab-item first-icon">
+                <a class='tab-link @(activeTab == "tab1" ? "active" : "")' @onclick='() => ChangeTab("tab1")'>
+                    <img src="/images/Flowchart.svg" />
+                </a>
+            </li>
+            <li class="tab-item">
+                <a class='tab-link @(activeTab == "tab2" ? "active" : "")' @onclick='() => ChangeTab("tab2")'>
+                    <img src="/images/ProgressIcon.svg" />
+                </a>
+            </li>
+            <li class="tab-item">
+                <a class='tab-link @(activeTab == "tab3" ? "active" : "")' @onclick='() => ChangeTab("tab3")'>
+                    <img src="/images/ManageIcon.svg" />
+                </a>
+            </li>
         </ul>
+
+        <section class="tab-content">
+            @if (activeTab == "tab1")
+            {
+                <header>
+                    <h1>All</h1>
+                </header>
+            }
+            else if (activeTab == "tab2")
+            {
+                <header>
+                    <h1>Progress</h1>
+                </header>
+            }
+            else if (activeTab == "tab3")
+            {
+                <header>
+                    <h1>Manage</h1>
+                </header>
+            }
+        </section>
+
     </section>
+
+    <section class="tab-section">
+        <ul class="tab-list">
+            <li class="tab-item">
+                <a class="tab-link active" href="#" name="tab1">
+                    <img src="/images/Flowchart.svg" />
+                </a>
+            </li>
+        </ul>
+        <section class="tab-content">
+            <header>
+                <h1>Summary</h1>
+            </header>
+        </section>
+    </section>
+
 </section>
+
+
+@code {
+    private string activeTab = "tab1";
+
+    private void ChangeTab(string tabName)
+    {
+        activeTab = tabName;
+    }
+}

@@ -418,31 +418,84 @@
   display: grid;
   height: 100vh;
   width: 100vw;
-  padding: 32px;
+  padding: 32px 30px;
   grid-template-columns: 1fr 447px;
-  gap: 4px;
+  gap: 24px;
   background: #29324A;
   transition: 0.3s ease-in-out;
 }
-.new-ui-section .tab-section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-height: 960px;
-  overflow-y: auto;
-  background-color: #FFFFFF;
-  border-radius: 20px;
+.new-ui-section > * {
+  overflow: hidden;
 }
-.new-ui-section .tab {
+.new-ui-section .tab-list {
   display: flex;
-  gap: 35px;
+  flex-wrap: wrap;
+  height: 56px;
+  list-style: none;
+}
+.new-ui-section .tab-list .tab-item {
+  cursor: pointer;
+}
+.new-ui-section .tab-list .tab-item .tab-link {
+  height: 56px;
+  display: block;
+  background-color: #0B0F1C;
+  transition: background-color 0.3s ease-in-out;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.new-ui-section .tab-list .tab-item .tab-link img {
   margin-left: 20px;
   margin-top: 16px;
+  margin-bottom: 8px;
+  margin-right: 20px;
+  filter: invert(1);
+  transition: filter 0.3s ease-in-out;
 }
-.new-ui-section .tab .first-icon {
-  width: 32px;
-  height: 32px;
+.new-ui-section .tab-list .tab-item .tab-link.active {
+  background-color: #FFFFFF;
+}
+.new-ui-section .tab-list .tab-item .tab-link.active img {
+  filter: invert(0);
+}
+.new-ui-section .first-icon img {
   padding: 6px;
+}
+.new-ui-section .tab-content {
+  height: calc(100% - 56px);
+  max-height: 960px;
+  background-color: #FFFFFF;
+  border-radius: 0px 20px 20px 20px;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #FFFFFF;
+}
+.header .header-left {
+  flex-grow: 1;
+}
+.header .sort-button {
+  margin-right: 10px;
+}
+.header .search-box {
+  display: flex;
+  align-items: center;
+}
+.header .search-box .search-box input[type=text] {
+  padding: 5px;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.header .search-box .span {
+  padding: 5px;
+  background-color: transparent;
+  border: none;
 }
 
 .workflow {

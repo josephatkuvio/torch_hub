@@ -2,32 +2,62 @@
     display: grid;
     height: 100vh;
     width: 100vw;
-    padding: 32px;
+    padding: 32px 30px;
     grid-template-columns: 1fr 447px;
-    gap: 4px;
+    gap: 24px;
     background: #29324A;
     transition: 0.3s ease-in-out;
 
-    .tab-section {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        max-height: 960px;
-        overflow-y: auto;
-        background-color: #FFFFFF;
-        border-radius: 20px;
+    > * {
+        overflow: hidden;
     }
 
-    .tab {
+    .tab-list {
         display: flex;
-        gap: 35px;
-        margin-left: 20px;
-        margin-top: 16px;
+        flex-wrap: wrap;
+        height: 56px;
+        list-style: none;
 
-        .first-icon {
-            width: 32px;
-            height: 32px;
-            padding: 6px;
+        .tab-item {
+            cursor: pointer;
+
+            .tab-link {
+                height: 56px;
+                display: block;
+                background-color: #0B0F1C;
+                transition: background-color 0.3s ease-in-out;
+                border-top-left-radius: 20px;
+                border-top-right-radius: 20px;
+
+                img {
+                    margin-left: 20px;
+                    margin-top: 16px;
+                    margin-bottom: 8px;
+                    margin-right: 20px;
+                    filter: invert(1);
+                    transition: filter 0.3s ease-in-out;
+                }
+
+                &.active {
+                    background-color: #FFFFFF;
+
+                    img {
+                        filter: invert(0);
+                    }
+                }
+            }
         }
+    }
+
+    .first-icon img {
+        padding: 6px;
+    }
+
+    .tab-content {
+        height: calc(100% - 56px);
+        max-height: 960px;
+        background-color: #FFFFFF;
+        border-radius: 0px 20px 20px 20px;
+        padding: 24px;
     }
 }
