@@ -4,14 +4,51 @@
     </div>
     <div class="header-right">
         <button class="sort-button">Sort</button>
+        <img class="sort-icon-img" src="/images/sortIcon.svg" />
         <div class="search-box">
             <input type="text" placeholder="Search" />
-            <span class="search-icon">
-                <span class="glyphicon glyphicon-search"></span>
-            </span>
+            <i class="fa fa-search"></i>
         </div>
+        <i class="sort"></i>
     </div>
 </header>
+
+<div class="divider"></div>
+
+<section class="workflow-folders">
+    <h2>Workflow</h2>
+    <section class="workflow-cards">
+        <article class="workflow-card">
+            <img class="folder-img" src="/images/folderIcon.svg" />
+            <div class="card-text">
+                <h3>Workflow Name</h3>
+                <h4>24 FEB 2016</h4>
+                @*<time>@Workflow.Create_date.ToString("dd MMMM yyyy")</time>*@
+            </div>
+            <button class="up-btn"><img class="up-btn-img" src="/images/upArrowIcon.svg" /></button>
+        </article>
+    </section>
+</section>
+
+<div class="divider"></div>
+
+<section class="specimens-list-cards">
+    <h2>Recent Specimens</h2>
+    <section class="spec-cards">
+        <article class="spec-card">
+            <div class="left">
+                <img class="spec-img" src="/images/BRIT240602.jpg" />
+                <h1>Specimen Name</h1>
+            </div>
+            <div class="right">
+                <h1>Workflow Name</h1>
+                <h1>06/20/2023</h1>
+                @*<time>@Workflow.Create_date.ToString("MM/dd/yyyy")</time>*@
+                <button class="more-btn">...</button>
+            </div>
+        </article>
+    </section>
+</section>
 
 
 @code {

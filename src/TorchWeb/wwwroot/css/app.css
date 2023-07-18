@@ -473,29 +473,133 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  background-color: #FFFFFF;
 }
-.header .header-left {
-  flex-grow: 1;
+.header .header-left h1 {
+  margin-bottom: 0;
+  font-weight: 400;
 }
-.header .sort-button {
-  margin-right: 10px;
+.header .header-right {
+  display: flex;
 }
-.header .search-box {
+.header .header-right .sort-button {
+  background: transparent;
+  color: #0B0F1C;
+  padding-right: 4px;
+  font-size: 12px;
+}
+.header .header-right .sort-icon-img {
+  margin-right: 17px;
+}
+.header .header-right .search-box {
   display: flex;
   align-items: center;
+  position: relative;
 }
-.header .search-box .search-box input[type=text] {
-  padding: 5px;
+.header .header-right .search-box .search-box input[type=text] {
+  padding: 12.5px 26px;
   margin-right: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 16px;
 }
-.header .search-box .span {
-  padding: 5px;
-  background-color: transparent;
-  border: none;
+.header .header-right .search-box i {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #5A6182;
+}
+
+.divider {
+  height: 1px;
+  background-color: #F7F8FC;
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.workflow-folders {
+  height: 184px;
+  overflow-y: auto;
+}
+.workflow-folders h2 {
+  margin: 16px 0;
+  height: 15px;
+}
+.workflow-folders .workflow-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.workflow-folders .workflow-cards .workflow-card {
+  border: 1px solid #E6E8F2;
+  border-radius: 20px;
+  height: 136px;
+  padding: 24px;
+  min-width: 224px;
+  max-width: 290px;
+}
+.workflow-folders .workflow-cards .workflow-card .folder-img {
+  margin-bottom: 20px;
+}
+.workflow-folders .workflow-cards .workflow-card .card-text {
+  width: 118px;
+}
+.workflow-folders .workflow-cards .workflow-card .card-text h3 {
+  font-size: 14px;
+  color: #181E30;
+  font-weight: 400;
+}
+.workflow-folders .workflow-cards .workflow-card .card-text h4 {
+  font-size: 12px;
+  color: #5A6182;
+  font-weight: 400;
+}
+.workflow-folders .workflow-cards .workflow-card .up-btn {
+  float: right;
+  position: relative;
+  bottom: 32px;
+  background: transparent;
+  padding: 0;
+}
+.workflow-folders .workflow-cards .workflow-card .up-btn .up-btn-img {
+  width: 36px;
+  height: 36px;
+}
+
+.specimens-list-cards {
+  overflow-y: auto;
+  height: calc(100% - 319px);
+}
+.specimens-list-cards .spec-cards .spec-card {
+  display: flex;
+  border: 1px solid #F7F8FC;
+  border-radius: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  margin: 13px 0;
+}
+.specimens-list-cards .spec-cards .spec-card .left, .specimens-list-cards .spec-cards .spec-card .right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.specimens-list-cards .spec-cards .spec-card .spec-img {
+  width: 32px;
+  height: 32px;
+}
+.specimens-list-cards .spec-cards .spec-card h1 {
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+.specimens-list-cards .spec-cards .spec-card .more-btn {
+  background: transparent;
+  color: #29324A;
+  align-self: center;
+  bottom: 4px;
+  position: relative;
 }
 
 .workflow {

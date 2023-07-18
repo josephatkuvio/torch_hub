@@ -25,9 +25,10 @@
         <section class="tab-content">
             @if (activeTab == "tab1")
             {
-                <header>
+                @*<header>
                     <h1>All</h1>
-                </header>
+                </header>*@
+                <NewUIWorkflow />
             }
             else if (activeTab == "tab2")
             {
@@ -49,7 +50,7 @@
         <ul class="tab-list">
             <li class="tab-item">
                 <a class="tab-link active" href="#" name="tab1">
-                    <img src="/images/Flowchart.svg" />
+                    <img src="/images/summaryIcon.svg" />
                 </a>
             </li>
         </ul>
