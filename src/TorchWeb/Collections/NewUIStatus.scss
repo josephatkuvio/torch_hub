@@ -1,0 +1,196 @@
+.status-header {
+    height: 38.8px;
+
+    h1 {
+        margin-bottom: 0;
+        font-weight: 400;
+    }
+}
+
+.status-board {
+    border: 1px solid #F7F8FC;
+    border-radius: 16px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    height: 128px;
+    padding: 24px 32px;
+    background: #F7F8FC;
+    margin-top: 32px;
+    gap: 32px;
+
+    section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .status-img {
+            margin-right: 16px;
+        }
+
+        .status-board-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #181E30;
+            font-weight: 400;
+            margin-bottom: 0;
+            letter-spacing: 0.84px;
+        }
+
+        h3 {
+            font-size: 14px;
+            color: #5A6182;
+            font-weight: 400;
+        }
+
+        span {
+            font-size: 14px;
+            color: #181E30;
+            font-weight: 400;
+        }
+    }
+}
+
+.divider {
+    height: 1px;
+    background-color: #F7F8FC;
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+
+.specimens-list-cards-status {
+    overflow-y: auto;
+    height: calc(100% - 235px);
+
+    .spec-cards {
+
+        .spec-card {
+            display: flex;
+            border: 1px solid #F7F8FC;
+            border-radius: 20px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            margin: 13px 0;
+
+            .left, .right {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .spec-img {
+                width: 32px;
+                height: 32px;
+            }
+
+            .title-and-progress {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                flex-grow: 1;
+            }
+
+            h1 {
+                margin-bottom: 0;
+                font-size: 14px;
+                font-weight: 400;
+            }
+
+            h2 {
+                margin-bottom: 0;
+                font-size: 12px;
+                font-weight: 400;
+                text-transform: none;
+                color: #181E30;
+            }
+
+            .progress {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                .progress-bar {
+                    position: absolute;
+                    left: 96px;
+                    right: 252px;
+                    height: 7px;
+                    background-color: #E6E8F2;
+                    border-radius: 10px;
+                }
+
+                .percentage-container {
+                    display: flex;
+                    justify-content: space-between; 
+                    width: 100%;
+                }
+            }
+
+            .more-btn {
+                background: transparent;
+                color: #29324A;
+                align-self: center;
+                bottom: 4px;
+                position: relative;
+            }
+
+            .two-btns {
+                display: flex;
+                gap: 10px;
+
+                button {
+                    background: transparent;
+                    border-radius: 10px;
+                    padding: 8px 10px;
+                    /*width: 65px;*/
+                    width: 70px;
+                    font-size: 12px;
+                    text-align: center;
+                }
+            }
+
+            .no-err-btn {
+                color: #5A6182;
+                border: 1px solid #6E7496;
+            }
+        }
+
+        .error {
+            background: #FEF1F4;
+            color: #B50021;
+
+            h1 {
+                color: #B50021;
+            }
+
+            .err-btn {
+                color: #C92946;
+                border: 1px solid #DD516B;
+            }
+        }
+
+        .with-progress {            
+            position: relative;
+
+            .left, .right {
+                gap: 32px;
+            }
+
+            span {
+                font-size: 12px;
+                right: 222px;
+                position: absolute;
+            }
+        }
+    }
+}
+
+.processed-spec-section {
+    border-radius: 20px;
+    border: 1px solid #E6E8F2;
+    padding: 24px 24px 0px 24px;
+}

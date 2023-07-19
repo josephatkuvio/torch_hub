@@ -469,39 +469,39 @@
   padding: 24px;
 }
 
-.header {
+.workflow-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.header .header-left h1 {
+.workflow-header .header-left h1 {
   margin-bottom: 0;
   font-weight: 400;
 }
-.header .header-right {
+.workflow-header .header-right {
   display: flex;
 }
-.header .header-right .sort-button {
+.workflow-header .header-right .sort-button {
   background: transparent;
   color: #0B0F1C;
   padding-right: 4px;
   font-size: 12px;
 }
-.header .header-right .sort-icon-img {
+.workflow-header .header-right .sort-icon-img {
   margin-right: 17px;
 }
-.header .header-right .search-box {
+.workflow-header .header-right .search-box {
   display: flex;
   align-items: center;
   position: relative;
 }
-.header .header-right .search-box .search-box input[type=text] {
+.workflow-header .header-right .search-box .search-box input[type=text] {
   padding: 12.5px 26px;
   margin-right: 5px;
   border: 1px solid #ccc;
   border-radius: 16px;
 }
-.header .header-right .search-box i {
+.workflow-header .header-right .search-box i {
   position: absolute;
   top: 50%;
   right: 10px;
@@ -600,6 +600,174 @@
   align-self: center;
   bottom: 4px;
   position: relative;
+}
+
+.status-header {
+  height: 38.8px;
+}
+.status-header h1 {
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+.status-board {
+  border: 1px solid #F7F8FC;
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  height: 128px;
+  padding: 24px 32px;
+  background: #F7F8FC;
+  margin-top: 32px;
+  gap: 32px;
+}
+.status-board section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.status-board section .status-img {
+  margin-right: 16px;
+}
+.status-board section .status-board-text {
+  display: flex;
+  flex-direction: column;
+}
+.status-board section h1 {
+  font-size: 22px;
+  color: #181E30;
+  font-weight: 400;
+  margin-bottom: 0;
+  letter-spacing: 0.84px;
+}
+.status-board section h3 {
+  font-size: 14px;
+  color: #5A6182;
+  font-weight: 400;
+}
+.status-board section span {
+  font-size: 14px;
+  color: #181E30;
+  font-weight: 400;
+}
+
+.divider {
+  height: 1px;
+  background-color: #F7F8FC;
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.specimens-list-cards-status {
+  overflow-y: auto;
+  height: calc(100% - 235px);
+}
+.specimens-list-cards-status .spec-cards .spec-card {
+  display: flex;
+  border: 1px solid #F7F8FC;
+  border-radius: 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  margin: 13px 0;
+}
+.specimens-list-cards-status .spec-cards .spec-card .left, .specimens-list-cards-status .spec-cards .spec-card .right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.specimens-list-cards-status .spec-cards .spec-card .spec-img {
+  width: 32px;
+  height: 32px;
+}
+.specimens-list-cards-status .spec-cards .spec-card .title-and-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+}
+.specimens-list-cards-status .spec-cards .spec-card h1 {
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+.specimens-list-cards-status .spec-cards .spec-card h2 {
+  margin-bottom: 0;
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: none;
+  color: #181E30;
+}
+.specimens-list-cards-status .spec-cards .spec-card .progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.specimens-list-cards-status .spec-cards .spec-card .progress .progress-bar {
+  position: absolute;
+  left: 96px;
+  right: 252px;
+  height: 7px;
+  background-color: #E6E8F2;
+  border-radius: 10px;
+}
+.specimens-list-cards-status .spec-cards .spec-card .progress .percentage-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.specimens-list-cards-status .spec-cards .spec-card .more-btn {
+  background: transparent;
+  color: #29324A;
+  align-self: center;
+  bottom: 4px;
+  position: relative;
+}
+.specimens-list-cards-status .spec-cards .spec-card .two-btns {
+  display: flex;
+  gap: 10px;
+}
+.specimens-list-cards-status .spec-cards .spec-card .two-btns button {
+  background: transparent;
+  border-radius: 10px;
+  padding: 8px 10px;
+  /*width: 65px;*/
+  width: 70px;
+  font-size: 12px;
+  text-align: center;
+}
+.specimens-list-cards-status .spec-cards .spec-card .no-err-btn {
+  color: #5A6182;
+  border: 1px solid #6E7496;
+}
+.specimens-list-cards-status .spec-cards .error {
+  background: #FEF1F4;
+  color: #B50021;
+}
+.specimens-list-cards-status .spec-cards .error h1 {
+  color: #B50021;
+}
+.specimens-list-cards-status .spec-cards .error .err-btn {
+  color: #C92946;
+  border: 1px solid #DD516B;
+}
+.specimens-list-cards-status .spec-cards .with-progress {
+  position: relative;
+}
+.specimens-list-cards-status .spec-cards .with-progress .left, .specimens-list-cards-status .spec-cards .with-progress .right {
+  gap: 32px;
+}
+.specimens-list-cards-status .spec-cards .with-progress span {
+  font-size: 12px;
+  right: 222px;
+  position: absolute;
+}
+
+.processed-spec-section {
+  border-radius: 20px;
+  border: 1px solid #E6E8F2;
+  padding: 24px 24px 0px 24px;
 }
 
 .workflow {
