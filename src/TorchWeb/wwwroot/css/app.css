@@ -423,6 +423,9 @@
   gap: 24px;
   background: #29324A;
   transition: 0.3s ease-in-out;
+  /*&summary {
+      grid-template-columns: 1fr 447px;
+  }*/
 }
 .new-ui-section > * {
   overflow: hidden;
@@ -1045,10 +1048,7 @@
 }
 .workflow-detail .right-section .create-new-task {
   border-radius: 20px;
-  /*display: grid;
-  grid-template-columns: 3fr 7fr;*/
   align-items: center;
-  /*height: 239px;*/
   background: #F7F8FC;
   cursor: pointer;
   padding: 17px 32px;
@@ -1075,6 +1075,161 @@
 .workflow-detail .right-section .create-new-task .add-btn img {
   width: 14px;
   height: 14px;
+}
+
+.workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.workflow-header h1 {
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+.divider {
+  height: 1px;
+  background-color: #F7F8FC;
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.workflow-folders {
+  height: 184px;
+  overflow-y: auto;
+}
+.workflow-folders h2 {
+  margin: 16px 0;
+  height: 15px;
+}
+.workflow-folders .processing-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.workflow-folders .processing-cards .progress-bars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.workflow-folders .processing-cards .progress-bars .progress-bar {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 4px solid #e6e6e6;
+  overflow: hidden;
+}
+.workflow-folders .processing-cards .progress-bars .progress-bar .circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: #251E85;
+  border-right-color: #251E85;
+  transform: rotate(0deg);
+}
+.workflow-folders .processing-cards .prog-data {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.workflow-folders .processing-cards .prog-data .status-board-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.workflow-folders .processing-cards .progress-bar-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.workflow-folders .processing-cards .progress-bar-caption .progress-item {
+  display: flex;
+  gap: 8px;
+}
+.workflow-folders .processing-cards .progress-bar-caption .progress-item .title-caption {
+  width: 72px;
+}
+.workflow-folders .processing-cards h1 {
+  font-size: 20px;
+  color: #181E30;
+  font-weight: 400;
+  margin-bottom: 0;
+  letter-spacing: 1px;
+}
+.workflow-folders .processing-cards h3 {
+  font-size: 14px;
+  color: #5A6182;
+  font-weight: 400;
+}
+.workflow-folders .processing-cards h4 {
+  font-size: 12px;
+  color: #6E7496;
+  font-weight: 400;
+}
+.workflow-folders .processing-cards span {
+  font-size: 14px;
+  color: #181E30;
+  font-weight: 400;
+}
+
+.workflow-list-cards {
+  overflow-y: auto;
+  height: calc(100% - 319px);
+  margin-top: 32px;
+}
+.workflow-list-cards .w-list-cards .w-card {
+  display: flex;
+  background: var(--purple-100, #FAFAFF);
+  border-radius: 20px;
+  /*justify-content: space-between;*/
+  align-items: center;
+  padding: 17px 20px;
+  margin: 14px 0;
+  gap: 20px;
+}
+.workflow-list-cards .w-list-cards .w-card .spec-img {
+  width: 32px;
+  height: 32px;
+}
+.workflow-list-cards .w-list-cards .w-card .title-and-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+}
+.workflow-list-cards .w-list-cards .w-card h4 {
+  font-size: 12px;
+  color: #2A2570;
+  font-weight: 400;
+}
+.workflow-list-cards .w-list-cards .w-card .progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+.workflow-list-cards .w-list-cards .w-card .progress .progress-bar {
+  position: absolute;
+  width: 272px;
+  height: 7px;
+  background-color: #E6E8F2;
+  border-radius: 10px;
+}
+.workflow-list-cards .w-list-cards .w-card .progress span {
+  font-size: 12px;
+  right: 75px;
+  position: absolute;
+}
+.workflow-list-cards .w-list-cards .w-card .with-progress {
+  position: relative;
 }
 
 .workflow {

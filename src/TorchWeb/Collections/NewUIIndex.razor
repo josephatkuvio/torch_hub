@@ -6,36 +6,36 @@
 
         <ul class="tab-list">
             <li class="tab-item first-icon">
-                <a class='tab-link @(activeTab == "tab1" ? "active" : "")' @onclick='() => ChangeTab("tab1")'>
+                <a class='tab-link @(activeTab == "all" ? "active" : "")' @onclick='() => ChangeTab("all")'>
                     <img src="/images/Flowchart.svg" />
                 </a>
             </li>
             <li class="tab-item">
-                <a class='tab-link @(activeTab == "tab2" ? "active" : "")' @onclick='() => ChangeTab("tab2")'>
+                <a class='tab-link @(activeTab == "status" ? "active" : "")' @onclick='() => ChangeTab("status")'>
                     <img src="/images/ProgressIcon.svg" />
                 </a>
             </li>
             <li class="tab-item">
-                <a class='tab-link @(activeTab == "tab3" ? "active" : "")' @onclick='() => ChangeTab("tab3")'>
+                <a class='tab-link @(activeTab == "workflow" ? "active" : "")' @onclick='() => ChangeTab("workflow")'>
                     <img src="/images/ManageIcon.svg" />
                 </a>
             </li>
         </ul>
 
         <section class="tab-content">
-            @if (activeTab == "tab1")
+            @if (activeTab == "all")
             {
             <NewUIWorkflow />
             }
-            else if (activeTab == "tab2")
+            else if (activeTab == "status")
             {
             <NewUIStatus />
             }
-            else if (activeTab == "tab3" && !showDetail)
+            else if (activeTab == "workflow" && !showDetail)
             {
                 <NewUIManageWorkflow OnContentClick="ToggleShowDetail" />
             }
-            else if (activeTab == "tab3" && showDetail)
+            else if (activeTab == "workflow" && showDetail)
             {
             <NewUIWorkflowDetail />
             }
@@ -45,16 +45,14 @@
 
         <section class="tab-section">
             <ul class="tab-list">
-                <li class="tab-item">
-                    <a class="tab-link active" href="#" name="tab1">
+            <li class="tab-item" @onclick="ToggleSummary">
+                    <a class="tab-link active" name="summary">
                         <img src="/images/summaryIcon.svg" />
                     </a>
                 </li>
             </ul>
             <section class="tab-content">
-                <header>
-                    <h1>Summary</h1>
-                </header>
+                <NewUISummary />
             </section>
         </section>
 
@@ -62,8 +60,12 @@
 
 
     @code {
-    private string activeTab = "tab1";
+    private string activeTab = "all";
     private bool showDetail = false;
+
+    bool IsSummaryActive = true;
+
+    string ActiveTabClass => $"collection-{activeTab}{(IsSummaryActive ? "-summary" : "")}";
 
 
     private void ChangeTab(string tabName)
@@ -75,4 +77,6 @@
     {
         showDetail = !showDetail;
     }
+
+    void ToggleSummary() => IsSummaryActive = !IsSummaryActive;
 }
