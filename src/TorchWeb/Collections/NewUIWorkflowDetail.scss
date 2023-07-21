@@ -1,0 +1,83 @@
+.workflow-detail {
+    display: flex;
+    gap: 24px;
+
+    .left-section {
+        width: 70%;
+
+        .detailed-workflow-header {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+
+            .workflow-detail-header {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 32px;
+                margin-bottom: 6px;
+
+                .header-left {
+                    h1 {
+                        margin-bottom: 0;
+                        font-weight: 400;
+                    }
+                }
+
+                .header-right {
+                    display: flex;
+                    gap: 5px;
+
+                    .sort-button {
+                        background: transparent;
+                        color: #0B0F1C;
+                        padding: 8px 4px 8px 8px;
+                        font-size: 12px;
+                    }
+                }
+            }
+
+            .header-bottom-text {
+                display: flex;
+                gap: 16px;
+            }
+
+            h4 {
+                font-size: 12px;
+                color: #5A6182;
+                font-weight: 400;
+            }
+        }
+    }
+
+
+    .new-border {
+        width: 1px;
+        height: 83vh;
+        border-left: 1px solid #F7F8FC;
+    }
+
+    .right-section {
+        width: 30%;
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            position: relative;
+
+            input[type="text"] {
+                padding: 12.5px 26px;
+                border: 1px solid #ccc;
+                border-radius: 16px;
+                width: 100%;
+            }
+
+            i {
+                position: absolute;
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                color: #5A6182;
+            }
+        }
+    }
+}

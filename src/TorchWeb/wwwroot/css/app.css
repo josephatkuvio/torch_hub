@@ -484,7 +484,7 @@
 .workflow-header .header-right .sort-button {
   background: transparent;
   color: #0B0F1C;
-  padding-right: 4px;
+  padding: 8px 4px 8px 8px;
   font-size: 12px;
 }
 .workflow-header .header-right .sort-icon-img {
@@ -768,6 +768,183 @@
   border-radius: 20px;
   border: 1px solid #E6E8F2;
   padding: 24px 24px 0px 24px;
+}
+
+.manage-workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.manage-workflow-header .header-left h1 {
+  margin-bottom: 0;
+  font-weight: 400;
+}
+.manage-workflow-header .header-right {
+  display: flex;
+}
+.manage-workflow-header .header-right .sort-button {
+  background: transparent;
+  color: #0B0F1C;
+  padding: 8px 4px 8px 8px;
+  font-size: 12px;
+}
+.manage-workflow-header .header-right .sort-icon-img {
+  margin-right: 17px;
+}
+.manage-workflow-header .header-right .search-box {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.manage-workflow-header .header-right .search-box .search-box input[type=text] {
+  padding: 12.5px 26px;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+}
+.manage-workflow-header .header-right .search-box i {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #5A6182;
+}
+
+.manage-workflow-folders {
+  /*height: 184px;*/
+  overflow-y: auto;
+}
+.manage-workflow-folders .workflow-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.manage-workflow-folders .workflow-cards .workflow-card {
+  border: 1px solid #E6E8F2;
+  border-radius: 20px;
+  padding: 24px;
+  min-width: 352px;
+  max-width: 440px;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .card-top-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .card-top-text h2 {
+  margin-bottom: 0;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .manage-card {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .card-text h3 {
+  font-size: 14px;
+  color: #181E30;
+  font-weight: 400;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .card-text h4 {
+  font-size: 12px;
+  color: #5A6182;
+  font-weight: 400;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .bottom {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .bottom .info-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .bottom label {
+  font-size: 12px;
+  color: #5A6182;
+  font-weight: 400;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .up-btn {
+  float: right;
+  position: relative;
+  bottom: 32px;
+  background: transparent;
+  padding: 0;
+}
+.manage-workflow-folders .workflow-cards .workflow-card .up-btn .up-btn-img {
+  width: 36px;
+  height: 36px;
+}
+
+.workflow-detail {
+  display: flex;
+  gap: 24px;
+}
+.workflow-detail .left-section {
+  width: 70%;
+}
+.workflow-detail .left-section .detailed-workflow-header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.workflow-detail .left-section .detailed-workflow-header .workflow-detail-header {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  margin-bottom: 6px;
+}
+.workflow-detail .left-section .detailed-workflow-header .workflow-detail-header .header-left h1 {
+  margin-bottom: 0;
+  font-weight: 400;
+}
+.workflow-detail .left-section .detailed-workflow-header .workflow-detail-header .header-right {
+  display: flex;
+  gap: 5px;
+}
+.workflow-detail .left-section .detailed-workflow-header .workflow-detail-header .header-right .sort-button {
+  background: transparent;
+  color: #0B0F1C;
+  padding: 8px 4px 8px 8px;
+  font-size: 12px;
+}
+.workflow-detail .left-section .detailed-workflow-header .header-bottom-text {
+  display: flex;
+  gap: 16px;
+}
+.workflow-detail .left-section .detailed-workflow-header h4 {
+  font-size: 12px;
+  color: #5A6182;
+  font-weight: 400;
+}
+.workflow-detail .new-border {
+  width: 1px;
+  height: 83vh;
+  border-left: 1px solid #F7F8FC;
+}
+.workflow-detail .right-section {
+  width: 30%;
+}
+.workflow-detail .right-section .search-box {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.workflow-detail .right-section .search-box input[type=text] {
+  padding: 12.5px 26px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  width: 100%;
+}
+.workflow-detail .right-section .search-box i {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #5A6182;
 }
 
 .workflow {

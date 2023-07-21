@@ -25,51 +25,54 @@
         <section class="tab-content">
             @if (activeTab == "tab1")
             {
-                @*<header>
-                    <h1>All</h1>
-                </header>*@
-                <NewUIWorkflow />
+            <NewUIWorkflow />
             }
             else if (activeTab == "tab2")
             {
-@*                <header>
-                    <h1>Progress</h1>
-                </header>*@
-                <NewUIStatus />
+            <NewUIStatus />
             }
-            else if (activeTab == "tab3")
+            else if (activeTab == "tab3" && !showDetail)
             {
-                <header>
-                    <h1>Manage</h1>
-                </header>
+                <NewUIManageWorkflow OnContentClick="ToggleShowDetail" />
             }
+            else if (activeTab == "tab3" && showDetail)
+            {
+            <NewUIWorkflowDetail />
+            }
+            </section>
+
+        </section>
+
+        <section class="tab-section">
+            <ul class="tab-list">
+                <li class="tab-item">
+                    <a class="tab-link active" href="#" name="tab1">
+                        <img src="/images/summaryIcon.svg" />
+                    </a>
+                </li>
+            </ul>
+            <section class="tab-content">
+                <header>
+                    <h1>Summary</h1>
+                </header>
+            </section>
         </section>
 
     </section>
 
-    <section class="tab-section">
-        <ul class="tab-list">
-            <li class="tab-item">
-                <a class="tab-link active" href="#" name="tab1">
-                    <img src="/images/summaryIcon.svg" />
-                </a>
-            </li>
-        </ul>
-        <section class="tab-content">
-            <header>
-                <h1>Summary</h1>
-            </header>
-        </section>
-    </section>
 
-</section>
-
-
-@code {
+    @code {
     private string activeTab = "tab1";
+    private bool showDetail = false;
+
 
     private void ChangeTab(string tabName)
     {
         activeTab = tabName;
+    }
+
+    private void ToggleShowDetail()
+    {
+        showDetail = !showDetail;
     }
 }

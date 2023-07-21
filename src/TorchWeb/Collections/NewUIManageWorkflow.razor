@@ -1,0 +1,55 @@
+﻿<header class="manage-workflow-header">
+    <div class="header-left">
+        <h1>Manage Workflow</h1>
+    </div>
+    <div class="header-right">
+        <button class="sort-button">New</button>
+        <img class="sort-icon-img" src="/images/plusNewIcon.svg" />
+        <button class="sort-button">Sort</button>
+        <img class="sort-icon-img" src="/images/sortIcon.svg" />
+        <div class="search-box">
+            <input type="text" placeholder="Search" />
+            <i class="fa fa-search"></i>
+        </div>
+        <i class="sort"></i>
+    </div>
+</header>
+
+
+<section class="manage-workflow-folders">
+    <section class="workflow-cards">
+        <article class="workflow-card">
+            <div class="card-top-text" @onclick="HandleContentClick">
+                <h2>Workflow Name</h2>
+                <img class="sort-icon-img" src="/images/arrowRightIcon.svg" />
+            </div>
+            <div class="divider manage-card"></div>
+            <div class="card-text bottom">
+                <div class="info-pair">
+                    <label>Last Updated</label>
+                    <h3>24 FEB 2016</h3>
+                    @*<time>@Workflow.Create_date.ToString("dd MMMM yyyy")</time>*@
+                </div>
+                <div class="info-pair">
+                    <label>Created by</label>
+                    <h3>Christina J</h3>
+                </div>
+                <div class="info-pair">
+                    <label>Assigned Tasks</label>
+                    <h3>34</h3>
+                </div>
+            </div>
+        </article>
+    </section>
+</section>
+
+
+
+@code {
+    [Parameter] public EventCallback OnContentClick { get; set; }
+
+    private async Task HandleContentClick()
+    {
+        await OnContentClick.InvokeAsync();
+    }
+}
