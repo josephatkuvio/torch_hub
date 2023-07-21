@@ -113,6 +113,7 @@
                 display: flex;
                 align-items: center;
                 gap: 8px;
+                margin-top: 5px;
 
                 .progress-bar {
                     position: absolute;
@@ -125,7 +126,7 @@
 
                 .percentage-container {
                     display: flex;
-                    justify-content: space-between; 
+                    justify-content: space-between;
                     width: 100%;
                 }
             }
@@ -173,7 +174,7 @@
             }
         }
 
-        .with-progress {            
+        .with-progress {
             position: relative;
 
             .left, .right {

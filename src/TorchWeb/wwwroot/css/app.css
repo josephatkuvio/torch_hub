@@ -703,6 +703,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-top: 5px;
 }
 .specimens-list-cards-status .spec-cards .spec-card .progress .progress-bar {
   position: absolute;
@@ -812,7 +813,6 @@
 }
 
 .manage-workflow-folders {
-  /*height: 184px;*/
   overflow-y: auto;
 }
 .manage-workflow-folders .workflow-cards {
@@ -905,12 +905,6 @@
   display: flex;
   gap: 5px;
 }
-.workflow-detail .left-section .detailed-workflow-header .workflow-detail-header .header-right .sort-button {
-  background: transparent;
-  color: #0B0F1C;
-  padding: 8px 4px 8px 8px;
-  font-size: 12px;
-}
 .workflow-detail .left-section .detailed-workflow-header .header-bottom-text {
   display: flex;
   gap: 16px;
@@ -919,6 +913,108 @@
   font-size: 12px;
   color: #5A6182;
   font-weight: 400;
+}
+.workflow-detail .left-section .workflow-detail-buttons {
+  background: transparent;
+  padding: 8px 4px 8px 8px;
+  font-size: 12px;
+}
+.workflow-detail .left-section .task-cards {
+  margin-top: 32px;
+}
+.workflow-detail .left-section .task-cards .workflow-cards {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card {
+  display: flex;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card .card-order {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 29px 8px 0px 8px;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card .detail-buttons {
+  background: transparent;
+  font-size: 12px;
+  padding: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  border: 1px solid var(--gray-200, #E6E8F2);
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card .detail-buttons img {
+  height: 11px;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card .order {
+  margin-bottom: 10px;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card {
+  border: 1px solid #E6E8F2;
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .card-top-text {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 16px;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .card-top-text h2 {
+  margin-bottom: 0;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .card-top-text .top-top-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .card-top-text .top-top-text .right-btns {
+  display: flex;
+  gap: 8px;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .card-top-text h3 {
+  font-size: 14px;
+  color: #181E30;
+  font-weight: 400;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .card-text h3 {
+  font-size: 14px;
+  color: #181E30;
+  font-weight: 400;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .card-text h4 {
+  font-size: 12px;
+  color: #5A6182;
+  font-weight: 400;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .task-card-bottom-text {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .task-card-bottom-text .task-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .task-card-bottom-text .task-options .task-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #344054;
+  font-weight: 500;
+}
+.workflow-detail .left-section .task-cards .workflow-cards .task-card-card .task-card-bottom-text .task-options .task-opt input[type=radio] {
+  top: 4px;
+  position: relative;
 }
 .workflow-detail .new-border {
   width: 1px;
@@ -932,6 +1028,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  margin-bottom: 32px;
 }
 .workflow-detail .right-section .search-box input[type=text] {
   padding: 12.5px 26px;
@@ -945,6 +1042,39 @@
   right: 10px;
   transform: translateY(-50%);
   color: #5A6182;
+}
+.workflow-detail .right-section .create-new-task {
+  border-radius: 20px;
+  /*display: grid;
+  grid-template-columns: 3fr 7fr;*/
+  align-items: center;
+  /*height: 239px;*/
+  background: #F7F8FC;
+  cursor: pointer;
+  padding: 17px 32px;
+  margin-bottom: 13px;
+  display: flex;
+  justify-content: space-between;
+}
+.workflow-detail .right-section .create-new-task h3 {
+  font-size: 14px;
+  color: #181E30;
+  font-weight: 400;
+}
+.workflow-detail .right-section .create-new-task .add-btn {
+  background: transparent;
+  border-radius: 9px;
+  border: 1px solid var(--gray-200, #E6E8F2);
+  display: flex;
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+}
+.workflow-detail .right-section .create-new-task .add-btn img {
+  width: 14px;
+  height: 14px;
 }
 
 .workflow {
