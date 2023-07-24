@@ -2,22 +2,29 @@
     display: grid;
     height: 100vh;
     width: 100vw;
-    padding: 32px 30px;    
+    padding: 32px 30px;
     grid-template-columns: 1fr 447px;
     gap: 24px;
     background: #29324A;
     transition: 0.3s ease-in-out;
 
-
-
-    /*&summary {
-        grid-template-columns: 1fr 447px;
-    }*/
-
-
     > * {
         overflow: hidden;
     }
+
+
+    &.collapsed {
+        grid-template-columns: 1fr 72px;
+
+        .tab-item {
+            width: 72px;
+        }
+
+        .tab-content {
+            border-radius: 0px 0px 20px 20px;
+        }
+    }
+
 
     .tab-list {
         display: flex;
@@ -51,6 +58,14 @@
                     img {
                         filter: invert(0);
                     }
+                }
+            }
+
+            .summary {
+                background-color: #FFFFFF;
+
+                img {
+                    filter: invert(0);
                 }
             }
         }

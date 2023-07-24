@@ -423,12 +423,18 @@
   gap: 24px;
   background: #29324A;
   transition: 0.3s ease-in-out;
-  /*&summary {
-      grid-template-columns: 1fr 447px;
-  }*/
 }
 .new-ui-section > * {
   overflow: hidden;
+}
+.new-ui-section.collapsed {
+  grid-template-columns: 1fr 72px;
+}
+.new-ui-section.collapsed .tab-item {
+  width: 72px;
+}
+.new-ui-section.collapsed .tab-content {
+  border-radius: 0px 0px 20px 20px;
 }
 .new-ui-section .tab-list {
   display: flex;
@@ -459,6 +465,12 @@
   background-color: #FFFFFF;
 }
 .new-ui-section .tab-list .tab-item .tab-link.active img {
+  filter: invert(0);
+}
+.new-ui-section .tab-list .tab-item .summary {
+  background-color: #FFFFFF;
+}
+.new-ui-section .tab-list .tab-item .summary img {
   filter: invert(0);
 }
 .new-ui-section .first-icon img {
@@ -934,6 +946,7 @@
 }
 .workflow-detail .left-section .task-cards .workflow-cards .task-card {
   display: flex;
+  width: 100%;
 }
 .workflow-detail .left-section .task-cards .workflow-cards .task-card .card-order {
   display: flex;

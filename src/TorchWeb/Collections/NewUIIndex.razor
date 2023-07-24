@@ -1,6 +1,6 @@
 ﻿@page "/new-ui-page"
 
-<section class="new-ui-section">
+<section class="new-ui-section @(summaryCollapsed ? "collapsed" : "")">
 
     <section class="tab-section">
 
@@ -25,11 +25,11 @@
         <section class="tab-content">
             @if (activeTab == "all")
             {
-            <NewUIWorkflow />
+                <NewUIWorkflow />
             }
             else if (activeTab == "status")
             {
-            <NewUIStatus />
+                <NewUIStatus />
             }
             else if (activeTab == "workflow" && !showDetail)
             {
@@ -37,35 +37,32 @@
             }
             else if (activeTab == "workflow" && showDetail)
             {
-            <NewUIWorkflowDetail />
+                <NewUIWorkflowDetail />
             }
-            </section>
-
-        </section>
-
-        <section class="tab-section">
-            <ul class="tab-list">
-            <li class="tab-item" @onclick="ToggleSummary">
-                    <a class="tab-link active" name="summary">
-                        <img src="/images/summaryIcon.svg" />
-                    </a>
-                </li>
-            </ul>
-            <section class="tab-content">
-                <NewUISummary />
-            </section>
         </section>
 
     </section>
 
+    <section class="tab-section summary-section">
+        <ul class="tab-list">
+            <li class="tab-item" @onclick="ToggleSummary">
+                <a class="tab-link summary" name="summary">
+                    <img src="/images/summaryIcon.svg" />
+                </a>
+            </li>
+        </ul>
+        <section class="tab-content">
+            <NewUISummary />
+        </section>
+    </section>
 
-    @code {
+</section>
+
+
+@code {
     private string activeTab = "all";
     private bool showDetail = false;
-
-    bool IsSummaryActive = true;
-
-    string ActiveTabClass => $"collection-{activeTab}{(IsSummaryActive ? "-summary" : "")}";
+    private bool summaryCollapsed = false;
 
 
     private void ChangeTab(string tabName)
@@ -78,5 +75,8 @@
         showDetail = !showDetail;
     }
 
-    void ToggleSummary() => IsSummaryActive = !IsSummaryActive;
+    private void ToggleSummary()
+    {
+        summaryCollapsed = !summaryCollapsed;
+    }
 }
