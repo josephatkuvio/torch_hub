@@ -436,6 +436,9 @@
 .new-ui-section.collapsed .tab-content {
   border-radius: 0px 0px 20px 20px;
 }
+.new-ui-section.collapsed .collapsed-summary-tab-content {
+  padding: 8px;
+}
 .new-ui-section .tab-list {
   display: flex;
   flex-wrap: wrap;
@@ -1243,6 +1246,43 @@
 }
 .workflow-list-cards .w-list-cards .w-card .with-progress {
   position: relative;
+}
+
+.collapsed-summary-section {
+  height: 100%;
+}
+.collapsed-summary-section .progress-bars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.collapsed-summary-section .progress-bars .progress-bar {
+  width: 11px;
+  height: 274px;
+  background-color: #e6e6e6;
+  border-radius: 7px;
+  overflow: hidden;
+}
+.collapsed-summary-section .progress-bars .progress-bar .vertical-progress {
+  height: 50%;
+  background-color: #251E85;
+  transition: height 0.2s ease-in-out;
+}
+.collapsed-summary-section .divider {
+  height: 1px;
+  background-color: #F7F8FC;
+  margin: 20px 0px;
+}
+.collapsed-summary-section .icons {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 14px;
+}
+.collapsed-summary-section .icons div {
+  padding: 12px 16px;
+  border-radius: 20px;
 }
 
 .workflow {

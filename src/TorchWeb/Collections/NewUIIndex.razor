@@ -51,8 +51,16 @@
                 </a>
             </li>
         </ul>
-        <section class="tab-content">
-            <NewUISummary />
+        <section class="tab-content collapsed-summary-tab-content">
+            @if (!summaryCollapsed)
+            {
+                <NewUISummary />
+            }
+            else
+            {
+                <NewUICollapsedSummary />
+            }
+            @*<NewUISummary />*@
         </section>
     </section>
 
