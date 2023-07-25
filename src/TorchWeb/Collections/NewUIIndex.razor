@@ -5,18 +5,18 @@
     <section class="tab-section">
 
         <ul class="tab-list">
-            <li class="tab-item first-icon">
-                <a class='tab-link @(activeTab == "all" ? "active" : "")' @onclick='() => ChangeTab("all")'>
+            <li class="tab-item first-icon @(activeTab == "all" ? "active" : "")" @onclick='() => ChangeTab("all")'>
+                <a class='tab-link'>
                     <img src="/images/Flowchart.svg" />
                 </a>
             </li>
-            <li class="tab-item">
-                <a class='tab-link @(activeTab == "status" ? "active" : "")' @onclick='() => ChangeTab("status")'>
+            <li class="tab-item @(activeTab == "status" ? "active" : "")" @onclick='() => ChangeTab("status")'>
+                <a class='tab-link'>
                     <img src="/images/ProgressIcon.svg" />
                 </a>
             </li>
-            <li class="tab-item">
-                <a class='tab-link @(activeTab == "workflow" ? "active" : "")' @onclick='() => ChangeTab("workflow")'>
+            <li class="tab-item @(activeTab == "workflow" ? "active" : "")" @onclick='() => ChangeTab("workflow")'>
+                <a class='tab-link'>
                     <img src="/images/ManageIcon.svg" />
                 </a>
             </li>
@@ -45,8 +45,8 @@
 
     <section class="tab-section summary-section">
         <ul class="tab-list">
-            <li class="tab-item" @onclick="ToggleSummary">
-                <a class="tab-link summary" name="summary">
+            <li class="tab-item summary active" @onclick="ToggleSummary">
+                <a class="tab-link" name="summary">
                     <img src="/images/summaryIcon.svg" />
                 </a>
             </li>
@@ -60,7 +60,6 @@
             {
                 <NewUICollapsedSummary />
             }
-            @*<NewUISummary />*@
         </section>
     </section>
 
