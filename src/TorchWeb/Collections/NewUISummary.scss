@@ -32,31 +32,50 @@
         gap: 32px;
         flex-wrap: wrap;
 
-        .progress-bars {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
+        .nested-progress-bars {
 
-            .progress-bar {
-                position: relative;
-                width: 100px;
-                height: 100px;
-                border-radius: 50%;
-                border: 4px solid #e6e6e6;
-                overflow: hidden;
+            .o-progress-circle {
+                width: 130px;
 
-                .circle {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    border-radius: 50%;
-                    border: 4px solid transparent;
-                    border-top-color: #251E85;
-                    border-right-color: #251E85;
-                    transform: rotate(0deg);
+                .o-progress-circle__fill {
+                    position: absolute;                    
+
+                    .icon {
+                        width: 130px;
+                        height: 130px;
+
+                        circle {
+                            fill: none;
+                            stroke-width: 2;                            
+                        }
+                    }
+                }
+            }
+
+            .outer-circle {
+                .o-progress-circle__fill {
+                    .icon circle {
+                        stroke-dasharray: 100;
+                        /*stroke: #3C359C;*/
+                    }
+                }
+            }
+
+            .middle-circle {
+                .o-progress-circle__fill {
+                    .icon circle {
+                        stroke-dasharray: 150;
+                        /*stroke: #0EC2E9;*/
+                    }
+                }
+            }
+
+            .inner-circle {
+                .o-progress-circle__fill {
+                    .icon circle {
+                        stroke-dasharray: 200;
+                        /*stroke: #FF7546;*/
+                    }
                 }
             }
         }
@@ -71,6 +90,10 @@
                 flex-direction: column;
                 gap: 8px;
             }
+
+            .completion {
+                width: 75px;
+            }
         }
 
         .progress-bar-caption {
@@ -80,7 +103,26 @@
 
             .progress-item {
                 display: flex;
+                align-items: center;
                 gap: 8px;
+
+                .color-caption-circle {
+                    width: 11px;
+                    height: 11px;
+                    border-radius: 26px;
+                }
+
+                .uploading-circle {
+                    background-color: #3C359C;
+                }
+
+                .success-circle {
+                    background-color: #0EC2E9;
+                }
+
+                .error-circle {
+                    background-color: #FF7546;
+                }
 
                 .title-caption {
                     width: 72px;
@@ -202,7 +244,7 @@
                     content: "";
                     position: absolute;
                     height: 100%;
-                    width: 0%;                    
+                    width: 0%;
                     border-radius: 10px;
                 }
             }
