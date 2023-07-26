@@ -1,5 +1,6 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M12.7941 5.5459H10.5439C7.78252 5.5459 5.54395 7.78447 5.54395 10.5459V13.4544C5.54395 16.2158 7.78252 18.4544 10.5439 18.4544H13.4331C16.1945 18.4544 18.4331 16.2158 18.4331 13.4544V11.1934" stroke="#23D706" stroke-width="1.2" stroke-linecap="round"/>
-<path d="M9 11.0488L10.7103 13.6212C11.0924 14.1959 11.9281 14.2199 12.3426 13.6681L16 8.79883" stroke="#23D706" stroke-width="1.2" stroke-linecap="round"/>
-<rect x="0.5" y="0.5" width="23" height="23" rx="8.5" stroke="#E0FFE3"/>
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="save">
+<path id="Rectangle 1121" d="M8.79407 1.5459H6.54395C3.78252 1.5459 1.54395 3.78447 1.54395 6.5459V9.45438C1.54395 12.2158 3.78252 14.4544 6.54395 14.4544H9.43305C12.1945 14.4544 14.4331 12.2158 14.4331 9.45438V7.19336" stroke="#23D706" stroke-width="1.2" stroke-linecap="round"/>
+<path id="Vector 74" d="M5 7.04875L6.71026 9.62115C7.09238 10.1959 7.92807 10.2199 8.34257 9.66808L12 4.79883" stroke="#23D706" stroke-width="1.2" stroke-linecap="round"/>
+</g>
 </svg>

@@ -1025,7 +1025,7 @@
 }
 .workflow-detail .left-section .detailed-workflow-header .workflow-detail-header .header-right {
   display: flex;
-  gap: 5px;
+  gap: 8px;
 }
 .workflow-detail .left-section .detailed-workflow-header .header-bottom-text {
   display: flex;
@@ -1038,8 +1038,17 @@
 }
 .workflow-detail .left-section .workflow-detail-buttons {
   background: transparent;
-  padding: 8px 4px 8px 8px;
   font-size: 12px;
+  border-radius: 9px;
+  border: 1px solid #E6E8F2;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+}
+.workflow-detail .left-section .workflow-detail-buttons .edit-icon, .workflow-detail .left-section .workflow-detail-buttons .trash-icon, .workflow-detail .left-section .workflow-detail-buttons .close-icon {
+  width: 15px;
+  height: 15px;
+  vertical-align: bottom;
 }
 .workflow-detail .left-section .task-cards {
   margin-top: 32px;
@@ -1054,6 +1063,7 @@
 .workflow-detail .left-section .task-cards .workflow-cards .task-card {
   display: flex;
   width: 100%;
+  cursor: pointer;
 }
 .workflow-detail .left-section .task-cards .workflow-cards .task-card .card-order {
   display: flex;
@@ -1061,17 +1071,21 @@
   align-items: center;
   padding: 29px 8px 0px 8px;
 }
+.workflow-detail .left-section .task-cards .workflow-cards .task-card .card-order h2 {
+  color: #5A6182;
+}
 .workflow-detail .left-section .task-cards .workflow-cards .task-card .detail-buttons {
   background: transparent;
   font-size: 12px;
-  padding: 8px;
+  padding: 10px;
   width: 32px;
   height: 32px;
   border-radius: 12px;
   border: 1px solid var(--gray-200, #E6E8F2);
 }
 .workflow-detail .left-section .task-cards .workflow-cards .task-card .detail-buttons img {
-  height: 11px;
+  height: 12px;
+  width: 12px;
 }
 .workflow-detail .left-section .task-cards .workflow-cards .task-card .order {
   margin-bottom: 10px;
@@ -1195,6 +1209,7 @@
 .workflow-detail .right-section .create-new-task .add-btn img {
   width: 14px;
   height: 14px;
+  margin: 0;
 }
 
 .workflow-header {

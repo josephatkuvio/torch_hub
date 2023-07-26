@@ -10,10 +10,10 @@
                 </div>
                 <div class="header-right">
                     <button class="workflow-detail-buttons">
-                        <img class="sort-icon-img" src="/images/Edit save.svg" />
+                        <img class="sort-icon-img edit-icon" src="/images/Edit save.svg" />
                     </button>
                     <button class="workflow-detail-buttons">
-                        <img class="sort-icon-img" src="/images/Trashcan.svg" />
+                        <img class="sort-icon-img trash-icon" src="/images/Trashcan.svg" />
                     </button>
                 </div>
             </div>
@@ -26,56 +26,84 @@
 
         <section class="task-cards">
 
-            <section class="workflow-cards">
-                <section class="task-card">
-                    <div class="card-order">
-                        <h2>01</h2>
-                        <button class="detail-buttons order">
-                            <img class="detail-icon-img" src="/images/up.svg" />
-                        </button>
-                        <button class="detail-buttons ">
-                            <img class="detail-icon-img" src="/images/down.svg" />
-                        </button>
+            <section class="workflow-cards">                
 
-                    </div>
-                    <article class="task-card-card">
-                        <div class="card-top-text">
-                            <div class="top-top-text">
-                                <h2>Configuration Name</h2>
-                                <div class="right-btns">
-                                    <button class="workflow-detail-buttons">
-                                        <img class="sort-icon-img" src="/images/close_icon.svg" />
-                                    </button>
-                                    <button class="workflow-detail-buttons">
-                                        <img class="sort-icon-img" src="/images/greenEditSaveIcon.svg" />
-                                    </button>
-                                    <button class="workflow-detail-buttons">
-                                        <img class="sort-icon-img" src="/images/Trashcan.svg" />
-                                    </button>
+                <section class="task-card" @onclick="ToggleExpandCollapse">
+                    @if (isExpanded)
+                    {
+                        <div class="card-order">
+                            <h2>01</h2>
+                            <button class="detail-buttons order" @onclick:stopPropagation=true>
+                                <img class="detail-icon-img" src="/images/up.svg" />
+                            </button>
+                            <button class="detail-buttons " @onclick:stopPropagation=true>
+                                <img class="detail-icon-img" src="/images/down.svg" />
+                            </button>
+
+                        </div>
+                        <article class="task-card-card">
+                            <div class="card-top-text">
+                                <div class="top-top-text">
+                                    <h2>Configuration Name</h2>
+                                    <div class="right-btns">
+                                        <button class="workflow-detail-buttons" @onclick:stopPropagation=true>
+                                            <img class="sort-icon-img close-icon" src="/images/close_icon.svg" />
+                                        </button>
+                                        <button class="workflow-detail-buttons" @onclick:stopPropagation=true>
+                                            <img class="sort-icon-img edit-icon" src="/images/greenEditSaveIcon.svg" />
+                                        </button>
+                                        <button class="workflow-detail-buttons" @onclick:stopPropagation=true>
+                                            <img class="sort-icon-img trash-icon" src="/images/Trashcan.svg" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="header-bottom-text">
+                                    <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et.</h3>
                                 </div>
                             </div>
-                            <div class="header-bottom-text">
-                                <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et.</h3>
-                            </div>
-                        </div>
 
-                        <div class="task-card-bottom-text">
-                            <div class="task-options">
-                                <label class="task-opt">
-                                    <input type="radio" checked>
-                                    Option_1
-                                </label>
-                                <label class="task-opt">
-                                    <input type="radio">
-                                    Option_2
-                                </label>
-                                <label class="task-opt">
-                                    <input type="radio">
-                                    Option_3
-                                </label>
+                            <div class="task-card-bottom-text">
+                                <div class="task-options">
+                                    <label class="task-opt">
+                                        <input type="radio" @onclick:stopPropagation=true checked>
+                                        Option_1
+                                    </label>
+                                    <label class="task-opt">
+                                        <input type="radio" @onclick:stopPropagation=true>
+                                        Option_2
+                                    </label>
+                                    <label class="task-opt" @onclick:stopPropagation=true>
+                                        <input type="radio">
+                                        Option_3
+                                    </label>
+                                </div>
                             </div>
+                        </article>
+                    }
+                    else
+                    {
+                        <div class="card-order">
+                            <h2>01</h2>
                         </div>
-                    </article>
+                        <article class="task-card-card">
+                            <div class="card-top-text">
+                                <div class="top-top-text">
+                                    <h2>Configuration Name</h2>
+                                    <div class="right-btns">
+                                        <button class="workflow-detail-buttons">
+                                            <img class="sort-icon-img close-icon" src="/images/close_icon.svg" />
+                                        </button>
+                                        <button class="workflow-detail-buttons">
+                                            <img class="sort-icon-img edit-icon" src="/images/greenEditSaveIcon.svg" />
+                                        </button>
+                                        <button class="workflow-detail-buttons">
+                                            <img class="sort-icon-img trash-icon" src="/images/Trashcan.svg" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    }
                 </section>
 
             </section>
@@ -97,6 +125,7 @@
                 <img src="/images/plusNewIcon.svg" />
             </button>
         </article>
+
     </section>
 
 </section>
@@ -106,9 +135,15 @@
 
 @code {
     [Parameter] public EventCallback OnBackClick { get; set; }
+    private bool isExpanded = false;
 
     private async Task HandleBackClick()
     {
         await OnBackClick.InvokeAsync();
+    }
+
+    private void ToggleExpandCollapse()
+    {
+        isExpanded = !isExpanded;
     }
 }

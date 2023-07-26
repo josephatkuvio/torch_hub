@@ -33,7 +33,7 @@
 
                 .header-right {
                     display: flex;
-                    gap: 5px;
+                    gap: 8px;
                 }
             }
 
@@ -51,8 +51,18 @@
 
         .workflow-detail-buttons {
             background: transparent;
-            padding: 8px 4px 8px 8px;
             font-size: 12px;
+            border-radius: 9px;
+            border: 1px solid #E6E8F2;
+            width: 24px;
+            height: 24px;
+            padding: 4px;
+
+            .edit-icon, .trash-icon, .close-icon {
+                width: 15px;
+                height: 15px;
+                vertical-align: bottom;
+            }
         }
 
         .task-cards {
@@ -68,25 +78,31 @@
                 .task-card {
                     display: flex;
                     width: 100%;
+                    cursor: pointer;
 
                     .card-order {
                         display: flex;
                         flex-direction: column;
                         align-items: center;
                         padding: 29px 8px 0px 8px;
+
+                        h2 {
+                            color: #5A6182;
+                        }
                     }
 
                     .detail-buttons {
                         background: transparent;
                         font-size: 12px;
-                        padding: 8px;
+                        padding: 10px;
                         width: 32px;
                         height: 32px;
                         border-radius: 12px;
                         border: 1px solid var(--gray-200, #E6E8F2);
 
                         img {
-                            height: 11px;
+                            height: 12px;
+                            width: 12px;
                         }
                     }
 
@@ -237,6 +253,7 @@
                 img {
                     width: 14px;
                     height: 14px;
+                    margin: 0;
                 }
             }
         }
