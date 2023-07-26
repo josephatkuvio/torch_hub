@@ -1,7 +1,9 @@
 ﻿<section class="workflow-detail">
     <section class="left-section">
         <header class="detailed-workflow-header">
-            &larr; Back
+            <aside class="back" @onclick="HandleBackClick">
+                &larr; Back
+            </aside>
             <div class="workflow-detail-header">
                 <div class="header-left">
                     <h1>Workflow Name</h1>
@@ -103,5 +105,10 @@
 
 
 @code {
+    [Parameter] public EventCallback OnBackClick { get; set; }
 
+    private async Task HandleBackClick()
+    {
+        await OnBackClick.InvokeAsync();
+    }
 }

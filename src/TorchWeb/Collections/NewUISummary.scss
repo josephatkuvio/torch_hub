@@ -159,11 +159,20 @@
                 margin-top: 5px;
 
                 .progress-bar {
-                    position: absolute;
+                    position: relative;
                     width: 272px;
                     height: 7px;
                     background-color: #E6E8F2;
                     border-radius: 10px;
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        height: 100%;
+                        width: 88%;
+                        background-color: #3C359C;
+                        border-radius: 10px;
+                    }
                 }
 
                 span {
@@ -175,6 +184,27 @@
 
             .with-progress {
                 position: relative;
+            }
+        }
+
+        .error {
+            background: #FEF1F4;
+            color: #B50021;
+
+            h4 {
+                color: #B50021;
+            }
+
+            .progress .progress-bar {
+                background-color: #F6DBE2;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    height: 100%;
+                    width: 0%;                    
+                    border-radius: 10px;
+                }
             }
         }
     }

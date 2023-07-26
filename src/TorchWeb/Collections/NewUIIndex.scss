@@ -24,7 +24,7 @@
         }
 
         .collapsed-summary-tab-content {
-            padding: 8px;
+            padding: 24px 8px 8px 8px;
         }
     }
 
@@ -71,6 +71,54 @@
             }
         }
 
+        .tab-item::before, .tab-item::after {
+            width: 10px;
+            height: 10px;
+            content: "";
+            position: absolute;
+            bottom: 0;
+        }
+
+        .tab-item::before {
+            left: -10px;
+        }
+
+        .tab-item::after {
+            right: -10px;
+        }
+
+        .active::before, .active::after {
+            z-index: 1;
+            background: #FFFFFF;
+        }
+
+        .tab-link::before, .tab-link::after {            
+            content: "";
+            position: absolute;
+            bottom: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            background: #0B0F1C;
+            z-index: 2;
+        }
+
+        .tab-link::before {
+            left: -20px;
+        }
+
+        .tab-link::after {
+            right: -20px;
+        }
+
+        .active .tab-link::before, .active .tab-link::after {
+            background: #0B0F1C;
+        }
+
+        .tab-item:last-child .tab-link::after {
+            background: #29324A;
+        }
+
         .first-icon img {
             padding: 6px;
         }
@@ -79,40 +127,6 @@
             width: 32px;
             height: 32px;
         }
-    }
-
-    .tab-list .active:after {
-        z-index: 1;
-        background: #FFFFFF;
-    }
-
-    .tab-list .tab-item:after {
-        right: -10px;
-        width: 10px;
-        height: 10px;
-        content: "";
-        position: absolute;
-        bottom: 0;
-    }
-
-    .tab-list .active .tab-link:after {
-        background: #0B0F1C;
-    }
-
-    .tab-list .tab-link:after {
-        right: -20px;
-        content: "";
-        position: absolute;
-        bottom: 0;
-        width: 20px;
-        height: 20px;
-        border-radius: 10px;
-        background: #0B0F1C;
-        z-index: 2;
-    }
-
-    .tab-list .tab-item:last-child .tab-link:after {
-        background: #29324A;
     }
 
     .tab-content {

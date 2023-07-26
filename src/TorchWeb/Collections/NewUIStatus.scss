@@ -1,9 +1,52 @@
-.status-header {
-    height: 38.8px;
+.workflow-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    h1 {
-        margin-bottom: 0;
-        font-weight: 400;
+    .header-left {
+        h1 {
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+    }
+
+    .header-right {
+        display: flex;
+
+        .sort-button {
+            background: transparent;
+            color: #0B0F1C;
+            padding: 8px 4px 8px 8px;
+            font-size: 12px;
+        }
+
+        .sort-icon-img {
+            margin-right: 17px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            position: relative;
+
+            input[type="text"] {
+                padding: 12.5px 26px;
+                border: 1px solid #ccc;
+                border-radius: 16px;
+
+                &::placeholder {
+                    color: #6E7496;
+                }
+            }
+
+            i {
+                position: absolute;
+                top: 50%;
+                right: 26px;
+                transform: translateY(-50%);
+                color: #5A6182;
+            }
+        }
     }
 }
 
@@ -99,6 +142,7 @@
                 margin-bottom: 0;
                 font-size: 14px;
                 font-weight: 400;
+                color: #181E30;
             }
 
             h2 {
@@ -122,6 +166,15 @@
                     height: 7px;
                     background-color: #E6E8F2;
                     border-radius: 10px;
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        height: 100%;
+                        width: 45%;
+                        background-color: #29324A;
+                        border-radius: 10px;
+                    }
                 }
 
                 .percentage-container {
@@ -181,6 +234,10 @@
                 gap: 32px;
             }
 
+            .left {
+                width: 100%;
+            }
+
             span {
                 font-size: 12px;
                 right: 222px;
@@ -188,10 +245,16 @@
             }
         }
     }
-}
 
-.processed-spec-section {
-    border-radius: 20px;
-    border: 1px solid #E6E8F2;
-    padding: 24px 24px 0px 24px;
+    &::-webkit-scrollbar {
+        &-thumb {
+            background: #29324A;
+        }
+    }
+
+    .processed-spec-section {
+        border-radius: 20px;
+        border: 1px solid #E6E8F2;
+        padding: 24px 24px 0px 24px;
+    }
 }

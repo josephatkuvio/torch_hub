@@ -29,17 +29,20 @@
             align-items: center;
             position: relative;
 
-            .search-box input[type="text"] {
+            input[type="text"] {
                 padding: 12.5px 26px;
-                margin-right: 5px;
                 border: 1px solid #ccc;
                 border-radius: 16px;
+
+                &::placeholder {
+                    color: #6E7496;
+                }
             }
 
             i {
                 position: absolute;
                 top: 50%;
-                right: 10px;
+                right: 26px;
                 transform: translateY(-50%);
                 color: #5A6182;
             }
@@ -89,6 +92,7 @@
                     font-size: 14px;
                     color: #181E30;
                     font-weight: 400;
+                    margin-bottom: 4px;
                 }
 
                 h4 {
@@ -101,7 +105,7 @@
             .up-btn {
                 float: right;
                 position: relative;
-                bottom: 32px;
+                bottom: 36px;
                 background: transparent;
                 padding: 0;
 

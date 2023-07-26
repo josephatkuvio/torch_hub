@@ -437,7 +437,7 @@
   border-radius: 0px 0px 20px 20px;
 }
 .new-ui-section.collapsed .collapsed-summary-tab-content {
-  padding: 8px;
+  padding: 24px 8px 8px 8px;
 }
 .new-ui-section .tab-list {
   display: flex;
@@ -477,30 +477,24 @@
   height: 100%;
   text-decoration: none;
 }
-.new-ui-section .tab-list .first-icon img {
-  padding: 6px;
-}
-.new-ui-section .tab-list .summary img {
-  width: 32px;
-  height: 32px;
-}
-.new-ui-section .tab-list .active:after {
-  z-index: 1;
-  background: #FFFFFF;
-}
-.new-ui-section .tab-list .tab-item:after {
-  right: -10px;
+.new-ui-section .tab-list .tab-item::before, .new-ui-section .tab-list .tab-item::after {
   width: 10px;
   height: 10px;
   content: "";
   position: absolute;
   bottom: 0;
 }
-.new-ui-section .tab-list .active .tab-link:after {
-  background: #0B0F1C;
+.new-ui-section .tab-list .tab-item::before {
+  left: -10px;
 }
-.new-ui-section .tab-list .tab-link:after {
-  right: -20px;
+.new-ui-section .tab-list .tab-item::after {
+  right: -10px;
+}
+.new-ui-section .tab-list .active::before, .new-ui-section .tab-list .active::after {
+  z-index: 1;
+  background: #FFFFFF;
+}
+.new-ui-section .tab-list .tab-link::before, .new-ui-section .tab-list .tab-link::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -510,8 +504,24 @@
   background: #0B0F1C;
   z-index: 2;
 }
-.new-ui-section .tab-list .tab-item:last-child .tab-link:after {
+.new-ui-section .tab-list .tab-link::before {
+  left: -20px;
+}
+.new-ui-section .tab-list .tab-link::after {
+  right: -20px;
+}
+.new-ui-section .tab-list .active .tab-link::before, .new-ui-section .tab-list .active .tab-link::after {
+  background: #0B0F1C;
+}
+.new-ui-section .tab-list .tab-item:last-child .tab-link::after {
   background: #29324A;
+}
+.new-ui-section .tab-list .first-icon img {
+  padding: 6px;
+}
+.new-ui-section .tab-list .summary img {
+  width: 32px;
+  height: 32px;
 }
 .new-ui-section .tab-content {
   height: calc(100% - 56px);
@@ -547,16 +557,18 @@
   align-items: center;
   position: relative;
 }
-.workflow-header .header-right .search-box .search-box input[type=text] {
+.workflow-header .header-right .search-box input[type=text] {
   padding: 12.5px 26px;
-  margin-right: 5px;
   border: 1px solid #ccc;
   border-radius: 16px;
+}
+.workflow-header .header-right .search-box input[type=text]::placeholder {
+  color: #6E7496;
 }
 .workflow-header .header-right .search-box i {
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 26px;
   transform: translateY(-50%);
   color: #5A6182;
 }
@@ -601,6 +613,7 @@
   font-size: 14px;
   color: #181E30;
   font-weight: 400;
+  margin-bottom: 4px;
 }
 .workflow-folders .workflow-cards .workflow-card .card-text h4 {
   font-size: 12px;
@@ -610,7 +623,7 @@
 .workflow-folders .workflow-cards .workflow-card .up-btn {
   float: right;
   position: relative;
-  bottom: 32px;
+  bottom: 36px;
   background: transparent;
   padding: 0;
 }
@@ -654,12 +667,46 @@
   position: relative;
 }
 
-.status-header {
-  height: 38.8px;
+.workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.status-header h1 {
+.workflow-header .header-left h1 {
   margin-bottom: 0;
   font-weight: 400;
+}
+.workflow-header .header-right {
+  display: flex;
+}
+.workflow-header .header-right .sort-button {
+  background: transparent;
+  color: #0B0F1C;
+  padding: 8px 4px 8px 8px;
+  font-size: 12px;
+}
+.workflow-header .header-right .sort-icon-img {
+  margin-right: 17px;
+}
+.workflow-header .header-right .search-box {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.workflow-header .header-right .search-box input[type=text] {
+  padding: 12.5px 26px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+}
+.workflow-header .header-right .search-box input[type=text]::placeholder {
+  color: #6E7496;
+}
+.workflow-header .header-right .search-box i {
+  position: absolute;
+  top: 50%;
+  right: 26px;
+  transform: translateY(-50%);
+  color: #5A6182;
 }
 
 .status-board {
@@ -743,6 +790,7 @@
   margin-bottom: 0;
   font-size: 14px;
   font-weight: 400;
+  color: #181E30;
 }
 .specimens-list-cards-status .spec-cards .spec-card h2 {
   margin-bottom: 0;
@@ -763,6 +811,14 @@
   right: 252px;
   height: 7px;
   background-color: #E6E8F2;
+  border-radius: 10px;
+}
+.specimens-list-cards-status .spec-cards .spec-card .progress .progress-bar::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 45%;
+  background-color: #29324A;
   border-radius: 10px;
 }
 .specimens-list-cards-status .spec-cards .spec-card .progress .percentage-container {
@@ -811,13 +867,18 @@
 .specimens-list-cards-status .spec-cards .with-progress .left, .specimens-list-cards-status .spec-cards .with-progress .right {
   gap: 32px;
 }
+.specimens-list-cards-status .spec-cards .with-progress .left {
+  width: 100%;
+}
 .specimens-list-cards-status .spec-cards .with-progress span {
   font-size: 12px;
   right: 222px;
   position: absolute;
 }
-
-.processed-spec-section {
+.specimens-list-cards-status::-webkit-scrollbar-thumb {
+  background: #29324A;
+}
+.specimens-list-cards-status .processed-spec-section {
   border-radius: 20px;
   border: 1px solid #E6E8F2;
   padding: 24px 24px 0px 24px;
@@ -880,6 +941,7 @@
   padding: 24px;
   min-width: 352px;
   max-width: 440px;
+  width: 436px;
 }
 .manage-workflow-folders .workflow-cards .workflow-card .card-top-text {
   display: flex;
@@ -908,25 +970,26 @@
   display: flex;
   flex-direction: row;
   gap: 24px;
+  justify-content: space-between;
 }
-.manage-workflow-folders .workflow-cards .workflow-card .bottom .info-pair {
+.manage-workflow-folders .workflow-cards .workflow-card .info-pair {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
-.manage-workflow-folders .workflow-cards .workflow-card .bottom label {
+.manage-workflow-folders .workflow-cards .workflow-card label {
   font-size: 12px;
   color: #5A6182;
   font-weight: 400;
 }
-.manage-workflow-folders .workflow-cards .workflow-card .up-btn {
+.manage-workflow-folders .workflow-cards .up-btn {
   float: right;
   position: relative;
   bottom: 32px;
   background: transparent;
   padding: 0;
 }
-.manage-workflow-folders .workflow-cards .workflow-card .up-btn .up-btn-img {
+.manage-workflow-folders .workflow-cards .up-btn .up-btn-img {
   width: 36px;
   height: 36px;
 }
@@ -942,6 +1005,13 @@
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+}
+.workflow-detail .left-section .detailed-workflow-header .back {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #5A6182;
 }
 .workflow-detail .left-section .detailed-workflow-header .workflow-detail-header {
   display: flex;
@@ -1092,7 +1162,7 @@
 .workflow-detail .right-section .search-box i {
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 26px;
   transform: translateY(-50%);
   color: #5A6182;
 }
@@ -1267,10 +1337,18 @@
   margin-top: 5px;
 }
 .workflow-list-cards .w-list-cards .w-card .progress .progress-bar {
-  position: absolute;
+  position: relative;
   width: 272px;
   height: 7px;
   background-color: #E6E8F2;
+  border-radius: 10px;
+}
+.workflow-list-cards .w-list-cards .w-card .progress .progress-bar::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 88%;
+  background-color: #3C359C;
   border-radius: 10px;
 }
 .workflow-list-cards .w-list-cards .w-card .progress span {
@@ -1281,6 +1359,23 @@
 .workflow-list-cards .w-list-cards .w-card .with-progress {
   position: relative;
 }
+.workflow-list-cards .w-list-cards .error {
+  background: #FEF1F4;
+  color: #B50021;
+}
+.workflow-list-cards .w-list-cards .error h4 {
+  color: #B50021;
+}
+.workflow-list-cards .w-list-cards .error .progress .progress-bar {
+  background-color: #F6DBE2;
+}
+.workflow-list-cards .w-list-cards .error .progress .progress-bar::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  border-radius: 10px;
+}
 
 .collapsed-summary-section {
   height: 100%;
@@ -1289,9 +1384,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 3px;
 }
 .collapsed-summary-section .progress-bars .progress-bar {
+  position: relative;
   width: 11px;
   height: 274px;
   background-color: #e6e6e6;
@@ -1299,9 +1395,23 @@
   overflow: hidden;
 }
 .collapsed-summary-section .progress-bars .progress-bar .vertical-progress {
-  height: 50%;
-  background-color: #251E85;
+  content: "";
+  position: absolute;
+  border-radius: 10px;
+  width: 100%;
   transition: height 0.2s ease-in-out;
+}
+.collapsed-summary-section .progress-bars .progress-bar .vertical-progress.error {
+  height: 5%;
+  background-color: #FF7546;
+}
+.collapsed-summary-section .progress-bars .progress-bar .vertical-progress.success {
+  height: 95%;
+  background-color: #2AD7FD;
+}
+.collapsed-summary-section .progress-bars .progress-bar .vertical-progress.uploading {
+  height: 70%;
+  background-color: #251E85;
 }
 .collapsed-summary-section .divider {
   height: 1px;

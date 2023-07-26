@@ -10,6 +10,14 @@
             justify-content: space-between;
             flex-direction: column;
 
+            .back {
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 20px;
+                color: #5A6182;
+            }
+
             .workflow-detail-header {
                 display: flex;
                 justify-content: space-between;
@@ -193,7 +201,7 @@
             i {
                 position: absolute;
                 top: 50%;
-                right: 10px;
+                right: 26px;
                 transform: translateY(-50%);
                 color: #5A6182;
             }

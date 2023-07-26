@@ -5,10 +5,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 20px;
+        gap: 3px;
 
 
         .progress-bar {
+            position: relative;
             width: 11px;
             height: 274px;
             background-color: #e6e6e6;
@@ -16,9 +17,26 @@
             overflow: hidden;
 
             .vertical-progress {
-                height: 50%;
-                background-color: #251E85;
+                content: "";
+                position: absolute;
+                border-radius: 10px;
+                width: 100%;
                 transition: height 0.2s ease-in-out;
+
+                &.error {
+                    height: 5%;
+                    background-color: #FF7546;
+                }
+
+                &.success {
+                    height: 95%;
+                    background-color: #2AD7FD;
+                }
+
+                &.uploading {
+                    height: 70%;
+                    background-color: #251E85;
+                }
             }
         }
     }
