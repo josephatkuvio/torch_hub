@@ -10,7 +10,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazoredModal();
 builder.Services.AddDbContext<TorchContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database"))
-.UseSnakeCaseNamingConvention());
+                                           .UseSnakeCaseNamingConvention());
 
 builder.Services.AddScoped<DbContext, TorchContext>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlServerRepository<>));
