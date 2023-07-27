@@ -7,24 +7,24 @@
     <UserSecretsId>37d51774-feb2-457a-aec4-2527c9fd4ead</UserSecretsId>
   </PropertyGroup>
 
-  <!--<ItemGroup>
-    <OpenApiReference Include="OpenAPIs\openapi.json" CodeGenerator="NSwagCSharp" Namespace="Torch.Api" ClassName="TorchApi">
-      <SourceUri>http://127.0.0.1:5000/openapi.json</SourceUri>
+  <ItemGroup>
+    <OpenApiReference Include="OpenAPIs\openapi.json" CodeGenerator="NSwagCSharp" Namespace="Torch" ClassName="TorchApi">
+      <SourceUri>http://localhost:8000/openapi.json</SourceUri>
     </OpenApiReference>
-  </ItemGroup>-->
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.2.0" />
     <PackageReference Include="Blazored.Modal" Version="7.1.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.9" />
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.0.0">
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="7.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5">
+    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.18.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

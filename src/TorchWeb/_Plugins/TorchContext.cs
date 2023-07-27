@@ -12,16 +12,14 @@ public class TorchContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder model)
     {
-        model.Entity<TorchTask>().UseTpcMappingStrategy();
-        model.Entity<TorchParameter>().UseTpcMappingStrategy();
+        model.Entity<Task>().UseTpcMappingStrategy();
+        model.Entity<Parameter>().UseTpcMappingStrategy();
         
         model.Entity<Institution>().ToTable("institution");
         model.Entity<Collection>().ToTable("collection");
-        model.Entity<CollectionTask>().ToTable("collection_tasks");
-        model.Entity<CollectionTaskParameter>().ToTable("collection_tasks_parameters");
+        model.Entity<Workflow>().ToTable("workflow");
         model.Entity<Specimen>().ToTable("specimen");
         model.Entity<SpecimenTask>().ToTable("specimen_tasks");
-        model.Entity<SpecimenTaskParameter>().ToTable("specimen_tasks_parameters");
         model.Entity<SpecimenImage>().ToTable("specimenimage");
         model.Entity<User>().ToTable("user");
         model.Entity<Role>().ToTable("role");
