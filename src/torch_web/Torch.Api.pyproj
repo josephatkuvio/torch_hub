@@ -5,17 +5,38 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{a21b8773-30bd-4adc-9cd3-986092994965}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>app.py</StartupFile>
+    <StartupFile>torch_api/app.py</StartupFile>
     <SearchPath>..\..\src</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{789894c7-04a9-4a11-a6b5-3f4435165112};{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Web launcher</LaunchProvider>
     <InterpreterId />
-    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <WebBrowserUrl>
+    </WebBrowserUrl>
     <PythonWsgiHandler>{StartupModule}.wsgi_app</PythonWsgiHandler>
     <Name>Torch.Api</Name>
     <SuppressEnvironmentCreationPrompt>True</SuppressEnvironmentCreationPrompt>
+    <PythonRunWebServerCommand>
+    </PythonRunWebServerCommand>
+    <PythonRunWebServerCommandArguments>
+    </PythonRunWebServerCommandArguments>
+    <PythonDebugWebServerCommand>
+    </PythonDebugWebServerCommand>
+    <PythonDebugWebServerCommandArguments>
+    </PythonDebugWebServerCommandArguments>
+    <WebBrowserPort>
+    </WebBrowserPort>
+    <PythonDebugWebServerCommandType>
+    </PythonDebugWebServerCommandType>
+    <PythonRunWebServerCommandType>module</PythonRunWebServerCommandType>
+    <IsWindowsApplication>False</IsWindowsApplication>
+    <CommandLineArguments>
+    </CommandLineArguments>
+    <InterpreterPath>
+    </InterpreterPath>
+    <InterpreterArguments>
+    </InterpreterArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -25,41 +46,26 @@
   <ItemGroup>
     <Content Include=".env" />
     <Content Include="requirements.txt" />
-    <Content Include="torch_web\templates\emails\invite.html" />
-    <Content Include="torch_web\templates\swagger.html" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="torch_web\model.py" />
-    <Compile Include="torch_web\workflows\tasks\check_duplicate.py" />
-    <Compile Include="torch_web\workflows\tasks\get_exif_data.py" />
-    <Compile Include="torch_web\workflows\tasks\recognize_text.py" />
-    <Compile Include="torch_web\workflows\workflows.py" />
-    <Compile Include="torch_web\workflows\workflow_api.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="torch_web\__init__.py" />
-    <Compile Include="app.py" />
-    <Compile Include="torch_web\collections\collections_api.py" />
-    <Compile Include="torch_web\collections\collections.py" />
-    <Compile Include="torch_web\notifications\notifications_api.py" />
-    <Compile Include="torch_web\workflows\tasks\check_catalog_number.py" />
-    <Compile Include="torch_web\workflows\tasks\check_orientation.py" />
-    <Compile Include="torch_web\workflows\tasks\copy_file.py" />
-    <Compile Include="torch_web\workflows\tasks\generate_derivatives.py" />
-    <Compile Include="torch_web\workflows\tasks\herbar.py" />
-    <Compile Include="torch_web\workflows\tasks\upload.py" />
-    <Compile Include="torch_web\reports\reports_api.py" />
-    <Compile Include="torch_web\reports\reports.py" />
+    <Compile Include="torch_api\database.py" />
+    <Compile Include="torch_api\models.py" />
+    <Compile Include="torch_api\tasks\check_duplicate.py" />
+    <Compile Include="torch_api\tasks\get_exif_data.py" />
+    <Compile Include="torch_api\tasks\recognize_text.py" />
+    <Compile Include="torch_api\torch_tasks.py" />
+    <Compile Include="torch_api\__init__.py" />
+    <Compile Include="torch_api\app.py" />
+    <Compile Include="torch_api\tasks\check_catalog_number.py" />
+    <Compile Include="torch_api\tasks\check_orientation.py" />
+    <Compile Include="torch_api\tasks\copy_file.py" />
+    <Compile Include="torch_api\tasks\generate_derivatives.py" />
+    <Compile Include="torch_api\tasks\herbar.py" />
+    <Compile Include="torch_api\tasks\upload.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="torch_web\collections\" />
-    <Folder Include="torch_web\" />
-    <Folder Include="torch_web\templates\" />
-    <Folder Include="torch_web\templates\emails\" />
-    <Folder Include="torch_web\workflows\" />
-    <Folder Include="torch_web\notifications\" />
-    <Folder Include="torch_web\reports\" />
-    <Folder Include="torch_web\workflows\tasks\" />
+    <Folder Include="torch_api\" />
+    <Folder Include="torch_api\tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
   <ProjectExtensions>
