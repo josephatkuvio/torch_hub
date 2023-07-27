@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="container-body">
-                @if (Users != null)
+                @if (AllUsers != null)
                 {
                     <table>
 
@@ -31,10 +31,10 @@
                             <th>Role</th>
                             <th></th>
                         </tr>
-                        @foreach (var user in Users.Users)
+                        @foreach (var user in AllUsers)
                         {
                             <tr>
-                                <td>@user.First_name @user.Last_name</td>
+                                <td>@user.FirstName @user.LastName</td>
                                 <td>@user.Email</td>
                                 <td>@(user.Roles.FirstOrDefault()?.Name)</td>
                                 <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
@@ -52,25 +52,21 @@
 @inject IModalService Modal
 @inject IJSRuntime JSRuntime
 @code {
-    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
-    UsersResponse? Users;
-    public string InstitutionName { get; set; }
-    public string InstitutionCode { get; set; }
-
+    [CascadingParameter] public ClaimsPrincipal User { get; set; } = null!;
+    IEnumerable<User>? AllUsers;
+    public string? InstitutionName { get; set; }
+    public string? InstitutionCode { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        if (User != null)
-        {
-            InstitutionName = User.Claims.FirstOrDefault(c => c.Type == "institution_name")?.Value;
-            InstitutionCode = User.Claims.FirstOrDefault(c => c.Type == "institution_code")?.Value;
-            await LoadUsers();
-        }
+        InstitutionName = User!.Claim("institution_name");
+        InstitutionCode = User.Claim("institution_code");
+        LoadUsers();
     }
 
-    private async Task LoadUsers()
+    void LoadUsers()
     {
-        Users = await TorchCommands.GetUsersAsync();
+        AllUsers = Users.Query.Where(x => x.InstitutionId == User!.InstitutionId());
     }
 
     async Task OpenInviteModal()
@@ -83,7 +79,8 @@
     {
         var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
         if (confirm)
-            await TorchCommands.RemoveUserAsync(id);
-        await LoadUsers();
+            await Users.ExecuteAsync(id, x => x.SetInstitution(null));
+
+        LoadUsers();
     }
 }

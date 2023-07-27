@@ -1,0 +1,44 @@
+﻿@page "/collections/{CollectionId:int}/{SpecimenId:int}"
+
+<div class="specimen-detail">
+    @if (FullSpecimen != null)
+    {
+        <section class="tasks">
+            @foreach (var task in FullSpecimen.Tasks.OrderBy(x => x.StartDate))
+            {
+                <TaskCard Task="task" />
+            }
+        </section>
+        <figure>
+            @if (ImageUrl != null)
+            {
+                <img src="@SelectedImageUrl" alt="@FullSpecimen.CatalogNumber" />
+            }
+        </figure>
+    }
+</div>
+
+@inject IConfiguration Config
+@code {
+    [Parameter] public int CollectionId { get; set; }
+    [Parameter] public int SpecimenId { get; set; }
+    [Parameter] public Specimen? Specimen { get; set; }
+    SpecimenImage? SelectedImage;
+    Specimen? FullSpecimen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FullSpecimen = Specimen == null
+            ? await Specimens.FindAsync(SpecimenId)
+            : await Specimens.FindAsync(Specimen.Id);
+
+        SelectedImage = FullSpecimen!.Images.FirstOrDefault();
+    }
+
+    string? ImageUrl => (FullSpecimen!.CardImage?.ExternalUrl?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
+        + FullSpecimen.CardImage?.ExternalUrl;
+
+    string? SelectedImageUrl => SelectedImage?.ExternalUrl ?? ImageUrl;
+
+    void Select(SpecimenImage img) => SelectedImage = img;
+}

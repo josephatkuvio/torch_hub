@@ -1,4 +1,5 @@
-﻿@using Sparc.Blossom.Authentication;
+﻿@using Microsoft.AspNetCore.Components.Authorization;
+@using Sparc.Blossom.Authentication;
 @inherits LayoutComponentBase
 
 
@@ -11,13 +12,14 @@
     <CascadingBlazoredModal></CascadingBlazoredModal>
 </CascadingValue>
 
-@inject BlossomAuthenticationStateProvider Auth
+@inject AuthenticationStateProvider Auth
 @code {
-    ClaimsPrincipal? User;
+    ClaimsPrincipal User = new ClaimsPrincipal(new ClaimsIdentity());
     protected override async Task OnInitializedAsync()
     {
         var user = await Auth.GetAuthenticationStateAsync();
-        User = user?.User;
+        if (user?.User != null)
+            User = user.User;
     }
 }
 

@@ -27,10 +27,10 @@
             @if (Derivatives != null)
             {
                 <div class="images">
-                    @foreach (var img in Derivatives)
+                    @foreach (var img in Derivatives.Where(x => x != null))
                     {
                         <figure @onclick="@(() => SelectImage(img.size))">
-                            <img src="@img.url" alt="@img.size" />
+                            <img src="@img!.url" alt="@img.size" />
                             <figcaption>
                                 @img.size (@img.width x @img.height)
                             </figcaption>
@@ -79,9 +79,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        RunState = Task.Run_state;
-        RunMessage = Task.Run_message;
-        Socket.On(Task.Func_name, (response) =>
+        if (Task is SpecimenTask specimenTask)
+        {
+            RunState = specimenTask.RunState;
+            RunMessage = specimenTask.RunMessage;
+        }
+        Socket.On(Task.FuncName, (response) =>
         {
             RunState = response.GetValue<string>(2);
             RunMessage = response.GetValue<string>(3);
@@ -97,7 +100,7 @@
         ? Result.Keys.Select(x => System.Text.Json.JsonSerializer.Deserialize<Derivative>(Result[x].ToString())).ToList()
         : null;
 
-    List<TorchTaskParameter> DisplayParameters => Task.Parameters
+    List<TorchParameter> DisplayParameters => Task.Parameters
         .Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value != "None")
         .ToList();
 

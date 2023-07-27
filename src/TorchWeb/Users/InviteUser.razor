@@ -7,22 +7,22 @@
 
     <label>
         Member Email
-        <input @bind=Request.Email />
+        <input @bind=Email />
     </label>
 
     <label>
         Member Role
-        <select @bind="@Request.Roles">             
+        <select @bind="@Role">             
             @if (User?.IsInRole("admin") == true)
             {
-                @foreach (var role in Roles.Roles)
+                @foreach (var role in AllRoles)
                 {
                     <option value="@role.Id">@role.Name</option>
                 }
             }
             else if (User?.IsInRole("supervisor") == true)
             {
-                var basicRole = Roles.Roles.FirstOrDefault(r => r.Name == "basic");
+                var basicRole = AllRoles.FirstOrDefault(r => r.Name == "basic");
                 if (basicRole != null)
                 {
                     <option value="@basicRole.Id">@basicRole.Name</option>
@@ -34,19 +34,22 @@
     <button @onclick=Send>Send invite</button>
 </div>
 
+@inject IRepository<Role> Roles
 @code {
-    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
-    RolesResponse? Roles;
-    SendInviteRequest Request = new ();
+    [CascadingParameter] public ClaimsPrincipal User { get; set; } = null!;
+    List<Role> AllRoles = new();
+    string Email = "";
+    string Role = "";
+    //SendInviteRequest Request = new ();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        Roles = await TorchCommands.GetRolesAsync();
+        AllRoles = Roles.Query.ToList();
     }
 
     async Task Send()
     {
-        await TorchCommands.SendInviteAsync(Request);
+        // await TorchCommands.SendInviteAsync(Request);
         await Ok();
     }
 }
