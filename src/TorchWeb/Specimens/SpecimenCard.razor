@@ -20,7 +20,7 @@
     DateTime? CreateDate;
     string? Status;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         CatalogNumber = Specimen.CatalogNumber;
         CreateDate = Specimen.CreateDate;

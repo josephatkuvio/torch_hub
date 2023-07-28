@@ -49,7 +49,7 @@
     TorchTask? SelectedTask { get; set; }
 
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         //Tasks = (await TorchCommands.GetAllTasksAsync()).Tasks;
     }

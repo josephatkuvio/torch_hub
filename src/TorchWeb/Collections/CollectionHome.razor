@@ -59,7 +59,7 @@
             </header>
             @if (Model != null)
             {
-                <Workflow Collection="Model" />
+                <WorkflowEdit Collection="Model" />
             }
         </section>
 
@@ -73,6 +73,7 @@
 @inject IConfiguration Config
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@inject IRepository<Workflow> Workflows
 
 @code {
     [CascadingParameter] public ClaimsPrincipal? User { get; set; }
@@ -130,7 +131,7 @@
 
     async Task AddTask(TorchTask task)
     {
-        await Collections.ExecuteAsync(Model, x => x.AddTask(task));
+        await Workflows.ExecuteAsync(Model!, x => x.AddTask(task));
         IsTaskboardActive = true;
         StateHasChanged();
     }

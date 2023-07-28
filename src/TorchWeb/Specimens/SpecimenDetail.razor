@@ -6,7 +6,7 @@
         <section class="tasks">
             @foreach (var task in FullSpecimen.Tasks.OrderBy(x => x.StartDate))
             {
-                <TaskCard Task="task" />
+                <TaskCard SpecimenTask="task"  />
             }
         </section>
         <figure>

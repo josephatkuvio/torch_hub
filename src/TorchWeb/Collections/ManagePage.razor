@@ -1,6 +1,6 @@
 ﻿@page "/manage-page/{collectionId:int}"
 
-@if (User?.IsInRole("admin") == true || User?.IsInRole("supervisor") == true)
+@if (Collection != null&& (User?.IsInRole("admin") == true || User?.IsInRole("supervisor") == true))
 {
     <div class="admin-div">
         <header>
@@ -8,7 +8,7 @@
                 <a href="/collections/@CollectionId">&larr; Back</a>
             </aside>
             <h1 class="page-name">Manage Page</h1>
-            <h1>@CollectionName - @CollectionCode</h1>
+            <h1>@Collection.Name - @Collection.Code</h1>
         </header>
 
         <div class="container">
@@ -21,8 +21,6 @@
                 </div>
             </div>
             <div class="container-body">
-                @if (CollectionUsers != null)
-                {
                     <table>
 
                         <tr>
@@ -34,7 +32,7 @@
                                 <th></th>
                             }
                         </tr>
-                        @foreach (var user in CollectionUsers.Users)
+                        @foreach (var user in Collection.Users)
                         {
                             @if (User?.IsInRole("admin") == true || User?.IsInRole("supervisor") == true && user.Role == "basic")
                             {
@@ -60,34 +58,16 @@
 
 @inject IModalService Modal
 @inject IJSRuntime JSRuntime
+@inject IRepository<Collection> Collections
 @code {
     [CascadingParameter] public ClaimsPrincipal? User { get; set; }
 
     [Parameter] public int CollectionId { get; set; }
-    CollectionUsersResponse? CollectionUsers;
-    public string? CollectionName { get; set; }
-    public string? CollectionCode { get; set; }
+    Collection? Collection;
 
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await LoadCollectionInfo();
-        await LoadCollectionUsers();
-    }
-
-    private async Task LoadCollectionInfo()
-    {
-        var collection = await TorchCommands.GetCollectionAsync(CollectionId);
-        if (collection != null)
-        {
-            CollectionName = collection.Name;
-            CollectionCode = collection.Code;
-        }
-    }
-
-    private async Task LoadCollectionUsers()
-    {
-        CollectionUsers = await TorchCommands.GetCollectionUsersAsync(CollectionId);
+        Collection = Collections.Include("Users").Single(x => x.Id == CollectionId);
     }
 
     async Task OpenInviteModal()

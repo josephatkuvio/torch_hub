@@ -19,12 +19,12 @@ def root():
     return "TORCH Engine is running."
 
 
-@app.get("/tasks")
+@app.get("/tasks", operation_id="GetAllTasks")
 def tasks_getall():
     return { 'tasks': torch_task_registry }
 
 
-@app.post("/workflows/{workflow_id}/{batch_id}")
+@app.post("/workflows/{workflow_id}/{batch_id}", operation_id="StartWorkflow")
 def workflows_start(workflow_id: int, batch_id: str, background_tasks: BackgroundTasks):
     with Session(engine) as session:
         query = select(Specimen).where(Specimen.batch_id == batch_id)
@@ -33,7 +33,7 @@ def workflows_start(workflow_id: int, batch_id: str, background_tasks: Backgroun
         background_tasks.add_task(workflow.start_many, specimens)
 
 
-@app.put('/collections/{collection_id}')
+@app.put('/collections/{collection_id}', operation_id="UpdateExternalUrl")
 def specimens_update_external_url(collection_id:int, specimens: List[Specimen]):
     updated_specimens = []
     

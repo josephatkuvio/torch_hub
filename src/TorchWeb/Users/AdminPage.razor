@@ -57,7 +57,7 @@
     public string? InstitutionName { get; set; }
     public string? InstitutionCode { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         InstitutionName = User!.Claim("institution_name");
         InstitutionCode = User.Claim("institution_code");

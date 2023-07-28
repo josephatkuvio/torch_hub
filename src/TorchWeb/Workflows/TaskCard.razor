@@ -29,7 +29,7 @@
                 <div class="images">
                     @foreach (var img in Derivatives.Where(x => x != null))
                     {
-                        <figure @onclick="@(() => SelectImage(img.size))">
+                        <figure @onclick="@(() => SelectImage(img!.size))">
                             <img src="@img!.url" alt="@img.size" />
                             <figcaption>
                                 @img.size (@img.width x @img.height)
@@ -69,21 +69,24 @@
 
 @code {
     [Parameter] public TorchTask Task { get; set; } = null!;
+    [Parameter] public SpecimenTask? SpecimenTask { get; set; }
     [Parameter] public EventCallback<TorchTask> OnAdd { get; set; }
     [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
-    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; }
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; } = null!;
     record Derivative(string url, string size, int width, int height);
     bool IsSelected;
     string? RunState;
     string? RunMessage;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        if (Task is SpecimenTask specimenTask)
+        if (SpecimenTask != null)
         {
-            RunState = specimenTask.RunState;
-            RunMessage = specimenTask.RunMessage;
+            RunState = SpecimenTask.RunState;
+            RunMessage = SpecimenTask.RunMessage;
+            Task ??= SpecimenTask.Task;
         }
+
         Socket.On(Task.FuncName, (response) =>
         {
             RunState = response.GetValue<string>(2);
@@ -97,10 +100,10 @@
         : null;
 
     List<Derivative?>? Derivatives => Task.Name == "Generate Derivatives" && Result != null
-        ? Result.Keys.Select(x => System.Text.Json.JsonSerializer.Deserialize<Derivative>(Result[x].ToString())).ToList()
+        ? Result.Keys.Select(x => System.Text.Json.JsonSerializer.Deserialize<Derivative>(Result[x].ToString()!)).ToList()
         : null;
 
-    List<TorchParameter> DisplayParameters => Task.Parameters
+    List<Parameter> DisplayParameters => Task.Parameters
         .Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value != "None")
         .ToList();
 

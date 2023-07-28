@@ -17,14 +17,14 @@
             <h2>Tasks</h2>
         </header>
         <ul>
-            @foreach (var task in Collection.Tasks)
+            @foreach (var task in Workflow.Tasks)
             {
                 <li>
                     <TaskCard Task="task" OnDelete="RemoveTask" />
                 </li>
             }
         </ul>
-        @if (!Collection.Tasks.Any())
+        @if (!Workflow.Tasks.Any())
         {
             <p>You haven't yet added any tasks to this workflow. Open the Task Catalog to browse available tasks and set up your workflow.</p>
         }
@@ -37,18 +37,19 @@
 @inject IModalService Modal
 @inject IConfiguration Config
 @inject IJSRuntime JS
+@inject IRepository<Workflow> Workflows
 @code {
-    [Parameter] public Collection Collection { get; set; } = null!;
+    [Parameter] public Workflow Workflow { get; set; } = null!;
     bool IsEditing;
     ElementReference FilePicker;
 
     async Task RemoveTask(TorchTask task)
     {
-        Collection.Tasks.RemoveAll(x => x.Id == task.Id);
+        Workflow.Tasks.RemoveAll(x => x.Id == task.Id);
         await SaveAsync();
     }
 
-    string UploadUrl => $"{Config["Blossom:Authority"]}/collections/{Collection.Id}/specimens";
+    string UploadUrl => $"{Config["Blossom:Authority"]}/collections/{Workflow.Id}/specimens";
     async Task SelectFiles()
     {
         await JS.InvokeVoidAsync("triggerClick", FilePicker);
@@ -61,7 +62,7 @@
 
     async Task SaveAsync()
     {
-        await Collections.UpdateAsync(Collection);
+        await Workflows.UpdateAsync(Workflow);
     }
 
     void ToggleEdit() => IsEditing = !IsEditing;
