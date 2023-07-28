@@ -52,21 +52,19 @@
 @inject IModalService Modal
 @inject IJSRuntime JSRuntime
 @code {
-    [CascadingParameter] public ClaimsPrincipal User { get; set; } = null!;
+    [CascadingParameter] public User User { get; set; } = null!;
     IEnumerable<User>? AllUsers;
     public string? InstitutionName { get; set; }
     public string? InstitutionCode { get; set; }
 
     protected override void OnInitialized()
     {
-        InstitutionName = User!.Claim("institution_name");
-        InstitutionCode = User.Claim("institution_code");
         LoadUsers();
     }
 
     void LoadUsers()
     {
-        AllUsers = Users.Query.Where(x => x.InstitutionId == User!.InstitutionId());
+        AllUsers = Users.Query.Where(x => x.InstitutionId == User!.InstitutionId);
     }
 
     async Task OpenInviteModal()

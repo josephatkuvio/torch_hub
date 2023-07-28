@@ -13,13 +13,26 @@
 </CascadingValue>
 
 @inject AuthenticationStateProvider Auth
+@inject IRepository<User> Users
 @code {
-    ClaimsPrincipal User = new ClaimsPrincipal(new ClaimsIdentity());
+    User User = null!;
     protected override async Task OnInitializedAsync()
     {
         var user = await Auth.GetAuthenticationStateAsync();
         if (user?.User != null)
-            User = user.User;
+        {
+            foreach (var claim in user.User.Claims)
+            {
+                Console.WriteLine($"{claim.Type} = {claim.Value}");
+            }
+            var email = user.User.Get("name");
+            User = Users.Query.FirstOrDefault(x => x.Email == email);
+            if (User == null)
+            {
+                User = new(email);
+                //await Users.AddAsync(User);
+            }
+        }
     }
 }
 

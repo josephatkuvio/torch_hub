@@ -2,12 +2,11 @@
 @import 'Shared/NavMenu';
 @import 'Shared/Bookmark';
 
-@import 'Collections/Index';
-@import 'Collections/Collection';
-@import 'Collections/SpecimenCard';
+@import 'Index';
+@import 'Specimens/SpecimenCard';
 @import 'Collections/CollectionCard';
-@import 'Collections/SpecimenDetail';
-@import 'Collections/SpecimenList';
+@import 'Specimens/SpecimenDetail';
+@import 'Specimens/SpecimenList';
 @import 'Collections/AddCollection';
 @import 'Collections/ManagePage.scss';
 @import 'Collections/InviteUser.scss';
@@ -19,7 +18,7 @@
 @import 'Collections/NewUISummary.scss';
 @import 'Collections/NewUICollapsedSummary.scss';
 
-@import 'Workflows/Workflow';
+@import 'Workflows/WorkflowEdit';
 @import 'Workflows/TaskCatalog';
 @import 'Workflows/TaskCard';
 @import 'Workflows/TaskParameters';

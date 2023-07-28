@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\openapi.json" CodeGenerator="NSwagCSharp" Namespace="Torch" ClassName="TorchApi">
-      <SourceUri>http://localhost:8000/openapi.json</SourceUri>
-    </OpenApiReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.2.0" />
     <PackageReference Include="Blazored.Modal" Version="7.1.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
@@ -32,6 +26,10 @@
     <PackageReference Include="Sparc.Blossom.Client" Version="8.0.0-pre.5" />
     <PackageReference Include="Sparc.Blossom.Core" Version="8.0.0-pre.5" />
     <PackageReference Include="Sparc.Blossom.Data.SqlServer" Version="8.0.0-pre.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="OpenAPIs\" />
   </ItemGroup>
 
 </Project>

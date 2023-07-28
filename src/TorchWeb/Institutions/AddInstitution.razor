@@ -19,12 +19,19 @@
 </div>
 
 @code {
+    [CascadingParameter] public User User { get; set; } = null!;
+    
     string Name = "";
     string Code = "";
 
     async Task Send()
     {
-        await Institutions.AddAsync(new Institution(Name, Code));
-        Nav.NavigateTo("/", true);
+        var institution = new Institution(Name, Code);
+        institution.Users.Add(User);
+        await Institutions.AddAsync(institution);
+
+        User.SetInstitution(institution.Id);
+        await Users.UpdateAsync(User);
+
     }
 }

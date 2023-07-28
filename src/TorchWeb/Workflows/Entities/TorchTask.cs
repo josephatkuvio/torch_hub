@@ -2,12 +2,11 @@
 
 public class TorchTask
 {
-    public TorchTask(int workflowId, string funcName, string name, int sortOrder)
+    public TorchTask(int workflowId, string funcName, string name)
     {
         WorkflowId = workflowId;
         FuncName = funcName;
         Name = name;
-        SortOrder = sortOrder;
     }
 
     public int Id { get; private set; }

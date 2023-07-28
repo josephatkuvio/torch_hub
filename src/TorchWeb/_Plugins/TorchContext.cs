@@ -12,13 +12,14 @@ public class TorchContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder model)
     {
-        model.Entity<Task>().UseTpcMappingStrategy();
-        model.Entity<Parameter>().UseTpcMappingStrategy();
+        model.Entity<TorchTask>();
+        model.Entity<Parameter>();
         
         model.Entity<Institution>().ToTable("institution");
         model.Entity<Collection>().ToTable("collection");
+        model.Entity<CollectionUser>().ToTable("collection_users").HasKey(x => new { x.CollectionId, x.UserId });
         model.Entity<Workflow>().ToTable("workflow");
-        model.Entity<Collections.Specimen>().ToTable("specimen");
+        model.Entity<Specimen>().ToTable("specimen");
         model.Entity<SpecimenTask>().ToTable("specimen_tasks");
         model.Entity<SpecimenImage>().ToTable("specimenimage");
         model.Entity<User>().ToTable("user");
@@ -29,6 +30,7 @@ public class TorchContext : DbContext
             .WithMany(x => x.Users)
             .UsingEntity("roles_users");
 
-        model.Entity<Collections.Specimen>().Navigation(x => x.Images).AutoInclude();
+        model.Entity<Specimen>().Navigation(x => x.Images).AutoInclude();
+        model.Entity<User>().Navigation(x => x.Roles).AutoInclude();
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/new-ui-page"
+﻿@page "/"
 
 <section class="new-ui-section @(summaryCollapsed ? "collapsed" : "")">
 
@@ -67,10 +67,19 @@
 
 
 @code {
+    [CascadingParameter] public User User { get; set; } = null!;
     private string activeTab = "all";
     private bool showDetail = false;
     private bool summaryCollapsed = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (User.InstitutionId == null)
+        {
+            var modal = Modal.Show<AddInstitution>();
+            await modal.Result;
+        }
+    }
 
     private void ChangeTab(string tabName)
     {

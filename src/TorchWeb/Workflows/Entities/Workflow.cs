@@ -1,14 +1,15 @@
 ﻿using Sparc.Blossom.Data;
+using Torch.Web.Collections;
 
 namespace Torch.Web.Workflows;
 
 public class Workflow : Entity<int>
 {
-    public Workflow(int collectionId, string name, string code)
+    public Workflow(int collectionId, string name, string description)
     {
         CollectionId = collectionId;
         Name = name;
-        Description = code;
+        Description = description;
         CreateDate = DateTime.UtcNow;
     }
 

@@ -86,53 +86,6 @@
   color: var(--primary-500);
 }
 
-.collection {
-  display: grid;
-  height: 100vh;
-  width: 100vw;
-  padding: 32px;
-  grid-template-columns: 32px 1fr 32px 0px 32px 0vw 32px;
-  gap: 4px;
-  background: linear-gradient(180deg, #FFFFFF 1.34%, #DDDEE8 84.08%);
-  transition: 0.3s ease-in-out;
-}
-.collection-specimens {
-  grid-template-columns: 32px 1fr 32px 0fr 32px 0px 32px;
-}
-.collection-specimens-taskboard {
-  grid-template-columns: 32px 1fr 32px 0fr 32px 300px 32px;
-}
-.collection-catalog {
-  grid-template-columns: 32px 0fr 32px 1fr 32px 0px 32px;
-}
-.collection-catalog-taskboard {
-  grid-template-columns: 32px 0fr 32px 1fr 32px 300px 32px;
-}
-.collection > * {
-  overflow: hidden;
-}
-.collection > section {
-  padding: 32px 0;
-}
-.collection .deleteCollectionBtn {
-  margin-bottom: 15px;
-}
-.collection .back {
-  color: var(--grey-500);
-  cursor: pointer;
-  font-size: 14px;
-  line-height: 20px;
-  margin-bottom: 10px;
-}
-.collection .nav-manage-opt {
-  cursor: pointer;
-  float: right;
-  margin-top: -66px;
-}
-.collection .nav-manage-opt:hover {
-  color: var(--primary-500);
-}
-
 .specimen-card {
   width: 226.86px;
   height: 248px;

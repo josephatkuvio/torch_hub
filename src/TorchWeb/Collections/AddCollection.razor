@@ -19,13 +19,13 @@
 </div>
 
 @code {
-    [CascadingParameter] public ClaimsPrincipal User { get; set; } = null!;
+    [CascadingParameter] public User User { get; set; } = null!;
     string Name = "";
     string Code = ""; 
 
     async Task Save()
     {
-        await Collections.AddAsync(new Collection(User!.InstitutionId()!.Value, Name, Code));
+        await Collections.AddAsync(new Collection(User!.InstitutionId!.Value, Name, Code));
         await Ok();
     }
 }

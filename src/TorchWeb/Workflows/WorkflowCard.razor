@@ -1,0 +1,13 @@
+﻿<article class="workflow-card">
+    <img class="folder-img" src="/images/folderIcon.svg" />
+    <div class="card-text">
+        <h3>Workflow Name</h3>
+        <h4>24 FEB 2016</h4>
+        @*<time>@Workflow.Create_date.ToString("dd MMMM yyyy")</time>*@
+    </div>
+    <button class="up-btn"><img class="up-btn-img" src="/images/upArrowIcon.svg" /></button>
+</article>
+
+@code {
+    [Parameter] public Workflow Workflow { get; set; } = null!;
+}

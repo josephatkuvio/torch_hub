@@ -11,6 +11,7 @@ public class SpecimenTask
         StartDate = DateTime.UtcNow;
     }
 
+    public int Id { get; private set; }
     public int SpecimenId { get; private set; }
     public int TaskId { get; private set; }
     public DateTime StartDate { get; private set; }
