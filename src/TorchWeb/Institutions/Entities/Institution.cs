@@ -17,7 +17,8 @@ public class Institution : Entity<int>
     public string Code { get; private set; }
     public DateTime CreatedDate { get; private set; }
     public DateTime? DeletedDate { get; private set; }
+    public int OwnerId { get; private set; }
     public List<Workflow> Workflows { get; private set; } = new();
-    public List<User> Users { get; private set; } = new();
+    public User Owner { get; private set; } = null!;
 }
 

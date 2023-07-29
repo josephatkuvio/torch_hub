@@ -27,6 +27,7 @@ class Workflow(SQLModel, table=True):
     name: str
     description: Optional[str]
     created_date: datetime
+    deleted_date: Optional[datetime]
     institution: Institution = Relationship(back_populates="workflows")
     tasks: List["Task"] = Relationship(back_populates="workflow")
     users: List["WorkflowUser"] = Relationship(back_populates="workflow")
@@ -108,16 +109,15 @@ class Connection(SQLModel, table=True):
 class Specimen(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     input_connection_id: int = Field(foreign_key="connection.id")
-    output_connection_id: int = Field(foreign_key="connection.id")
+    output_connection_id: Optional[int] = Field(foreign_key="connection.id")
     input_file: str
     name: str
     create_date: datetime
-    batch_id: Optional[int]
     barcode: Optional[str]
     catalog_number: Optional[str]
     deleted: bool = Field(default=False)
     input_connection: Connection = Relationship(back_populates="input_specimens")
-    output_connection: Connection = Relationship(back_populates="output_specimens")
+    output_connection: Optional[Connection] = Relationship(back_populates="output_specimens")
     images: List["SpecimenImage"] = Relationship(back_populates="specimen")
 
 
@@ -143,7 +143,6 @@ class SpecimenImage(SQLModel, table=True):
     create_date: datetime
     specimen_id: int = Field(foreign_key="specimen.id")
     specimen: Specimen = Relationship(back_populates="images")
-    connection: Connection = Relationship(back_populates="specimens")
     hash_a: Optional[str]
     hash_b: Optional[str]
     hash_c: Optional[str]
@@ -155,6 +154,7 @@ class SpecimenImage(SQLModel, table=True):
 
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
+    email: str
     first_name: Optional[str]
     last_name: Optional[str]
     institution_id: Optional[int] = Field(foreign_key="institution.id")

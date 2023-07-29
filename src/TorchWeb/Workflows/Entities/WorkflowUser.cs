@@ -9,10 +9,12 @@ public class WorkflowUser
         WorkflowId = workflowId;
         UserId = userId;
         Role = role;
+        CreatedDate = DateTime.UtcNow;
     }
 
     public int WorkflowId { get; private set; }
     public int UserId { get; private set; }
+    public DateTime CreatedDate { get; private set; }
     public string Role { get; private set; }
     public Workflow Workflow { get; private set; } = null!;
     public User User { get; private set; } = null!;
