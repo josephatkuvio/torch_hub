@@ -535,3 +535,5 @@ FodyWeavers.xsd
 *.sln.iml
 /.vs/
 /src/torch_web/.env
+*.razor.css
+*.razor.min.css

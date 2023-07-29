@@ -1,9 +1,7 @@
 ﻿@page "/"
 
 <section class="new-ui-section @(summaryCollapsed ? "collapsed" : "")">
-
     <section class="tab-section">
-
         <ul class="tab-list">
             <li class="tab-item first-icon @(activeTab == "all" ? "active" : "")" @onclick='() => ChangeTab("all")'>
                 <a class='tab-link'>
@@ -68,6 +66,7 @@
 
 @code {
     [CascadingParameter] public User User { get; set; } = null!;
+    List<Workflow> MyWorkflows = new();
     private string activeTab = "all";
     private bool showDetail = false;
     private bool summaryCollapsed = false;
@@ -79,6 +78,8 @@
             var modal = Modal.Show<AddInstitution>();
             await modal.Result;
         }
+
+
     }
 
     private void ChangeTab(string tabName)

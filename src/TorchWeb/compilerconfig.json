@@ -1,6 +1,10 @@
 ﻿[
   {
     "outputFile": "wwwroot/css/app.css",
-    "inputFile": "App.scss"
+    "inputFile": "App.razor.scss"
+  },
+  {
+    "outputFile": "Index.razor.css",
+    "inputFile": "Index.razor.scss"
   }
 ]

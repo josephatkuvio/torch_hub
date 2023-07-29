@@ -55,6 +55,7 @@ def main():
 
 
 if __name__ == "__main__":
+    main()
     uvicorn.run('app:app', port=8000, log_level="info")
 
 

@@ -16,14 +16,12 @@ public class TorchContext : DbContext
         model.Entity<Parameter>();
         
         model.Entity<Institution>().ToTable("institution");
-        model.Entity<Collection>().ToTable("collection");
-        model.Entity<CollectionUser>().ToTable("collection_users").HasKey(x => new { x.CollectionId, x.UserId });
+        model.Entity<WorkflowUser>().ToTable("workflowuser").HasKey(x => new { x.WorkflowId, x.UserId });
         model.Entity<Workflow>().ToTable("workflow");
         model.Entity<Specimen>().ToTable("specimen");
-        model.Entity<SpecimenTask>().ToTable("specimen_tasks");
+        model.Entity<SpecimenTask>().ToTable("specimentask");
         model.Entity<SpecimenImage>().ToTable("specimenimage");
         model.Entity<User>().ToTable("user");
-        model.Entity<Role>().ToTable("role");
 
         model.Entity<User>()
             .HasMany(x => x.Roles)
