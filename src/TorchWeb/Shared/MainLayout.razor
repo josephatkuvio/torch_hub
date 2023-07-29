@@ -25,6 +25,7 @@
             {
                 Console.WriteLine($"{claim.Type} = {claim.Value}");
             }
+            User = new(auth.User.Get("name"));
             //var email = auth.User.Get("name");
             //var identity = auth.User.Get("id");
             //var existing = Users.Query.FirstOrDefault(x => x.Email == email);

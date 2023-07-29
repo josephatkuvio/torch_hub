@@ -1,4 +1,4 @@
-﻿@page "/_Host"
+﻿@page "/"
 @using Microsoft.AspNetCore.Components.Web
 @using Torch.Web;
 @namespace Torch.Web.Pages
@@ -16,10 +16,10 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="Torch.Web.styles.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon.png" />
-    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
+    <component type="typeof(HeadOutlet)" render-mode="Server" />
 </head>
 <body>
-    <component type="typeof(App)" render-mode="ServerPrerendered" />
+    <component type="typeof(App)" render-mode="Server" />
 
     <div id="blazor-error-ui">
         <environment include="Staging,Production">
