@@ -15,7 +15,7 @@ public class User : Entity<int>
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
     public int? InstitutionId { get; private set; }
-    public Institution? Institution { get; private set; };
+    public Institution? Institution { get; private set; }
     public List<Identity> Identities { get; private set; } = new();
     public List<WorkflowUser> WorkflowUsers { get; private set; } = new();
 

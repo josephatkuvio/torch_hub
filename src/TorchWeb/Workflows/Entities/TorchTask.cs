@@ -1,4 +1,6 @@
-﻿namespace Torch.Web.Workflows;
+﻿using Microsoft.AspNetCore.SignalR.Protocol;
+
+namespace Torch.Web.Workflows;
 
 public class TorchTask
 {
@@ -16,5 +18,5 @@ public class TorchTask
     public string FuncName { get; private set; }
     public int? SortOrder { get; private set; }
     public string? Description { get; private set; }
-    public string Parameters { get; private set; }
+    public Dictionary<string, string> Parameters { get; private set; } = new();
 }

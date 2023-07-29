@@ -27,7 +27,7 @@
     async Task Send()
     {
         var institution = new Institution(Name, Code);
-        institution.Users.Add(User);
+        institution.SetOwner(User);
         await Institutions.AddAsync(institution);
 
         User.SetInstitution(institution.Id);

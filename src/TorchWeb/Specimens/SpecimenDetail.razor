@@ -4,9 +4,9 @@
     @if (FullSpecimen != null)
     {
         <section class="tasks">
-            @foreach (var task in FullSpecimen.Tasks.OrderBy(x => x.StartDate))
+            @foreach (var task in FullSpecimen.TaskRuns.OrderBy(x => x.StartDate))
             {
-                <TaskCard SpecimenTask="task"  />
+                <TaskCard TaskRun="task"  />
             }
         </section>
         <figure>
@@ -35,10 +35,9 @@
         SelectedImage = FullSpecimen!.Images.FirstOrDefault();
     }
 
-    string? ImageUrl => (FullSpecimen!.CardImage?.ExternalUrl?.StartsWith("http") == true ? "" : Config["Blossom:Authority"])
-        + FullSpecimen.CardImage?.ExternalUrl;
+    string? ImageUrl => FullSpecimen!.CardImage?.AbsoluteUrl(Config["Blossom:Authority"]);
 
-    string? SelectedImageUrl => SelectedImage?.ExternalUrl ?? ImageUrl;
+    string? SelectedImageUrl => SelectedImage?.OutputFile ?? ImageUrl;
 
     void Select(SpecimenImage img) => SelectedImage = img;
 }

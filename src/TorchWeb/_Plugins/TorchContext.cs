@@ -24,6 +24,10 @@ public class TorchContext : DbContext
         model.Entity<WorkflowUser>().ToTable("workflowuser").HasKey(x => new { x.WorkflowId, x.UserId });
 
         model.Entity<Specimen>().OwnsMany(x => x.Images);
-        model.Entity<User>().Navigation(x => x.Roles).AutoInclude();
+        model.Entity<User>().OwnsMany(x => x.Identities);
+
+        // Json support
+        model.Entity<TorchTask>().Property(x => x.Parameters).HasColumnType("jsonb");
+        model.Entity<TorchTaskRun>().Property(x => x.Parameters).HasColumnType("jsonb");
     }
 }

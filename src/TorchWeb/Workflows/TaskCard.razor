@@ -1,4 +1,4 @@
-﻿<article class="task task-@(RunState) @(IsSelected ? "selected" : "")" @onclick=Select>
+﻿<article class="task task-@(TaskRun?.Status) @(IsSelected ? "selected" : "")" @onclick=Select>
     <header>
         <img src="/images/ellipse186.png" alt="" />
         <h4>@Task.Name</h4>
@@ -10,7 +10,7 @@
         <dl>
             @foreach (var parameter in DisplayParameters)
             {
-                <dt>@parameter.Name</dt>
+                <dt>@parameter.Key</dt>
                 <dd title="@parameter.Value">@parameter.Value</dd>
             }
         </dl>
@@ -21,7 +21,7 @@
         <button class="secondary" @onclick="Delete">Delete</button>
     }
 
-    @if (RunMessage != null)
+    @if (TaskRun != null)
     {
         <footer>
             @if (Derivatives != null)
@@ -38,12 +38,12 @@
                     }
                 </div>
             }
-            else if (Result != null)
+            else if (TaskRun.Result != null)
             {
                 <dl class="results">
-                    @foreach (var item in Result)
+                    @foreach (var item in TaskRun.Result.RootElement.EnumerateObject())
                     {
-                        <dt>@item.Key</dt>
+                        <dt>@item.Name</dt>
                         @if (item.Value.ToString()?.StartsWith("http") == true)
                         {
                             <dd>
@@ -61,7 +61,7 @@
             }
             else
             {
-                <aside>@RunMessage</aside>
+                <aside>@TaskRun?.Result</aside>
             }
         </footer>
     }
@@ -69,43 +69,30 @@
 
 @code {
     [Parameter] public TorchTask Task { get; set; } = null!;
-    [Parameter] public SpecimenTask? SpecimenTask { get; set; }
+    [Parameter] public TorchTaskRun? TaskRun { get; set; }
     [Parameter] public EventCallback<TorchTask> OnAdd { get; set; }
     [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; } = null!;
     record Derivative(string url, string size, int width, int height);
     bool IsSelected;
-    string? RunState;
-    string? RunMessage;
 
     protected override void OnInitialized()
     {
-        if (SpecimenTask != null)
+        if (TaskRun != null)
         {
-            RunState = SpecimenTask.RunState;
-            RunMessage = SpecimenTask.RunMessage;
-            Task ??= SpecimenTask.Task;
+            Socket.On(Task.FuncName, (response) =>
+            {
+                TaskRun = response.GetValue<TorchTaskRun>(1);
+                StateHasChanged();
+            });
         }
-
-        Socket.On(Task.FuncName, (response) =>
-        {
-            RunState = response.GetValue<string>(2);
-            RunMessage = response.GetValue<string>(3);
-            StateHasChanged();
-        });
     }
 
-    Dictionary<string, object>? Result => RunMessage?.StartsWith("{") == true
-        ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(RunMessage)
-        : null;
+    List<Derivative?>? Derivatives => TaskRun?.To<Derivative>("Generate Derivatives");
 
-    List<Derivative?>? Derivatives => Task.Name == "Generate Derivatives" && Result != null
-        ? Result.Keys.Select(x => System.Text.Json.JsonSerializer.Deserialize<Derivative>(Result[x].ToString()!)).ToList()
-        : null;
-
-    List<Parameter> DisplayParameters => Task.Parameters
-        .Where(x => !string.IsNullOrWhiteSpace(x.Value) && x.Value != "None")
-        .ToList();
+    Dictionary<string, string> DisplayParameters => Task.Parameters
+        .Where(x => x.Value != null && x.Value.ToString() != "None")
+        .ToDictionary(x => x.Key, x => x.Value);
 
     async Task Add() => await OnAdd.InvokeAsync(Task);
 

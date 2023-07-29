@@ -1,17 +1,19 @@
-﻿<header class="workflow-header">
-    <div class="header-left">
-        <h1>All</h1>
-    </div>
-    <div class="header-right">
-        <button class="sort-button">Sort</button>
-        <img class="sort-icon-img" src="/images/sortIcon.svg" />
-        <div class="search-box">
-            <input type="text" placeholder="Search" />
-            <i class="fa fa-search"></i>
+﻿<CascadingValue Value="Socket">
+    <header class="workflow-header">
+        <div class="header-left">
+            <h1>All</h1>
         </div>
-        <i class="sort"></i>
-    </div>
-</header>
+        <div class="header-right">
+            <button class="sort-button">Sort</button>
+            <img class="sort-icon-img" src="/images/sortIcon.svg" />
+            <div class="search-box">
+                <input type="text" placeholder="Search" />
+                <i class="fa fa-search"></i>
+            </div>
+            <i class="sort"></i>
+        </div>
+    </header>
+</CascadingValue>
 
 <div class="divider"></div>
 
@@ -20,7 +22,7 @@
     <section class="workflow-cards">
         @foreach (var workflow in MyWorkflows)
         {
-           
+            <WorkflowCard Workflow="workflow" />
         }
     </section>
 </section>
@@ -45,7 +47,16 @@
     </section>
 </section>
 
-
+@inject IConfiguration Config
 @code {
+    List<Workflow> MyWorkflows = new();
+    public SocketIOClient.SocketIO Socket { get; set; } = null!;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
+        await Socket.ConnectAsync();
+        // Socket.On("specimen_added", response => RefreshSpecimens());
+
+    }
 }

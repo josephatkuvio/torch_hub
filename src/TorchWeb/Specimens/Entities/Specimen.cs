@@ -22,8 +22,9 @@ public class Specimen : Entity<int>
     public string? CatalogNumber { get; private set; }
     public int Deleted { get; private set; }
     public Connection InputConnection {  get; private set; } = null!;
-    public Connection? OutputConnection {  get; private set; };
+    public Connection? OutputConnection { get; private set; }
     public List<SpecimenImage> Images { get; private set; } = new();
+    public List<TorchTaskRun> TaskRuns { get; private set; } = new();
     public void Delete() => Deleted = 1;
 
     public SpecimenImage? CardImage => Images.OrderBy(x => x.Width ?? 1000000).FirstOrDefault();

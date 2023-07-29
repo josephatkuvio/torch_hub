@@ -20,5 +20,11 @@ public class Institution : Entity<int>
     public int OwnerId { get; private set; }
     public List<Workflow> Workflows { get; private set; } = new();
     public User Owner { get; private set; } = null!;
+
+    public void SetOwner(User user)
+    {
+        Owner = user;
+        OwnerId = user.Id;
+    }
 }
 

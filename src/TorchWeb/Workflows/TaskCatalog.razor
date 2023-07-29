@@ -12,11 +12,11 @@
                 </header>
 
                 <section class="task-parameters">
-                    @foreach (var key in SelectedTask.Parameters.Where(x => x.Name != "specimen"))
+                    @foreach (var key in SelectedTask.Parameters.Keys)
                     {
                         <label>
-                            @key.Name
-                            <input @bind="@key.Value" />
+                            @key
+                            <input @bind="@SelectedTask.Parameters[key]" />
                         </label>
                     }
                 </section>

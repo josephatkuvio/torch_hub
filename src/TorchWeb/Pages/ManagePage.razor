@@ -1,14 +1,14 @@
 ﻿@page "/manage-page/{collectionId:int}"
 
-@if (Collection != null&& (User?.IsInRole("admin") == true || User?.IsInRole("supervisor") == true))
+@if (IsAdmin || IsSupervisor)
 {
     <div class="admin-div">
         <header>
             <aside class="back">
-                <a href="/collections/@CollectionId">&larr; Back</a>
+                <a href="/workflows/@Workflow.Id">&larr; Back</a>
             </aside>
             <h1 class="page-name">Manage Page</h1>
-            <h1>@Collection.Name - @Collection.Code</h1>
+            <h1>@Workflow.Name</h1>
         </header>
 
         <div class="container">
@@ -27,14 +27,14 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
-                            @if (User?.IsInRole("admin") == true)
+                            @if (IsAdmin)
                             {
                                 <th></th>
                             }
                         </tr>
-                        @foreach (var user in Collection.Users)
+                        @foreach (var user in Workflow.Users)
                         {
-                            @if (User?.IsInRole("admin") == true || User?.IsInRole("supervisor") == true && user.Role == "basic")
+                            @if ((IsAdmin || IsSupervisor) && user.Role == "basic")
                             {
                                 @*<tr>
                                     <td>@user.First_Name @user.Last_name</td>
@@ -58,16 +58,17 @@
 
 @inject IModalService Modal
 @inject IJSRuntime JSRuntime
-@inject IRepository<Collection> Collections
+@inject IRepository<Workflow> Workflows
 @code {
-    [CascadingParameter] public ClaimsPrincipal? User { get; set; }
+    [CascadingParameter] public User User { get; set; }
+    [Parameter] public Workflow Workflow { get; set; }
+    bool IsAdmin;
+    bool IsSupervisor;
 
-    [Parameter] public int CollectionId { get; set; }
-    Collection? Collection;
-
-    protected override void OnInitialized()
+protected override async Task OnInitializedAsync()
     {
-        Collection = Collections.Include("Users").Single(x => x.Id == CollectionId);
+        IsAdmin = User.IsInRole("admin", Workflow.Id);
+        IsSupervisor = User.IsInRole("supervisor", Workflow.Id);
     }
 
     async Task OpenInviteModal()

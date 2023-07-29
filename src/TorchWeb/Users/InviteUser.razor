@@ -1,5 +1,7 @@
 ﻿@inherits SparcModal
 
+@*I replicated the code but the invite needs to be tweaked for collections*@
+
 <div class="add-collection">
     <p>
         Invite new team member
@@ -12,20 +14,20 @@
 
     <label>
         Member Role
-        <select @bind="@Role">             
-            @if (User?.IsInRole("admin") == true)
+        <select @bind="Role">             
+            @if (User.IsInRole("admin", Workflow.Id) == true)
             {
-                @foreach (var role in AllRoles)
+                @foreach (var role in Roles)
                 {
-                    <option value="@role.Id">@role.Name</option>
+                    <option value="@role">@role</option>
                 }
             }
-            else if (User?.IsInRole("supervisor") == true)
+            else if (User.IsInRole("supervisor", Workflow.Id) == true)
             {
-                var basicRole = AllRoles.FirstOrDefault(r => r.Name == "basic");
+                var basicRole = Roles.FirstOrDefault(r => r == "basic");
                 if (basicRole != null)
                 {
-                    <option value="@basicRole.Id">@basicRole.Name</option>
+                    <option value="@basicRole">@basicRole</option>
                 }
             }
         </select>
@@ -34,22 +36,16 @@
     <button @onclick=Send>Send invite</button>
 </div>
 
-@inject IRepository<Role> Roles
 @code {
-    [CascadingParameter] public ClaimsPrincipal User { get; set; } = null!;
-    List<Role> AllRoles = new();
-    string Email = "";
-    string Role = "";
-    //SendInviteRequest Request = new ();
-
-    protected override void OnInitialized()
-    {
-        AllRoles = Roles.Query.ToList();
-    }
+    [CascadingParameter] public User User { get; set; } = null!;
+    [Parameter] public Workflow Workflow { get; set; } = null!;
+    List<string> Roles = new() { "Admin", "Supervisor", "Basic" };
+    string? Email;
+    string? Role;
 
     async Task Send()
     {
-        // await TorchCommands.SendInviteAsync(Request);
+        //await TorchCommands.SendInviteAsync(Request);
         await Ok();
     }
 }

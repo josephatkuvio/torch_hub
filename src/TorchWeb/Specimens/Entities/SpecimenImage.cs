@@ -24,6 +24,6 @@ public class SpecimenImage
     public string? HashD { get; private set; }
 
     public string? AbsoluteUrl(string? baseUrl) =>
-        (ExternalUrl?.StartsWith("http") == true ? "" : baseUrl)
-        + ExternalUrl;
+        (OutputFile.StartsWith("http") ? "" : baseUrl)
+        + OutputFile;
 }
