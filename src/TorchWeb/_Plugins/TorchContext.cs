@@ -25,7 +25,7 @@ public class TorchContext : DbContext
         model.Entity<Specimen>().HasOne(x => x.InputConnection).WithMany().HasForeignKey(x => x.InputConnectionId);
         model.Entity<Specimen>().HasOne(x => x.OutputConnection).WithMany().HasForeignKey(x => x.OutputConnectionId);
 
-        model.Entity<User>().HasOne(x => x.Institution).WithMany().HasForeignKey(x => x.InstitutionId);
+        model.Entity<User>().HasOne(x => x.CurrentWorkflow).WithMany().HasForeignKey(x => x.CurrentWorkflowId);
         model.Entity<Institution>().HasOne(x => x.Owner).WithMany().HasForeignKey(x => x.OwnerId);
 
         model.Entity<User>().OwnsMany(x => x.Identities).ToTable("identity");

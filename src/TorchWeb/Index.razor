@@ -67,21 +67,16 @@
 
 @code {
     [CascadingParameter] public User User { get; set; } = null!;
-    List<Workflow> MyWorkflows = new();
+    
+    Workflow? CurrentWorkflow;
     private string activeTab = "all";
     private bool showDetail = false;
     private bool summaryCollapsed = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        if (User.InstitutionId == null)
-        {
-            var institution = User.CreateDefaultInstitution();
-            await Institutions.UpdateAsync(institution);
-            User.SetInstitution(institution);
-            await Users.UpdateAsync(User);
-            Console.WriteLine($"institution {User.InstitutionId}");
-        }
+        if (CurrentWorkflow == null && User.CurrentWorkflowId != null)
+            CurrentWorkflow = await Workflows.FindAsync(User.CurrentWorkflowId);
     }
 
     private void ChangeTab(string tabName)

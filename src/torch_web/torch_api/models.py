@@ -158,8 +158,8 @@ class User(SQLModel, table=True):
     first_name: Optional[str]
     last_name: Optional[str]
     last_login_date: Optional[datetime]
-    institution_id: Optional[int] = Field(foreign_key="institution.id")
-    institution: Optional["Institution"] = Relationship(back_populates="users")
+    current_workflow_id: Optional[int] = Field(foreign_key="workflow.id")
+    current_workflow: Optional["Workflow"] = Relationship()
     identities: List["Identity"] = Relationship(back_populates="user")
 
 

@@ -31,9 +31,9 @@
                     @foreach (var user in AllUsers)
                     {
                         <tr>
-                            <td>@user.FirstName @user.LastName</td>
-                            <td>@user.Email</td>
-                            <td class="btn"><button @onclick="() => RemoveUser(user.Id)">Remove Member</button></td>
+                            <td>@user.User.FirstName @user.User.LastName</td>
+                            <td>@user.User.Email</td>
+                            <td class="btn"><button @onclick="() => RemoveUser(user.UserId)">Remove Member</button></td>
                         </tr>
                     }
                 </table>
@@ -49,7 +49,7 @@
 @inject IJSRuntime JSRuntime
 @code {
     [CascadingParameter] public User User { get; set; } = null!;
-    IEnumerable<User>? AllUsers;
+    IEnumerable<WorkflowUser>? AllUsers;
     public string? InstitutionName { get; set; }
     public string? InstitutionCode { get; set; }
 
@@ -60,7 +60,7 @@
 
     void LoadUsers()
     {
-        AllUsers = Users.Query.Where(x => x.InstitutionId == User!.InstitutionId);
+        AllUsers = Users.Query.Where(x => x.WorkflowUsers.Any(y => y.WorkflowId == User!.CurrentWorkflowId)).SelectMany(x => x.WorkflowUsers);
     }
 
     async Task OpenInviteModal()
@@ -73,7 +73,7 @@
     {
         var confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to remove this user from this institution?");
         if (confirm)
-            await Users.ExecuteAsync(id, x => x.SetInstitution(null));
+            await Users.ExecuteAsync(id, x => x.SetCurrentWorkflow(null));
 
         LoadUsers();
     }

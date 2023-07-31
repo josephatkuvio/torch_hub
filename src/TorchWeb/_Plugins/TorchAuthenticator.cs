@@ -3,19 +3,22 @@ using Sparc.Blossom.Authentication;
 using Sparc.Blossom.Data;
 using System.Security.Claims;
 using Torch.Web.Users;
+using Torch.Web.Workflows;
 
 namespace Torch.Web._Plugins;
 
 public class TorchAuthenticator
 {
-    public TorchAuthenticator(AuthenticationStateProvider auth, IRepository<User> users)
+    public TorchAuthenticator(AuthenticationStateProvider auth, IRepository<User> users, IRepository<Workflow> workflows)
     {
         Auth = auth;
         Users = users;
+        Workflows = workflows;
     }
 
     public AuthenticationStateProvider Auth { get; }
     public IRepository<User> Users { get; }
+    public IRepository<Workflow> Workflows { get; }
 
     public async Task<User?> LoginAsync()
     {
@@ -43,6 +46,14 @@ public class TorchAuthenticator
                     user.AddIdentity(providerName, providerId);
                     await Users.UpdateAsync(user);
                 }
+            }
+
+            if (user.CurrentWorkflowId == null)
+            {
+                var workflow = user.CreateDefaultWorkflow();
+                await Workflows.UpdateAsync(workflow);
+                user.SetCurrentWorkflow(workflow);
+                await Users.UpdateAsync(user);
             }
 
             await Users.ExecuteAsync(user, u => u.Login());

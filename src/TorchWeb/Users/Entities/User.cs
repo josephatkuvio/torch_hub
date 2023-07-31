@@ -33,9 +33,9 @@ public class User : Entity<int>
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
     internal bool IsAuthenticated { get; }
-    public int? InstitutionId { get; private set; }
+    public int? CurrentWorkflowId { get; private set; }
     public DateTime LastLoginDate { get; private set; }
-    public Institution? Institution { get; private set; }
+    public Workflow? CurrentWorkflow { get; private set; }
     public List<Identity> Identities { get; private set; } = new();
     public List<WorkflowUser> WorkflowUsers { get; private set; } = new();
 
@@ -45,10 +45,10 @@ public class User : Entity<int>
             Identities.Add(new Identity(Id, providerName, providerId));
     }
 
-    public void SetInstitution(Institution institution)
+    public void SetCurrentWorkflow(Workflow workflow)
     {
-        Institution = institution;
-        InstitutionId = institution.Id;
+        CurrentWorkflow = workflow;
+        CurrentWorkflowId = workflow.Id;
     }
 
     public bool IsInRole(string role, int workflowId) => WorkflowUsers.Any(x => x.WorkflowId == workflowId && x.Role == role);
@@ -58,18 +58,18 @@ public class User : Entity<int>
         LastLoginDate = DateTime.UtcNow;
     }
 
-    internal Institution CreateDefaultInstitution()
+    internal Workflow CreateDefaultWorkflow()
     {
-        if (InstitutionId != null)
-            return Institution;
+        if (CurrentWorkflow != null)
+            return CurrentWorkflow;
 
         var institution = new Institution("My Workspace", Email);
         institution.SetOwner(this);
 
-        var workflow = new Workflow(institution.Id, "My First Workflow", "Set up your first workflow");
+        var workflow = new Workflow(institution, "My First Workflow", "Set up your first workflow");
         institution.Workflows.Add(workflow);
 
-        return institution;
+        return workflow;
     }
 }
 

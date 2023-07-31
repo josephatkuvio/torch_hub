@@ -13,6 +13,11 @@ public class Workflow : Entity<int>
         CreatedDate = DateTime.UtcNow;
     }
 
+    public Workflow(Institution institution, string name, string description) : this(institution.Id, name, description)
+    {
+        Institution = institution;
+    }
+
     public int InstitutionId { get; private set; }
     public string Name { get; private set; }
     public string? Description { get; private set; }
