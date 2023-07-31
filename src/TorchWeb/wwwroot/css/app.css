@@ -29,12 +29,25 @@ h2 {
 button {
   border-radius: 15px;
 }
-
 button.secondary {
   background-color: var(--grey-400);
 }
 button.secondary:hover {
   background-color: var(--grey-300);
+}
+button.small {
+  background: transparent;
+  font-size: 12px;
+  border-radius: 9px;
+  border: 1px solid #E6E8F2;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+}
+button.small img {
+  width: 15px;
+  height: 15px;
+  vertical-align: bottom;
 }
 
 ::-webkit-scrollbar {

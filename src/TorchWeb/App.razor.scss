@@ -28,21 +28,39 @@ h2 {
 
 button {
     border-radius: 15px;
-}
 
-button.secondary {
-    background-color: var(--grey-400);
+    &.secondary {
+        background-color: var(--grey-400);
 
-    &:hover {
-        background-color: var(--grey-300);
+        &:hover {
+            background-color: var(--grey-300);
+        }
+    }
+
+    &.small {
+        background: transparent;
+        font-size: 12px;
+        border-radius: 9px;
+        border: 1px solid #E6E8F2;
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+
+        img {
+            width: 15px;
+            height: 15px;
+            vertical-align: bottom;
+        }
     }
 }
 
 ::-webkit-scrollbar {
     width: 4px;
+
     &-track {
         background: transparent;
     }
+
     &-thumb {
         background: #7f56d9;
         border-radius: 10px;

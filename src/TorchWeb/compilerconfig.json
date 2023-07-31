@@ -14,5 +14,9 @@
   {
     "outputFile": "Workflows/WorkflowDetail.razor.css",
     "inputFile": "Workflows/WorkflowDetail.razor.scss"
+  },
+  {
+    "outputFile": "Workflows/Tasks/TaskList.razor.css",
+    "inputFile": "Workflows/Tasks/TaskList.razor.scss"
   }
 ]

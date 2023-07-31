@@ -1,10 +1,8 @@
-from torch_web.collections import collections
 from sqlalchemy import or_, select
-from torch_web.workflows.workflows import torch_task
-from torch_web import db
-from torch_web.collections.collections import SpecimenImage
 import imagehash
 from PIL import Image
+from torch_tasks import torch_task
+from torch_api.models import SpecimenImage
 
 
 def hash(image: SpecimenImage, hash_size, hashfunc="average"):
@@ -33,7 +31,7 @@ def check_duplicate(specimen, max_distance=35, hash_size=8):
                                SpecimenImage.hash_c == img.hash_c,
                                SpecimenImage.hash_d == img.hash_d)
 
-            similar_images = db.session.scalars(select(collections.SpecimenImage).filter(SpecimenImage.id != img.id, SpecimenImage.hash_a is not None, split_filter))
+            similar_images = db.session.scalars(select(SpecimenImage).filter(SpecimenImage.id != img.id, SpecimenImage.hash_a is not None, split_filter))
             too_close_images = [sim for sim in similar_images if abs(sim.average_hash() - img.average_hash()) < int(max_distance)]
     
             if len(too_close_images) > 0:

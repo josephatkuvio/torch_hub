@@ -1,5 +1,6 @@
-from torch_web.collections import collections
-from torch_web.workflows.workflows import torch_task
+from torch_tasks import torch_task
+from torch_api.models import Specimen
+
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 from msrest.authentication import CognitiveServicesCredentials
@@ -10,7 +11,7 @@ import time
 
 
 @torch_task("Get Text from Image")
-def recognize_text(specimen: collections.Specimen):
+def recognize_text(specimen: Specimen):
     """
     Recognizes texts in an image using Microsoft Cognitive Services Computer Vision API.
 

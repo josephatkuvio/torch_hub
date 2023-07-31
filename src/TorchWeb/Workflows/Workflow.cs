@@ -29,6 +29,31 @@ public class Workflow : Entity<int>
     public List<Connection> Connections { get; private set; } = new();
 
     public void Delete() => DeletedDate = DateTime.UtcNow;
-    public void AddTask(TorchTask task) => Tasks.Add(task);
+    public void AddTask(string funcName, string name)
+    {
+        var newTask = new TorchTask(Id, funcName, name);
+        Tasks.Add(newTask);
+        UpdateTaskSortOrders();
+    }
+    
+    public void DeleteTask(TorchTask task)
+    {
+        var existingTask = Tasks.FirstOrDefault(x => x.Id == task.Id);
+        if (existingTask == null)
+            return;
+
+        Tasks.Remove(existingTask);
+        UpdateTaskSortOrders();
+    }
+
+    private void UpdateTaskSortOrders()
+    {
+        var order = 1;
+        foreach (var task in Tasks.OrderBy(x => x.SortOrder == null ? x.Id * 1000 : x.SortOrder))
+        {
+            task.SetSortOrder(order);
+            order++;
+        }
+    }
 }
 

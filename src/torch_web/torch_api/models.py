@@ -55,6 +55,13 @@ class Workflow(SQLModel, table=True):
             #context.socketio.emit('specimen_added', specimen_id);
 
 
+class CatalogTask(SQLModel):
+    name: str
+    func_name: str
+    description: Optional[str] = Field(nullable=True)
+    parameters: Dict
+
+
 class Task(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     workflow_id: Optional[int] = Field(default=None, foreign_key="workflow.id")
@@ -62,8 +69,10 @@ class Task(SQLModel, table=True):
     func_name: str
     sort_order: Optional[int]
     description: Optional[str]
+    last_updated_date: Optional[datetime]
     workflow: Workflow = Relationship(back_populates="tasks")
     parameters: Dict = Field(default={}, sa_column=Column(JSON))
+    runs: List["TaskRun"] = Relationship(back_populates="task")
 
     def start(self, specimen: "Specimen"):
         with Session(engine) as session:
@@ -101,9 +110,7 @@ class Connection(SQLModel, table=True):
     password_key: Optional[str]
     application_id: Optional[str]
     application_key: Optional[str]
-    workflow: Workflow = Relationship(back_populates="connection")
-    input_specimens: List["Specimen"] = Relationship(back_populates="input_connection")
-    output_specimens: List["Specimen"] = Relationship(back_populates="output_connection")
+    workflow: Workflow = Relationship(back_populates="connections")
 
 
 class Specimen(SQLModel, table=True):
@@ -116,9 +123,8 @@ class Specimen(SQLModel, table=True):
     barcode: Optional[str]
     catalog_number: Optional[str]
     deleted: bool = Field(default=False)
-    input_connection: Connection = Relationship(back_populates="input_specimens")
-    output_connection: Optional[Connection] = Relationship(back_populates="output_specimens")
     images: List["SpecimenImage"] = Relationship(back_populates="specimen")
+    tasks: List["TaskRun"] = Relationship(back_populates="specimen")
 
 
 class TaskRun(SQLModel, table=True):
@@ -130,7 +136,7 @@ class TaskRun(SQLModel, table=True):
     end_date: Optional[datetime]
     status: Optional[str]
     result: Optional[str]
-    task: Task = Relationship(back_populates="specimens")
+    task: Task = Relationship(back_populates="runs")
     specimen: Specimen = Relationship(back_populates="tasks")
 
 
@@ -161,6 +167,7 @@ class User(SQLModel, table=True):
     current_workflow_id: Optional[int] = Field(foreign_key="workflow.id")
     current_workflow: Optional["Workflow"] = Relationship()
     identities: List["Identity"] = Relationship(back_populates="user")
+    workflows: List["WorkflowUser"] = Relationship(back_populates="user")
 
 
 class Identity(SQLModel, table=True):

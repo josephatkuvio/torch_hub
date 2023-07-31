@@ -1,4 +1,5 @@
 import uvicorn
+import os
 
 from typing import List
 from sqlmodel import Session, select
@@ -6,8 +7,8 @@ from fastapi import FastAPI, BackgroundTasks
 from fastapi_socketio import SocketManager
 
 from torch_api.database import create_db_and_tables, engine
-from torch_api.models import Specimen, Workflow
-from torch_api.torch_tasks import torch_task_registry
+from torch_api.models import CatalogTask, Specimen, Workflow
+from torch_api.torch_tasks import get_all_tasks
 
 
 app = FastAPI()
@@ -20,8 +21,15 @@ def root():
 
 
 @app.get("/tasks", operation_id="GetAllTasks")
-def tasks_getall():
-    return { 'tasks': torch_task_registry }
+async def tasks_getall() -> List[CatalogTask]:
+    for module in os.listdir(os.path.dirname(__file__) + '/tasks'):
+        if module == '__init__.py' or module[-3:] != '.py':
+            continue
+        __import__('tasks.' + module[:-3], locals(), globals())
+    del module
+
+    tasks = get_all_tasks()
+    return tasks
 
 
 @app.post("/workflows/{workflow_id}/{batch_id}", operation_id="StartWorkflow")

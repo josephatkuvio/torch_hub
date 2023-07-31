@@ -1,11 +1,9 @@
 import re
-
-from torch_web.collections import collections
-from torch_web.workflows.workflows import torch_task
-
+from torch_api.models import Specimen
+from torch_tasks import torch_task
 
 @torch_task("Extract Catalog Number")
-def check_catalog_number(specimen: collections.Specimen, catalog_number_regex, catalog_group_name='catNum'):
+def check_catalog_number(specimen: Specimen, catalog_number_regex, catalog_group_name='catNum'):
     """
     Extracts the catalog number from the specimen's file name.
     

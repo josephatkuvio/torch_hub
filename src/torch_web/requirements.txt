@@ -9,3 +9,9 @@ psycopg2
 
 # Task Dependencies
 imagehash
+boto3
+Pillow
+azure-storage-blob
+azure-identity
+azure-cognitiveservices-vision-computervision
+paramiko

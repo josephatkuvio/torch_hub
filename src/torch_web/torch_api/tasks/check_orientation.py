@@ -1,5 +1,6 @@
-from torch_web.collections import collections
-from torch_web.workflows.workflows import torch_task
+from torch_tasks import torch_task
+from torch_api.models import Specimen
+
 from PIL import Image
 
 
@@ -17,7 +18,7 @@ def is_portrait(image_path=None):
 
 
 @torch_task("Check Portrait Orientation")
-def check_orientation(specimen: collections.Specimen):
+def check_orientation(specimen: Specimen):
     image_bytes = specimen.image_bytes()
     print('image bytes is', image_bytes)
     if not is_portrait(image_bytes):

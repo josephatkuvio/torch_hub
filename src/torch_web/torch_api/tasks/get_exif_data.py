@@ -1,5 +1,5 @@
-from torch_web.collections import collections
-from torch_web.workflows.workflows import torch_task
+from torch_tasks import torch_task
+from torch_api.models import Specimen
 
 from PIL import Image, TiffImagePlugin
 from PIL.ExifTags import TAGS
@@ -23,7 +23,7 @@ def cast(v):
 
 
 @torch_task("Get EXIF Info")
-def get_exif_data(specimen: collections.Specimen):
+def get_exif_data(specimen: Specimen):
     """
     Extract EXIF data from an image.
     Args:

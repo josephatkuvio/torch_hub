@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <OpenApiReference Include="OpenAPIs\openapi.json" CodeGenerator="NSwagCSharp" Namespace="Torch.Api" ClassName="TorchApi">
+      <SourceUri>http://localhost:8000/openapi.json</SourceUri>
+    </OpenApiReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.2.0" />
     <PackageReference Include="Blazored.Modal" Version="7.1.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />

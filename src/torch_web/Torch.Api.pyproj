@@ -58,7 +58,6 @@
     <Compile Include="torch_api\app.py" />
     <Compile Include="torch_api\tasks\check_catalog_number.py" />
     <Compile Include="torch_api\tasks\check_orientation.py" />
-    <Compile Include="torch_api\tasks\copy_file.py" />
     <Compile Include="torch_api\tasks\generate_derivatives.py" />
     <Compile Include="torch_api\tasks\herbar.py" />
     <Compile Include="torch_api\tasks\upload.py" />

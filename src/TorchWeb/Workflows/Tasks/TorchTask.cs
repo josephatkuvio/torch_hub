@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR.Protocol;
-
-namespace Torch.Web.Workflows;
+﻿namespace Torch.Web.Workflows;
 
 public class TorchTask
 {
@@ -9,6 +7,7 @@ public class TorchTask
         WorkflowId = workflowId;
         FuncName = funcName;
         Name = name;
+        LastUpdatedDate = DateTime.UtcNow;
     }
 
     public int Id { get; private set; }
@@ -18,5 +17,15 @@ public class TorchTask
     public string FuncName { get; private set; }
     public int? SortOrder { get; private set; }
     public string? Description { get; private set; }
+    public DateTime LastUpdatedDate { get; private set; }
     public Dictionary<string, string> Parameters { get; private set; } = new();
+
+    public void SetSortOrder(int sortOrder)
+    {
+        if (SortOrder != sortOrder)
+        {
+            SortOrder = sortOrder;
+            LastUpdatedDate = DateTime.UtcNow;
+        }
+    }
 }
