@@ -12,30 +12,12 @@
     <CascadingBlazoredModal></CascadingBlazoredModal>
 </CascadingValue>
 
-@inject AuthenticationStateProvider Auth
-@inject IRepository<User> Users
+@inject TorchAuthenticator Auth
 @code {
-    User User = null!;
+    User User = new();
     protected override async Task OnInitializedAsync()
     {
-        var auth = await Auth.GetAuthenticationStateAsync();
-        if (auth?.User != null)
-        {
-            foreach (var claim in auth.User.Claims)
-            {
-                Console.WriteLine($"{claim.Type} = {claim.Value}");
-            }
-            User = new(auth.User.Get("name"));
-            //var email = auth.User.Get("name");
-            //var identity = auth.User.Get("id");
-            //var existing = Users.Query.FirstOrDefault(x => x.Email == email);
-            //if (existing == null)
-            //{
-            //    existing = new(email);
-            //    await Users.AddAsync(existing);
-            //}
-            //User = existing;
-        }
+        User = await Auth.LoginAsync() ?? new();
     }
 }
 

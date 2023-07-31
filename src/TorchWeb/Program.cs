@@ -8,12 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazoredModal();
+
 builder.Services.AddDbContext<TorchContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database"))
                                            .UseSnakeCaseNamingConvention());
 
 builder.Services.AddScoped<DbContext, TorchContext>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlServerRepository<>));
+builder.Services.AddScoped<TorchAuthenticator>();
 builder.Services.AddAuth0WebAppAuthentication(options =>
 {
     options.Domain = builder.Configuration["Auth0:Domain"]!;

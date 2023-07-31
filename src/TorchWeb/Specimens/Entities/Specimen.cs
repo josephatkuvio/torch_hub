@@ -5,6 +5,9 @@ namespace Torch.Web.Collections;
 
 public class Specimen : Entity<int>
 {
+    private Specimen()
+    { }
+    
     public Specimen(int inputConnectionId, string name, string inputFile)
     {
         InputConnectionId = inputConnectionId;

@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿@attribute [Authorize]
+@page "/"
 
 <section class="new-ui-section @(summaryCollapsed ? "collapsed" : "")">
     <section class="tab-section">
