@@ -1,0 +1,14 @@
+﻿<article>
+    <img src="/images/folderIcon.svg" />
+    <header>
+        <h3>@Connection.Name</h3>
+        <h4>@Connection.Direction | @Connection.ContainerType</h4>
+    </header>
+    <button>
+        <img src="/images/upArrowIcon.svg" />
+    </button> 
+</article>
+
+@code {
+    [Parameter] public Connection Connection { get; set; } = null!;
+}

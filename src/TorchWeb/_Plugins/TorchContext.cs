@@ -19,6 +19,9 @@ public class TorchContext : DbContext
         model.Entity<TorchTaskRun>().ToTable("taskrun");
         model.Entity<User>().ToTable("user");
         model.Entity<Workflow>().ToTable("workflow");
+        model.Entity<Workflow>().Navigation(x => x.Connections).AutoInclude();
+        model.Entity<Workflow>().Navigation(x => x.Tasks).AutoInclude();
+
         model.Entity<WorkflowUser>().ToTable("workflowuser").HasKey(x => new { x.WorkflowId, x.UserId });
 
         model.Entity<Specimen>().OwnsMany(x => x.Images).ToTable("specimenimage");

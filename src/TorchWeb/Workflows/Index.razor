@@ -1,45 +1,48 @@
 ﻿@attribute [Authorize]
 @page "/"
 
+
 <section class="new-ui-section @(summaryCollapsed ? "collapsed" : "")">
     <section class="tab-section">
         <ul class="tab-list">
-            <li class="tab-item first-icon @(activeTab == "all" ? "active" : "")" @onclick='() => ChangeTab("all")'>
+            <li class="tab-item first-icon @(activeTab == "workflow" ? "active" : "")" @onclick='() => ChangeTab("all")'>
                 <a class='tab-link'>
                     <img src="/images/Flowchart.svg" />
                 </a>
             </li>
-            <li class="tab-item @(activeTab == "status" ? "active" : "")" @onclick='() => ChangeTab("status")'>
+            <li class="tab-item @(activeTab == "tasks" ? "active" : "")" @onclick='() => ChangeTab("status")'>
                 <a class='tab-link'>
                     <img src="/images/ProgressIcon.svg" />
                 </a>
             </li>
-            <li class="tab-item @(activeTab == "workflow" ? "active" : "")" @onclick='() => ChangeTab("workflow")'>
+            <li class="tab-item @(activeTab == "settings" ? "active" : "")" @onclick='() => ChangeTab("workflow")'>
                 <a class='tab-link'>
                     <img src="/images/ManageIcon.svg" />
                 </a>
             </li>
         </ul>
 
-        <section class="tab-content">
-            @if (activeTab == "all")
-            {
-                <NewUIWorkflow />
-            }
-            else if (activeTab == "status")
-            {
-                <NewUIStatus />
-            }
-            else if (activeTab == "workflow" && !showDetail)
-            {
-                <NewUIManageWorkflow OnContentClick="ToggleShowDetail" />
-            }
-            else if (activeTab == "workflow" && showDetail)
-            {
-                <NewUIWorkflowDetail OnBackClick="ToggleShowDetail" />
-            }
-        </section>
-
+        @if (CurrentWorkflow != null)
+        {
+            <section class="tab-content">
+                @if (activeTab == "workflow")
+                {
+                    <WorkflowDetail Workflow="CurrentWorkflow" />
+                }
+                else if (activeTab == "tasks")
+                {
+                    <NewUIStatus />
+                }
+                else if (activeTab == "settings" && !showDetail)
+                {
+                    <NewUIManageWorkflow OnContentClick="ToggleShowDetail" />
+                }
+                else if (activeTab == "settings" && showDetail)
+                {
+                    <NewUIWorkflowDetail OnBackClick="ToggleShowDetail" />
+                }
+            </section>
+        }
     </section>
 
     <section class="tab-section summary-section">
@@ -67,9 +70,11 @@
 
 @code {
     [CascadingParameter] public User User { get; set; } = null!;
-    
+
     Workflow? CurrentWorkflow;
-    private string activeTab = "all";
+    public SocketIOClient.SocketIO Socket { get; set; } = null!;
+
+    private string activeTab = "workflow";
     private bool showDetail = false;
     private bool summaryCollapsed = false;
 
@@ -77,6 +82,9 @@
     {
         if (CurrentWorkflow == null && User.CurrentWorkflowId != null)
             CurrentWorkflow = await Workflows.FindAsync(User.CurrentWorkflowId);
+
+        //Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
+        //await Socket.ConnectAsync();
     }
 
     private void ChangeTab(string tabName)

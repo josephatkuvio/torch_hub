@@ -1,8 +1,6 @@
-﻿<CascadingValue Value="Socket">
-    <header class="workflow-header">
-        <div class="header-left">
-            <h1>All</h1>
-        </div>
+﻿@using Torch.Web.Workflows.Connections
+    <header>
+        <h1>All</h1>
         <div class="header-right">
             <button class="sort-button">Sort</button>
             <img class="sort-icon-img" src="/images/sortIcon.svg" />
@@ -13,21 +11,26 @@
             <i class="sort"></i>
         </div>
     </header>
-</CascadingValue>
 
-<div class="divider"></div>
-
-<section class="workflow-folders">
-    <h2>Workflow</h2>
+<hr />
+ 
+<section>
+    <h2>Connections</h2>
     <section class="workflow-cards">
-        @foreach (var workflow in MyWorkflows)
+        @foreach (var connection in Workflow.Connections)
         {
-            <WorkflowCard Workflow="workflow" />
+            <ConnectionCard Connection="connection" />
+        }
+        @if (!Workflow.Connections.Any())
+        {
+            <aside>
+                No connections found for this workflow. Create your first connection in the Settings tab (third tab).
+            </aside>
         }
     </section>
 </section>
 
-<div class="divider"></div>
+<hr />
 
 <section class="specimens-list-cards">
     <h2>Recent Specimens</h2>
@@ -49,13 +52,10 @@
 
 @inject IConfiguration Config
 @code {
-    List<Workflow> MyWorkflows = new();
-    public SocketIOClient.SocketIO Socket { get; set; } = null!;
+    [Parameter] public Workflow Workflow { get; set; } = null!;
 
     protected override async Task OnInitializedAsync()
     {
-        Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
-        await Socket.ConnectAsync();
         // Socket.On("specimen_added", response => RefreshSpecimens());
 
     }

@@ -6,5 +6,13 @@
   {
     "outputFile": "Index.razor.css",
     "inputFile": "Index.razor.scss"
+  },
+  {
+    "outputFile": "Workflows/Connections/ConnectionCard.razor.css",
+    "inputFile": "Workflows/Connections/ConnectionCard.razor.scss"
+  },
+  {
+    "outputFile": "Workflows/WorkflowDetail.razor.css",
+    "inputFile": "Workflows/WorkflowDetail.razor.scss"
   }
 ]

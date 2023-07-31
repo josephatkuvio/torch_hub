@@ -25,21 +25,23 @@
                 <img class="sort-icon-img" src="/images/arrowRightIcon.svg" />
             </div>
             <div class="divider manage-card"></div>
-            <div class="card-text bottom">
-                <div class="info-pair">
-                    <label>Last Updated</label>
-                    <h3>24 FEB 2016</h3>
-                    @*<time>@Workflow.Create_date.ToString("dd MMMM yyyy")</time>*@
-                </div>
-                <div class="info-pair">
-                    <label>Created by</label>
-                    <h3>Christina J</h3>
-                </div>
-                <div class="info-pair">
-                    <label>Assigned Tasks</label>
-                    <h3>34</h3>
-                </div>
-            </div>
+            <footer>
+                <label>
+                    Last Updated
+                    <span>
+                        24 FEB 2016
+                    </span>
+                </label>
+                @*<time>@Workflow.Create_date.ToString("dd MMMM yyyy")</time>*@
+                <label>
+                    Created by
+                    <span>Christina J</span>
+                </label>
+                <label>
+                    Assigned Tasks
+                    <span>34</span>
+                </label>
+            </footer>
         </article>
 
     </section>

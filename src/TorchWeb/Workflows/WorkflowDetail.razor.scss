@@ -1,13 +1,11 @@
-.workflow-header {
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    .header-left {
-        h1 {
-            margin-bottom: 0;
-            font-weight: 400;
-        }
+    h1 {
+        margin-bottom: 0;
+        font-weight: 400;
     }
 
     .header-right {
@@ -50,20 +48,24 @@
     }
 }
 
-.divider {
+hr {
     height: 1px;
-    background-color: #F7F8FC;
+    display: block;
+    border-color: #F7F8FC;
     margin-top: 32px;
     margin-bottom: 16px;
 }
 
-.workflow-folders {
-    height: 184px;
-    overflow-y: auto;
-
+section {
     h2 {
         margin: 16px 0;
         height: 15px;
+    }
+
+    > aside {
+        font-size: 14px;
+        color: var(--grey-400);
+
     }
 
     .workflow-cards {
@@ -72,55 +74,7 @@
         align-items: flex-start;
         gap: 16px;
         flex-wrap: wrap;
-
-        .workflow-card {
-            border: 1px solid #E6E8F2;
-            border-radius: 20px;
-            height: 136px;
-            padding: 24px;
-            min-width: 224px;
-            max-width: 290px;
-
-            .folder-img {
-                margin-bottom: 20px;
-            }
-
-            .card-text {
-                width: 118px;
-
-                h3 {
-                    font-size: 14px;
-                    color: #181E30;
-                    font-weight: 400;
-                    margin-bottom: 4px;
-                }
-
-                h4 {
-                    font-size: 12px;
-                    color: #5A6182;
-                    font-weight: 400;
-                }
-            }
-
-            .up-btn {
-                float: right;
-                position: relative;
-                bottom: 36px;
-                background: transparent;
-                padding: 0;
-
-                .up-btn-img {
-                    width: 36px;
-                    height: 36px;
-                }
-            }
-        }
     }
-}
-
-.specimens-list-cards {
-    overflow-y: auto;
-    height: calc(100% - 319px);
 
     .spec-cards {
 
@@ -160,5 +114,3 @@
         }
     }
 }
-
-
