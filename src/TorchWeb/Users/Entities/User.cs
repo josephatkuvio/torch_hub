@@ -65,6 +65,10 @@ public class User : Entity<int>
 
         var institution = new Institution("My Workspace", Email);
         institution.SetOwner(this);
+
+        var workflow = new Workflow(institution.Id, "My First Workflow", "Set up your first workflow");
+        institution.Workflows.Add(workflow);
+
         return institution;
     }
 }
