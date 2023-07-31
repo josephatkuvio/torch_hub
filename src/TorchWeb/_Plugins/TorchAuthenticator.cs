@@ -22,8 +22,12 @@ public class TorchAuthenticator
         var auth = await Auth.GetAuthenticationStateAsync();
         if (auth?.User != null)
         {
-            var providerId = auth.User.Get(ClaimTypes.NameIdentifier);
-            var user = Users.Query.FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == "auth0" && y.ProviderId == providerId));
+            var provider = auth.User.Get(ClaimTypes.NameIdentifier) 
+                ?? throw new Exception("Missing provider information in user claims.");
+            
+            var providerName = provider.Split('|').First();
+            var providerId = provider.Split('|').Last();
+            var user = Users.Query.FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
             if (user == null)
             {
                 var email = auth.User.Get(ClaimTypes.Email) ?? auth.User.Get(ClaimTypes.Name) ?? auth.User.Get("name");
@@ -31,12 +35,12 @@ public class TorchAuthenticator
                 if (user == null)
                 {
                     user = new(auth.User);
-                    user.AddIdentity("auth0", auth.User);
+                    user.AddIdentity(providerName, providerId);
                     await Users.AddAsync(user);
                 }
                 else
                 {
-                    user.AddIdentity("auth0", auth.User);
+                    user.AddIdentity(providerName, providerId);
                     await Users.UpdateAsync(user);
                 }
             }

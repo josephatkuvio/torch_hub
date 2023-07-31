@@ -76,11 +76,12 @@
     {
         if (User.InstitutionId == null)
         {
-            var modal = Modal.Show<AddInstitution>();
-            await modal.Result;
+            var institution = User.CreateDefaultInstitution();
+            await Institutions.UpdateAsync(institution);
+            User.SetInstitution(institution);
+            await Users.UpdateAsync(User);
+            Console.WriteLine($"institution {User.InstitutionId}");
         }
-
-
     }
 
     private void ChangeTab(string tabName)

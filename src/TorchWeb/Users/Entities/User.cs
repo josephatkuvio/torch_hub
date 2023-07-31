@@ -18,6 +18,14 @@ public class User : Entity<int>
         Email = user.Get(ClaimTypes.Email) ?? user.Get(ClaimTypes.Name) ?? user.Get("name");
         FirstName = user.Get(ClaimTypes.GivenName);
         LastName = user.Get(ClaimTypes.Surname);
+
+        if (Email!.Contains(' ') && FirstName == null)
+        {
+            var parts = Email.Split(' ');
+            FirstName = parts[0];
+            LastName = parts[1];
+        }
+
         IsAuthenticated = user.Identity?.IsAuthenticated ?? false;
     }
 
@@ -31,21 +39,33 @@ public class User : Entity<int>
     public List<Identity> Identities { get; private set; } = new();
     public List<WorkflowUser> WorkflowUsers { get; private set; } = new();
 
-    public void AddIdentity(string providerName, ClaimsPrincipal user)
+    public void AddIdentity(string providerName, string providerId)
     {
-        var providerId = user.Get(ClaimTypes.NameIdentifier);
-        if (providerId != null)
-        {
+        if (!Identities.Any(x => x.ProviderName == providerName && x.ProviderId == providerId))
             Identities.Add(new Identity(Id, providerName, providerId));
-        }
     }
 
-    public void SetInstitution(int? id) => InstitutionId = id;
+    public void SetInstitution(Institution institution)
+    {
+        Institution = institution;
+        InstitutionId = institution.Id;
+    }
+
     public bool IsInRole(string role, int workflowId) => WorkflowUsers.Any(x => x.WorkflowId == workflowId && x.Role == role);
 
     internal void Login()
     {
         LastLoginDate = DateTime.UtcNow;
+    }
+
+    internal Institution CreateDefaultInstitution()
+    {
+        if (InstitutionId != null)
+            return Institution;
+
+        var institution = new Institution("My Workspace", Email);
+        institution.SetOwner(this);
+        return institution;
     }
 }
 

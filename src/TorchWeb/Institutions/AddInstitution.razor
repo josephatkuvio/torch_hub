@@ -30,7 +30,7 @@
         institution.SetOwner(User);
         await Institutions.AddAsync(institution);
 
-        User.SetInstitution(institution.Id);
+        User.SetInstitution(institution);
         await Users.UpdateAsync(User);
 
     }
