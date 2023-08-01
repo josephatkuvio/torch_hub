@@ -17,7 +17,7 @@
 <section>
     <h2>Connections</h2>
     <section class="workflow-cards">
-        @foreach (var connection in Workflow.Connections)
+        @foreach (var connection in Workflow.Connections.OrderBy(x => x.Direction))
         {
             <ConnectionCard Connection="connection" />
         }

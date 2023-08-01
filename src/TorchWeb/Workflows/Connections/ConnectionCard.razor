@@ -2,13 +2,33 @@
     <img src="/images/folderIcon.svg" />
     <header>
         <h3>@Connection.Name</h3>
-        <h4>@Connection.Direction | @Connection.ContainerType</h4>
+        <h4>@Connection.Direction | @(Connection.ContainerType.Replace("Connection", ""))</h4>
     </header>
-    <button>
-        <img src="/images/upArrowIcon.svg" />
-    </button> 
+    @if (Connection.Direction == "Input")
+    {
+        <InputFile @key=inputFileId OnChange="Upload" multiple />
+        
+@*        <button @onclick=Upload>
+            <img src="/images/upArrowIcon.svg" />
+        </button>
+*@    }
 </article>
 
+@inject IRepository<Connection> Connections
 @code {
     [Parameter] public Connection Connection { get; set; } = null!;
+    string inputFileId = Guid.NewGuid().ToString();
+
+    private async Task Upload(InputFileChangeEventArgs e)
+    {
+        await Connection.InitializeAsync();
+
+        foreach (var file in e.GetMultipleFiles())
+        {
+            await Connection.UploadSpecimenAsync(file.Name, file.OpenReadStream());
+            await Connections.UpdateAsync(Connection);
+        }
+
+        inputFileId = Guid.NewGuid().ToString();
+    }
 }

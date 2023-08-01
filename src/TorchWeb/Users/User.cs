@@ -4,6 +4,8 @@ using System.Security.Claims;
 using System.Security.Principal;
 using Torch.Web.Institutions;
 using Torch.Web.Workflows;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Torch.Web.Workflows.Connections;
 
 namespace Torch.Web.Users;
 
@@ -68,6 +70,9 @@ public class User : Entity<int>
 
         var workflow = new Workflow(institution, "My First Workflow", "Set up your first workflow");
         institution.Workflows.Add(workflow);
+
+        workflow.Connections.Add(new AzureBlobConnection(workflow, "Input"));
+        workflow.Connections.Add(new AzureBlobConnection(workflow, "Output"));
 
         return workflow;
     }

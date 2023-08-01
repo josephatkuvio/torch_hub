@@ -111,12 +111,13 @@ class Connection(SQLModel, table=True):
     application_id: Optional[str]
     application_key: Optional[str]
     workflow: Workflow = Relationship(back_populates="connections")
+    specimen_count: Optional[int]
 
 
 class Specimen(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     input_connection_id: int = Field(foreign_key="connection.id")
-    output_connection_id: Optional[int] = Field(foreign_key="connection.id")
+    output_connection_id: Optional[int] = Field(foreign_key="connection.id", nullable=True)
     input_file: str
     name: str
     create_date: datetime

@@ -1,5 +1,6 @@
 ﻿using Sparc.Blossom.Data;
 using Torch.Web.Institutions;
+using Torch.Web.Workflows.Connections;
 
 namespace Torch.Web.Workflows;
 
@@ -11,6 +12,7 @@ public class Workflow : Entity<int>
         Name = name;
         Description = description;
         CreatedDate = DateTime.UtcNow;
+        Connections.Add(new AzureBlobConnection(this, "Output"));
     }
 
     public Workflow(Institution institution, string name, string description) : this(institution.Id, name, description)

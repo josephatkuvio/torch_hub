@@ -3,6 +3,7 @@ using Torch.Web.Collections;
 using Torch.Web.Institutions;
 using Torch.Web.Users;
 using Torch.Web.Workflows;
+using Torch.Web.Workflows.Connections;
 
 namespace Torch.Web._Plugins;
 
@@ -12,7 +13,9 @@ public class TorchContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder model)
     {
-        model.Entity<Connection>().ToTable("connection");
+        model.Entity<Connection>().ToTable("connection").HasDiscriminator(x => x.ContainerType);
+        model.Entity<AzureBlobConnection>();
+
         model.Entity<Institution>().ToTable("institution");
         model.Entity<Specimen>().ToTable("specimen");
         model.Entity<TorchTask>().ToTable("task");
@@ -25,7 +28,7 @@ public class TorchContext : DbContext
         model.Entity<WorkflowUser>().ToTable("workflowuser").HasKey(x => new { x.WorkflowId, x.UserId });
 
         model.Entity<Specimen>().OwnsMany(x => x.Images).ToTable("specimenimage");
-        model.Entity<Specimen>().HasOne(x => x.InputConnection).WithMany().HasForeignKey(x => x.InputConnectionId);
+        model.Entity<Specimen>().HasOne(x => x.InputConnection).WithMany(x => x.Specimens).HasForeignKey(x => x.InputConnectionId);
         model.Entity<Specimen>().HasOne(x => x.OutputConnection).WithMany().HasForeignKey(x => x.OutputConnectionId);
 
         model.Entity<User>().HasOne(x => x.CurrentWorkflow).WithMany().HasForeignKey(x => x.CurrentWorkflowId);
@@ -36,5 +39,9 @@ public class TorchContext : DbContext
         // Json support
         model.Entity<TorchTask>().Property(x => x.Parameters).HasColumnType("jsonb");
         model.Entity<TorchTaskRun>().Property(x => x.Parameters).HasColumnType("jsonb");
+
+        // Connection inheritance
+        model.Entity<AzureBlobConnection>();
+
     }
 }
