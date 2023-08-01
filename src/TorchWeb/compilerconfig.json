@@ -18,5 +18,13 @@
   {
     "outputFile": "Workflows/Tasks/TaskList.razor.css",
     "inputFile": "Workflows/Tasks/TaskList.razor.scss"
+  },
+  {
+    "outputFile": "Workflows/Tasks/TaskCard.razor.css",
+    "inputFile": "Workflows/Tasks/TaskCard.razor.scss"
+  },
+  {
+    "outputFile": "Workflows/Index.razor.css",
+    "inputFile": "Workflows/Index.razor.scss"
   }
 ]

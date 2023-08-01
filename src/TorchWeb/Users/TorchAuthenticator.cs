@@ -23,7 +23,7 @@ public class TorchAuthenticator
     public async Task<User?> LoginAsync()
     {
         var auth = await Auth.GetAuthenticationStateAsync();
-        if (auth?.User != null)
+        if (auth?.User?.Identity?.IsAuthenticated == true)
         {
             var provider = auth.User.Get(ClaimTypes.NameIdentifier) 
                 ?? throw new Exception("Missing provider information in user claims.");

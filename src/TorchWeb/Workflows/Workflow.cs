@@ -29,9 +29,9 @@ public class Workflow : Entity<int>
     public List<Connection> Connections { get; private set; } = new();
 
     public void Delete() => DeletedDate = DateTime.UtcNow;
-    public void AddTask(string funcName, string name)
+    public void AddTask(string funcName, string name, Dictionary<string, string>? parameters)
     {
-        var newTask = new TorchTask(Id, funcName, name);
+        var newTask = new TorchTask(Id, funcName, name, parameters);
         Tasks.Add(newTask);
         UpdateTaskSortOrders();
     }
@@ -46,10 +46,10 @@ public class Workflow : Entity<int>
         UpdateTaskSortOrders();
     }
 
-    private void UpdateTaskSortOrders()
+    internal void UpdateTaskSortOrders()
     {
         var order = 1;
-        foreach (var task in Tasks.OrderBy(x => x.SortOrder == null ? x.Id * 1000 : x.SortOrder))
+        foreach (var task in Tasks.OrderBy(x => x.SortOrder == null ? 1000 : (x.TemporarySortOrder ?? x.SortOrder)))
         {
             task.SetSortOrder(order);
             order++;

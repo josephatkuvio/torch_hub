@@ -1,4 +1,5 @@
-﻿<section>
+﻿@using Newtonsoft.Json.Linq;
+<section class="task-list">
     <section>
         <header>
             <h1>@Workflow.Name</h1>
@@ -10,9 +11,9 @@
         </header>
 
         <section class="workflow-cards">
-            @foreach (var task in Workflow.Tasks)
+            @foreach (var task in Workflow.Tasks.OrderBy(x => x.SortOrder))
             {
-                <TaskCard Task="task" OnDelete="Delete" />
+                <TaskCard Task="task" OnDelete="Delete" OnReorder="Reorder" />
             }
         </section>
     </section>
@@ -25,15 +26,17 @@
             <i class="fa fa-search"></i>
         </label>
 
-        @foreach (var task in FilteredCatalog)
-        {
-            <article class="new-task" @onclick=@(() => Add(task))>
-                <h3>@task.Name</h3>
-                <button>
-                    <img src="/images/plusNewIcon.svg" />
-                </button>
-            </article>
-        }
+        <section class="task-catalog">
+            @foreach (var task in FilteredCatalog)
+            {
+                <article class="new-task" @onclick="@(() => Add(task))">
+                    <h3>@task.Name</h3>
+                    <button>
+                        <img src="/images/plusNewIcon.svg" />
+                    </button>
+                </article>
+            }
+        </section>
     </section>
 
 </section>
@@ -44,10 +47,10 @@
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
     ICollection<Torch.Api.CatalogTask> Catalog = new List<Torch.Api.CatalogTask>();
-    
+
     string searchText = "";
-    IEnumerable<Torch.Api.CatalogTask> FilteredCatalog => Catalog.Where(x => 
-        string.IsNullOrWhiteSpace(searchText) 
+    IEnumerable<Torch.Api.CatalogTask> FilteredCatalog => Catalog.Where(x =>
+        string.IsNullOrWhiteSpace(searchText)
         || x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
         .OrderBy(x => x.Name);
 
@@ -58,13 +61,20 @@
 
     async Task Add(Torch.Api.CatalogTask task)
     {
-        Workflow.AddTask(task.Func_name, task.Name);
+        var parameters = JObject.FromObject(task.Parameters).ToObject<Dictionary<string, string>>();
+        Workflow.AddTask(task.Func_name, task.Name, parameters);
         await Workflows.UpdateAsync(Workflow);
     }
 
-    async Task OnDelete(TorchTask task)
+    async Task Delete(TorchTask task)
     {
         Workflow.DeleteTask(task);
+        await Workflows.UpdateAsync(Workflow);
+    }
+
+    async Task Reorder(TorchTask task)
+    {
+        Workflow.UpdateTaskSortOrders();
         await Workflows.UpdateAsync(Workflow);
     }
 }

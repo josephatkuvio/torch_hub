@@ -1,4 +1,4 @@
-section {
+.task-list {
     display: grid;
     grid-template-columns: 7fr 1px 3fr;
     gap: 24px;
@@ -7,6 +7,10 @@ section {
         display: flex;
         justify-content: space-between;
         flex-direction: column;
+
+        h1 {
+            margin-bottom: 0.5rem ;
+        }
 
         > div {
             display: flex;
@@ -22,10 +26,8 @@ section {
 
     .workflow-cards {
         display: flex;
-        flex-direction: row;
-        align-items: flex-start;
+        flex-direction: column;
         gap: 16px;
-        flex-wrap: wrap;
         margin-top: 32px;
     }
 
@@ -56,6 +58,11 @@ section {
         }
     }
 
+    .task-catalog {
+        display: flex;
+        flex-direction: column;
+    }
+
     .new-task {
         border-radius: 20px;
         align-items: center;
@@ -65,6 +72,10 @@ section {
         margin-bottom: 13px;
         display: flex;
         justify-content: space-between;
+
+        &:hover {
+            background: #E6E8F2;
+        }
 
         h3 {
             font-size: 14px;

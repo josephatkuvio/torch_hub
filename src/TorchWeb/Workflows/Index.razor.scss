@@ -3,7 +3,7 @@
     height: 100vh;
     width: 100vw;
     padding: 32px 30px;
-    grid-template-columns: 1fr 447px;
+    grid-template-columns: 3fr minmax(300px, 1fr);
     gap: 24px;
     background: #29324A;
     transition: 0.3s ease-in-out;

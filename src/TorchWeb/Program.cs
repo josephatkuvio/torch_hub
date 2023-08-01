@@ -14,6 +14,7 @@ builder.Services.AddBlazoredModal();
 builder.Services.AddDbContext<TorchContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database"))
                                            .UseSnakeCaseNamingConvention());
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddScoped<DbContext, TorchContext>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(SqlServerRepository<>));

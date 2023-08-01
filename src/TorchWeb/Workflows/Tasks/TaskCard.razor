@@ -1,28 +1,28 @@
-﻿<article @onclick="ToggleExpandCollapse">
+﻿<article class="@(isExpanded ? "expanded" : "")">
     <header>
         <h2>@((Task.SortOrder ?? 0).ToString("00"))</h2>
         @if (isExpanded)
         {
-            <button class="order" @onclick:stopPropagation=true>
+            <button class="order" @onclick="MoveUp" @onclick:stopPropagation=true>
                 <img class="detail-icon-img" src="/images/up.svg" />
             </button>
-            <button @onclick:stopPropagation=true>
+            <button @onclick="MoveDown" @onclick:stopPropagation=true>
                 <img class="detail-icon-img" src="/images/down.svg" />
             </button>
         }
     </header>
 
     <div>
-        <header>
+        <header @onclick="ToggleExpandCollapse">
             <h2>@Task.Name</h2>
             <div class="right-btns">
-                <button class="tiny" @onclick:stopPropagation=true>
+                @*<button class="tiny" @onclick:stopPropagation=true>
                     <img src="/images/close_icon.svg" />
                 </button>
                 <button class="tiny" @onclick:stopPropagation=true>
                     <img src="/images/greenEditSaveIcon.svg" />
-                </button>
-                <button class="tiny" @onclick:stopPropagation=true>
+                </button>*@
+                <button class="tiny" @onclick=Delete @onclick:stopPropagation=true>
                     <img src="/images/Trashcan.svg" />
                 </button>
             </div>
@@ -47,14 +47,31 @@
     </div>
 </article>
 
+@inject IRepository<TorchTask> Tasks
 @code {
     [Parameter] public TorchTask Task { get; set; } = null!;
-    private bool isExpanded = false;
+    [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
+    [Parameter] public EventCallback<TorchTask> OnReorder { get; set; }
+    private bool isExpanded = true;
+    
 
     private void ToggleExpandCollapse()
     {
         isExpanded = !isExpanded;
     }
 
-    async Task Save() => await Workflows.UpdateAsync(Task.Workflow);
+    async Task MoveUp()
+    {
+        Task.SetSortOrder(true);
+        await OnReorder.InvokeAsync(Task);
+    }
+
+    async Task MoveDown()
+    {
+        Task.SetSortOrder(false);
+        await OnReorder.InvokeAsync(Task);
+    }
+
+    async Task Save() => await Tasks.UpdateAsync(Task);
+    async Task Delete() => await OnDelete.InvokeAsync(Task);
 }

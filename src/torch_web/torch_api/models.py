@@ -59,7 +59,7 @@ class CatalogTask(SQLModel):
     name: str
     func_name: str
     description: Optional[str] = Field(nullable=True)
-    parameters: Dict
+    parameters: dict
 
 
 class Task(SQLModel, table=True):
@@ -71,7 +71,7 @@ class Task(SQLModel, table=True):
     description: Optional[str]
     last_updated_date: Optional[datetime]
     workflow: Workflow = Relationship(back_populates="tasks")
-    parameters: Dict = Field(default={}, sa_column=Column(JSON))
+    parameters: dict = Field(default={}, sa_column=Column(JSON))
     runs: List["TaskRun"] = Relationship(back_populates="task")
 
     def start(self, specimen: "Specimen"):

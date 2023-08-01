@@ -3,6 +3,7 @@
   --grey-800: #212433;
   --grey-500: #606580;
   --grey-400: #7A8099;
+  --grey-200: #e6e8f2;
 }
 
 #blazor-error-ui {
@@ -48,6 +49,23 @@ button.small img {
   width: 15px;
   height: 15px;
   vertical-align: bottom;
+}
+button.tiny {
+  border-radius: 0.5625rem;
+  border: 1px solid var(--grey-200);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.28125rem;
+}
+button.tiny:hover {
+  background: var(--grey-200);
+}
+button.tiny svg, button.tiny img {
+  width: 0.9375rem;
+  height: 0.9375rem;
+  margin: 0;
 }
 
 ::-webkit-scrollbar {

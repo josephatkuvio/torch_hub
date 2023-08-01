@@ -1,16 +1,25 @@
 article {
-    display: flex;
+    display: grid;
+    grid-template-columns: 4.5rem auto;
     width: 100%;
     cursor: pointer;
+
+    &:hover {
+        > div {
+            border-color: var(--grey-400);
+        }
+    }
 
     > header {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 29px 8px 0px 8px;
+        padding-top: 1.81rem;
 
         h2 {
             color: #5A6182;
+            font: 400 1.5rem Manjari;
+            letter-spacing: 0.0525rem;
         }
 
         button {
@@ -45,14 +54,21 @@ article {
             display: grid;
             grid-template-columns: auto 100px;
             gap: 16px;
+            align-items: center;
 
             h2 {
+                color: var(--gray-800);
+                font-size: 1.0625rem;
+                font-weight: 500;
+                text-transform: none;
+                letter-spacing: normal;
                 margin-bottom: 0;
             }
 
             .right-btns {
                 display: flex;
                 gap: 8px;
+                justify-self: flex-end;
             }
 
             h3 {
