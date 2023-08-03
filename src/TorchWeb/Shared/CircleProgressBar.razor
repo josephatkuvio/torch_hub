@@ -1,0 +1,32 @@
+﻿<div class="outer-circle o-progress-circle o-progress-circle--rounded">
+    <div class="o-progress-circle__fill">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+
+            <circle cx="60" cy="60" r="54" fill="none" stroke="#e6e6e6" stroke-width="12" />
+
+            <circle cx="60" cy="60" r="36" fill="none" stroke="#e6e6e6" stroke-width="12" />
+
+            <circle cx="60" cy="60" r="18" fill="none" stroke="#e6e6e6" stroke-width="12" />
+
+
+
+            <circle cx="60" cy="60" r="54" fill="none" stroke="#3C359C" stroke-width="12"
+                    pathLength="100" style="stroke-dasharray: 100; stroke-dashoffset: calc(100 - @UploadPercentage); stroke-linecap: round;" />
+
+            <circle cx="60" cy="60" r="36" fill="none" stroke="#0EC2E9" stroke-width="12"
+                    pathLength="100" style="stroke-dasharray: 100; stroke-dashoffset: calc(100 - @ProcessPercentage); stroke-linecap: round;" />
+
+            <circle cx="60" cy="60" r="18" fill="none" stroke="#FF7546" stroke-width="12"
+                    pathLength="100" style="stroke-dasharray: 100; stroke-dashoffset: calc(100 - @TransferPercentage); stroke-linecap: round;" />
+
+        </svg>
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter] public decimal UploadPercentage { get; set; }
+    [Parameter] public decimal ProcessPercentage { get; set; }
+    [Parameter] public decimal TransferPercentage { get; set; }
+}

@@ -9,54 +9,8 @@
     <section class="processing-cards">
 
         <div class="nested-progress-bars">
-            <div class="outer-circle o-progress-circle o-progress-circle--rounded">
-                <div class="o-progress-circle__fill">
-                    @*<svg class="icon" viewBox="0 0 40 40">
-                        <circle r="15.9154943092" cy="20" cx="20" />
-                        <circle r="15.9154943092" cy="20" cx="20" stroke-dashoffset="25" transform="rotate(-90,20,20)" />
-                    </svg>*@
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" viewBox="0 0 130 130" fill="none">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M64.6913 11.8794C35.3537 11.8794 11.5708 35.6623 11.5708 64.9999C11.5708 94.3376 35.3537 118.12 64.6913 118.12C94.029 118.12 117.812 94.3376 117.812 64.9999C117.812 35.6623 94.029 11.8794 64.6913 11.8794ZM0 64.9999C0 29.2719 28.9633 0.308594 64.6913 0.308594C100.419 0.308594 129.383 29.2719 129.383 64.9999C129.383 100.728 100.419 129.691 64.6913 129.691C28.9633 129.691 0 100.728 0 64.9999Z" fill="#EDEDFF" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M58.9059 6.094C58.9059 2.89881 61.4961 0.308594 64.6913 0.308594C100.419 0.308594 129.383 29.2719 129.383 64.9999C129.383 100.728 100.419 129.691 64.6913 129.691C28.9633 129.691 0 100.728 0 64.9999C0 61.8047 2.59021 59.2145 5.7854 59.2145C8.98059 59.2145 11.5708 61.8047 11.5708 64.9999C11.5708 94.3376 35.3537 118.12 64.6913 118.12C94.029 118.12 117.812 94.3376 117.812 64.9999C117.812 35.6623 94.029 11.8794 64.6913 11.8794C61.4961 11.8794 58.9059 9.28919 58.9059 6.094Z" fill="url(#paint0_linear_2161_22655)" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M64.4997 27.0031C43.0681 27.0031 25.6944 44.3768 25.6944 65.8083C25.6944 87.2399 43.0681 104.614 64.4997 104.614C85.9313 104.614 103.305 87.2399 103.305 65.8083C103.305 44.3768 85.9313 27.0031 64.4997 27.0031ZM13.9997 65.8083C13.9997 37.918 36.6093 15.3083 64.4997 15.3083C92.3901 15.3083 115 37.918 115 65.8083C115 93.6987 92.3901 116.308 64.4997 116.308C36.6093 116.308 13.9997 93.6987 13.9997 65.8083Z" fill="url(#paint1_linear_2161_22655)" />
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M80.3799 46.8844C70.4192 38.4424 55.5009 39.6736 47.0589 49.6343C38.6169 59.5949 39.848 74.5132 49.8087 82.9552C59.7694 91.3972 74.6877 90.1661 83.1297 80.2054C91.5717 70.2447 90.3406 55.3264 80.3799 46.8844ZM38.2416 42.1613C50.8108 27.331 73.0225 25.4979 87.8528 38.0671C102.683 50.6363 104.516 72.848 91.947 87.6784C79.3778 102.509 57.1661 104.342 42.3358 91.7725C27.5054 79.2034 25.6724 56.9916 38.2416 42.1613Z" fill="#FFEAE2" />
-                        <defs>
-                            <linearGradient id="paint0_linear_2161_22655" x1="64.6913" y1="0.308594" x2="64.6913" y2="129.691" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#5048C0" />
-                                <stop offset="1" stop-color="#251E85" />
-                            </linearGradient>
-                            <linearGradient id="paint1_linear_2161_22655" x1="64.4997" y1="15.3083" x2="64.4997" y2="116.308" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4ADFFF" />
-                                <stop offset="1" stop-color="#0EB5DA" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
-
-                <div class="middle-circle o-progress-circle o-progress-circle--rounded">
-                    <div class="o-progress-circle__fill">
-                        <svg class="icon" viewBox="0 0 40 40">
-                            <circle r="12" cy="20" cx="20" />
-                            <circle r="12" cy="20" cx="20" stroke-dashoffset="30" transform="rotate(-90,20,20)" />
-                        </svg>
-                    </div>
-
-                    <div class="inner-circle o-progress-circle o-progress-circle--rounded">
-                        <div class="o-progress-circle__fill">
-                            <svg class="icon" viewBox="0 0 40 40">
-                                <circle r="8" cy="20" cx="20" />
-                                <circle r="8" cy="20" cx="20" stroke-dashoffset="40" transform="rotate(-90,20,20)" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <CircleProgressBar UploadPercentage="75" ProcessPercentage="50" TransferPercentage="25" />            
         </div>
-
-
-
-
 
         <div class="text-info">
             <div class="prog-data">
