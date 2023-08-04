@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Sparc.Blossom.Authentication;
 using Sparc.Blossom.Data;
 using System.Security.Claims;
@@ -25,12 +26,14 @@ public class TorchAuthenticator
         var auth = await Auth.GetAuthenticationStateAsync();
         if (auth?.User?.Identity?.IsAuthenticated == true)
         {
-            var provider = auth.User.Get(ClaimTypes.NameIdentifier) 
+            var provider = auth.User.Get(ClaimTypes.NameIdentifier)
                 ?? throw new Exception("Missing provider information in user claims.");
-            
+
             var providerName = provider.Split('|').First();
             var providerId = provider.Split('|').Last();
-            var user = Users.Query.FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
+            //var user = Users.Query.FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
+            var user = Users.Query.Include("WorkflowUsers.Workflow").FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
+
             if (user == null)
             {
                 var email = auth.User.Get(ClaimTypes.Email) ?? auth.User.Get(ClaimTypes.Name) ?? auth.User.Get("name");

@@ -1,0 +1,27 @@
+.workflow-switcher {
+    position: relative;
+    max-height: 497px;
+    overflow: auto;
+
+    select {
+        display: flex;
+        width: 290px;
+        justify-content: center;
+        border-radius: 16px;
+        border: 1px solid #FFFFFF;
+        color: #FFFFFF;
+
+        option {
+            display: block;
+            background: #29324A;
+            position: absolute;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        &:hover {
+            background-color: #383E5C;
+            transition: all ease-in-out .3s;
+        }
+    }
+}

@@ -76,5 +76,10 @@ public class User : Entity<int>
 
         return workflow;
     }
+
+    public void UpdateCurrentWorkflowId(int updatedWorkflowId)
+    {        
+        CurrentWorkflowId = updatedWorkflowId;
+    }
 }
 

@@ -28,11 +28,17 @@
         }
     }
 
+    .tab-and-select {
+        display: flex;
+        justify-content: space-between;
+    }
+    
     .tab-list {
         display: flex;
         flex-wrap: wrap;
         height: 56px;
         list-style: none;
+        width: calc(100% - 290px);
 
         .tab-item {
             cursor: pointer;
@@ -92,7 +98,7 @@
             background: #FFFFFF;
         }
 
-        .tab-link::before, .tab-link::after {            
+        .tab-link::before, .tab-link::after {
             content: "";
             position: absolute;
             bottom: 0;
