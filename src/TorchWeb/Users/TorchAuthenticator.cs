@@ -32,7 +32,8 @@ public class TorchAuthenticator
             var providerName = provider.Split('|').First();
             var providerId = provider.Split('|').Last();
             //var user = Users.Query.FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
-            var user = Users.Query.Include("WorkflowUsers.Workflow").FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
+            var user = Users.Include("WorkflowUsers.Workflow.Institution", "CurrentWorkflow")
+                .FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
 
             if (user == null)
             {
@@ -56,9 +57,13 @@ public class TorchAuthenticator
                 var workflow = user.CreateDefaultWorkflow();
                 await Workflows.UpdateAsync(workflow);
                 user.SetCurrentWorkflow(workflow);
-                await Users.UpdateAsync(user);
+            }
+            else
+            {
+                user.SetCurrentWorkflow(user.CurrentWorkflow!);
             }
 
+            await Users.UpdateAsync(user);
             await Users.ExecuteAsync(user, u => u.Login());
             return user;
         }

@@ -51,6 +51,9 @@ public class User : Entity<int>
     {
         CurrentWorkflow = workflow;
         CurrentWorkflowId = workflow.Id;
+        
+        if (!WorkflowUsers.Any(x => x.WorkflowId == workflow.Id))
+            WorkflowUsers.Add(new(workflow.Id, Id, "Admin"));
     }
 
     public bool IsInRole(string role, int workflowId) => WorkflowUsers.Any(x => x.WorkflowId == workflowId && x.Role == role);
@@ -73,6 +76,9 @@ public class User : Entity<int>
 
         workflow.Connections.Add(new AzureBlobConnection(workflow, "Input"));
         workflow.Connections.Add(new AzureBlobConnection(workflow, "Output"));
+
+        if (!WorkflowUsers.Any(x => x.WorkflowId == workflow.Id))
+            WorkflowUsers.Add(new(workflow.Id, Id, "Admin"));
 
         return workflow;
     }
