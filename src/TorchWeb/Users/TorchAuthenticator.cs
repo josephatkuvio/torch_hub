@@ -31,9 +31,11 @@ public class TorchAuthenticator
 
             var providerName = provider.Split('|').First();
             var providerId = provider.Split('|').Last();
-            //var user = Users.Query.FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
-            var user = Users.Include("WorkflowUsers.Workflow.Institution", "CurrentWorkflow")
-                .FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
+
+            //var user = Users.Include("WorkflowUsers.Workflow.Institution", "CurrentWorkflow")
+            //    .FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
+
+            var user = Users.Query.Include("WorkflowUsers.Workflow.Institution").Include(x => x.CurrentWorkflow).FirstOrDefault(x => x.Identities.Any(y => y.ProviderName == providerName && y.ProviderId == providerId));
 
             if (user == null)
             {

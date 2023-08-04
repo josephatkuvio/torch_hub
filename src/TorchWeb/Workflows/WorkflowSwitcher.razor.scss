@@ -10,6 +10,14 @@
         border-radius: 16px;
         border: 1px solid #FFFFFF;
         color: #FFFFFF;
+        padding: 8px 24px;
+
+        optgroup {
+            padding: 0px 24px 8px 24px;
+            font-size: 10px;
+            font-weight: 400;
+            color: #8D95BA;
+        }
 
         option {
             display: block;
@@ -17,6 +25,7 @@
             position: absolute;
             font-size: 12px;
             font-weight: 400;
+            padding: 0px 24px 8px 24px;
         }
 
         &:hover {

@@ -1,7 +1,5 @@
 ﻿<div class="workflow-switcher">
-    <select id="selected-workflow" @bind="SelectedWorkflowId">
-        <option value="@SelectedWorkflowId">@GetSelectedWorkflowName()</option>
-       
+    <select id="selected-workflow" @bind="SelectedWorkflowId" placeholder-text="@GetSelectedWorkflowName()">
         @foreach (var workflowUser in User.WorkflowUsers)
         {
             var institution = workflowUser.Workflow.Institution;
@@ -22,7 +20,7 @@
     [CascadingParameter] public User User { get; set; }
     [Parameter] public EventCallback<int> SelectedWorkflowIdChanged { get; set; }
 
-    int SelectedWorkflowId;   
+    int SelectedWorkflowId;
 
     string GetSelectedWorkflowName()
     {
@@ -42,7 +40,7 @@
     }
 
     protected override void OnInitialized()
-    {        
+    {
         SelectedWorkflowId = User.CurrentWorkflowId ?? 0;
     }
 
@@ -53,7 +51,7 @@
             User.UpdateCurrentWorkflowId(SelectedWorkflowId);
 
             await Users.UpdateAsync(User);
-            
+
             Nav.NavigateTo("/", true);
         }
     }
