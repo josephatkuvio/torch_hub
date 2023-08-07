@@ -32,54 +32,6 @@
         gap: 32px;
         flex-wrap: wrap;
 
-        .nested-progress-bars {
-
-            .o-progress-circle {
-                width: 130px;
-
-                .o-progress-circle__fill {
-                    position: absolute;                    
-
-                    .icon {
-                        width: 130px;
-                        height: 130px;
-
-                        circle {
-                            fill: none;
-                            stroke-width: 2;                            
-                        }
-                    }
-                }
-            }
-
-            .outer-circle {
-                .o-progress-circle__fill {
-                    .icon circle {
-                        stroke-dasharray: 100;
-                        /*stroke: #3C359C;*/
-                    }
-                }
-            }
-
-            .middle-circle {
-                .o-progress-circle__fill {
-                    .icon circle {
-                        stroke-dasharray: 150;
-                        /*stroke: #0EC2E9;*/
-                    }
-                }
-            }
-
-            .inner-circle {
-                .o-progress-circle__fill {
-                    .icon circle {
-                        stroke-dasharray: 200;
-                        /*stroke: #FF7546;*/
-                    }
-                }
-            }
-        }
-
         .prog-data {
             display: flex;
             gap: 16px;

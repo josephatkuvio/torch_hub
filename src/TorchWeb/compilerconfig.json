@@ -22,5 +22,9 @@
   {
     "outputFile": "Workflows/Index.razor.css",
     "inputFile": "Workflows/Index.razor.scss"
+  },
+  {
+    "outputFile": "Shared/CircleProgressBar.razor.css",
+    "inputFile": "Shared/CircleProgressBar.razor.scss"
   }
 ]

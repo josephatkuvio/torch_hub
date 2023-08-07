@@ -1,0 +1,37 @@
+figure {
+    width: 130px;
+    svg {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+.upload, .background {
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 100;
+    stroke-width: 12px;
+}
+
+.upload {
+    stroke: #3C359C;
+    &.background {
+        stroke: #EDEDFF;
+    }
+}
+
+.process {
+    stroke: #0EC2E9;
+
+    &.background {
+        stroke: #E9FBFF;
+    }
+}
+
+.transfer {
+    stroke: #FF7546;
+
+    &.background {
+        stroke: #FFEAE2;
+    }
+}
