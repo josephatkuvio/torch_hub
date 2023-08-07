@@ -1,5 +1,5 @@
 ﻿<div class="workflow-switcher">
-    <select id="selected-workflow" @bind="SelectedWorkflowId" placeholder-text="@GetSelectedWorkflowName()">
+    <select id="selected-workflow" value="@SelectedWorkflowId" @onchange="HandleSelectedWorkflowIdChanged" placeholder-text="@GetSelectedWorkflowName()">
         @foreach (var workflowUser in User.WorkflowUsers)
         {
             var institution = workflowUser.Workflow.Institution;
@@ -13,7 +13,6 @@
         }
     </select>
 </div>
-
 
 
 @code {
@@ -44,15 +43,25 @@
         SelectedWorkflowId = User.CurrentWorkflowId ?? 0;
     }
 
-    public async Task HandleSelectedWorkflowIdChanged()
+    //public async Task HandleSelectedWorkflowIdChanged()
+    //{
+    //    if (SelectedWorkflowId != 0)
+    //    {
+    //        User.UpdateCurrentWorkflowId(SelectedWorkflowId);
+
+    //        await Users.UpdateAsync(User);
+
+    //        await SelectedWorkflowIdChanged.InvokeAsync(SelectedWorkflowId);
+
+    //        Nav.NavigateTo("/", true);
+    //    }
+    //}
+
+    void HandleSelectedWorkflowIdChanged(ChangeEventArgs e)
     {
-        if (SelectedWorkflowId != 0)
+        if (int.TryParse(e.Value.ToString(), out int newWorkflowId))
         {
-            User.UpdateCurrentWorkflowId(SelectedWorkflowId);
-
-            await Users.UpdateAsync(User);
-
-            Nav.NavigateTo("/", true);
+            SelectedWorkflowIdChanged.InvokeAsync(newWorkflowId); // Notify the parent component
         }
     }
 }

@@ -25,7 +25,7 @@
                 </li>
             </ul>
 
-            <WorkflowSwitcher />
+            <WorkflowSwitcher SelectedWorkflowIdChanged="HandleSelectedWorkflowChange" />
         </div>
 
         @if (CurrentWorkflow != null)
@@ -91,6 +91,23 @@
 
         //Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
         //await Socket.ConnectAsync();
+    }
+
+    private async Task HandleSelectedWorkflowChange(int newWorkflowId)
+    {
+        if (User.WorkflowUsers != null)
+        {
+            foreach (var workflowUser in User.WorkflowUsers)
+            {
+                var matchingWorkflow = workflowUser.Workflow.Institution.Workflows.FirstOrDefault(w => w.Id == newWorkflowId);
+                if (matchingWorkflow != null)
+                {
+                    CurrentWorkflow = matchingWorkflow; 
+                    activeTab = "workflow"; 
+                    break;
+                }
+            }
+        }
     }
 
     private void ChangeTab(string tabName)
