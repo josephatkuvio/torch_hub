@@ -43,25 +43,11 @@
         SelectedWorkflowId = User.CurrentWorkflowId ?? 0;
     }
 
-    //public async Task HandleSelectedWorkflowIdChanged()
-    //{
-    //    if (SelectedWorkflowId != 0)
-    //    {
-    //        User.UpdateCurrentWorkflowId(SelectedWorkflowId);
-
-    //        await Users.UpdateAsync(User);
-
-    //        await SelectedWorkflowIdChanged.InvokeAsync(SelectedWorkflowId);
-
-    //        Nav.NavigateTo("/", true);
-    //    }
-    //}
-
     void HandleSelectedWorkflowIdChanged(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value.ToString(), out int newWorkflowId))
         {
-            SelectedWorkflowIdChanged.InvokeAsync(newWorkflowId); // Notify the parent component
+            SelectedWorkflowIdChanged.InvokeAsync(newWorkflowId); 
         }
     }
 }
