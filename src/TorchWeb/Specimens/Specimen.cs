@@ -1,4 +1,5 @@
-﻿using Sparc.Blossom.Data;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Sparc.Blossom.Data;
 using Torch.Web.Workflows;
 
 namespace Torch.Web.Collections;
@@ -24,6 +25,16 @@ public class Specimen : Entity<int>
         InputFile = inputFile;
     }
 
+    public Specimen(int inputConnectionId, string batchId, IBrowserFile file) : this()
+    {
+        InputConnectionId = inputConnectionId;
+        BatchId = batchId;
+        Name = file.Name;
+        CreateDate = DateTime.UtcNow;
+        InputFile = file.Name;
+        File = file;
+    }
+
     public int InputConnectionId { get; internal set; }
     public int? OutputConnectionId { get; set; }
     public string BatchId { get; private set; }
@@ -44,8 +55,11 @@ public class Specimen : Entity<int>
 
     public SpecimenImage? CardImage => Images.OrderBy(x => x.Width ?? 1000000).FirstOrDefault();
 
-    public void SetInputFile(string inputFile)
+    internal IBrowserFile? File { get; }
+
+    public void SetInputFile(string name, string inputFile)
     {
+        Name = name;
         InputFile = inputFile;
         StatusDate = DateTime.UtcNow;
         Status = "Uploaded";

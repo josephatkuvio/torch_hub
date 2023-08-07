@@ -55,16 +55,14 @@ public class AzureBlobConnection : Connection
         return specimens;
     }
 
-    internal override async Task<Specimen> UploadAsync(string batchId, string fileName, Stream stream)
+    internal override async Task<Specimen> UploadAsync(Specimen specimen, Stream stream)
     {
-        var name = Path.GetFileNameWithoutExtension(fileName);
-        var blobName = $"{batchId}/{fileName}";
+        var name = Path.GetFileNameWithoutExtension(specimen.Name);
+        var blobName = $"{specimen.BatchId}/{specimen.InputFile}";
 
         var blob = Container.GetBlobClient(blobName);
         var result = await blob.UploadAsync(stream);
-
-        var specimen = new Specimen(Id, batchId, name, blob.Name);
-        Specimens.Add(specimen);
+        specimen.SetInputFile(name, blob.Uri.ToString());
         return specimen;
     }
 }

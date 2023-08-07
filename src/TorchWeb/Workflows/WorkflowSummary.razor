@@ -53,7 +53,7 @@
     @if (Workflow.InputConnection != null)
     {
         <section class="w-list-cards">
-            @foreach (var specimen in Workflow.InputConnection.Specimens)
+            @foreach (var specimen in SpecimenQueue.Where(x => x.Status != "Uploaded"))
             {
                 <SpecimenCard Specimen="specimen" />
             }
@@ -64,10 +64,20 @@
 
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
-    [Parameter] public int ToUploadCount { get; set; }
     int UploadCount;
     int ProcessCount;
     int TransferCount;
+
+    int UploadPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)UploadCount / (UploadCount + SpecimenQueue.Count(x => x.Status != "Uploaded")));
+    int ProcessPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)ProcessCount / UploadCount);
+    int TransferPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)TransferCount / UploadCount);
+
+    double CompletionPercentage => (UploadPercentage / 3.0) + (ProcessPercentage / 3.0) + (TransferPercentage / 3.0);
+
+    int HoursLeft => 1;
+    int MinutesLeft => 30;
+    string BatchId = Guid.NewGuid().ToString();
+    List<Specimen> SpecimenQueue = new();
 
     protected override void OnParametersSet()
     {
@@ -76,7 +86,7 @@
             .GroupBy(x => x.InputConnectionId)
             .Select(x => new
             {
-                UploadCount = x.Count(),
+                UploadCount = x.Count(y => y.Status != "Uploaded"),
                 ProcessCount = x.Count(y => y.ProcessedDate != null),
                 TransferCount = x.Count(y => y.ProcessedDate != null && y.OutputConnectionId != null)
             });
@@ -86,12 +96,26 @@
         TransferCount = query.FirstOrDefault()?.TransferCount ?? 0;
     }
 
-    int UploadPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)UploadCount / (UploadCount + ToUploadCount));
-    int ProcessPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)ProcessCount / UploadCount);
-    int TransferPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)TransferCount / UploadCount);
+    public async Task Upload(InputFileChangeEventArgs e)
+    {
+        if (Workflow?.InputConnection == null)
+            return;
 
-    double CompletionPercentage => (UploadPercentage / 3.0) + (ProcessPercentage / 3.0) + (TransferPercentage / 3.0);
+        foreach (var file in e.GetMultipleFiles(10000))
+        {
+            SpecimenQueue.Add(new Specimen(Workflow.InputConnection.Id, BatchId, file));
+        }
 
-    int HoursLeft => 1;
-    int MinutesLeft => 30;
+        StateHasChanged();
+
+        foreach (var specimen in SpecimenQueue)
+        {
+            await Workflow.InputConnection.UploadAsync(specimen, specimen.File!.OpenReadStream(2_000_000_000));
+            await Workflows.UpdateAsync(Workflow);
+            StateHasChanged();
+        }
+
+        BatchId = Guid.NewGuid().ToString();
+        SpecimenQueue.Clear();
+    }
 }

@@ -60,7 +60,7 @@
             <section class="tab-content collapsed-summary-tab-content">
                 @if (!summaryCollapsed)
                 {
-                    <WorkflowSummary Workflow="CurrentWorkflow" ToUploadCount="@ToUploadCount" />
+                    <WorkflowSummary @ref=SummaryComponent Workflow="CurrentWorkflow" />
                 }
                 else
                 {
@@ -77,14 +77,12 @@
     [CascadingParameter] public User User { get; set; } = null!;
 
     Workflow? CurrentWorkflow;
+    WorkflowSummary? SummaryComponent;
     public SocketIOClient.SocketIO Socket { get; set; } = null!;
 
     private string activeTab = "workflow";
     private bool showDetail = false;
     private bool summaryCollapsed = false;
-    string BatchId = Guid.NewGuid().ToString();
-    int ToUploadCount;
-
 
     protected override async Task OnParametersSetAsync()
     {
@@ -95,24 +93,7 @@
         //await Socket.ConnectAsync();
     }
 
-    private async Task Upload(InputFileChangeEventArgs e)
-    {
-        if (CurrentWorkflow?.InputConnection == null)
-            return;
-
-        ToUploadCount = e.FileCount;
-        StateHasChanged();
-
-        foreach (var file in e.GetMultipleFiles(10000))
-        {
-            await CurrentWorkflow.InputConnection.UploadAsync(BatchId, file.Name, file.OpenReadStream(2_000_000_000));
-            await Workflows.UpdateAsync(CurrentWorkflow);
-            StateHasChanged();
-        }
-
-        BatchId = Guid.NewGuid().ToString();
-        ToUploadCount = 0;
-    }
+    private async Task Upload(InputFileChangeEventArgs e) => await SummaryComponent!.Upload(e);
 
     private void ChangeTab(string tabName)
     {

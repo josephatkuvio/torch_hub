@@ -38,5 +38,5 @@ public abstract class Connection
         return Task.FromResult(Enumerable.Empty<Specimen>());
     }
 
-    internal abstract Task<Specimen> UploadAsync(string batchId, string fileName, Stream stream);
+    internal abstract Task<Specimen> UploadAsync(Specimen specimen, Stream stream);
 }
