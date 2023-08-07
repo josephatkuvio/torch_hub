@@ -26,5 +26,13 @@
   {
     "outputFile": "Shared/CircleProgressBar.razor.css",
     "inputFile": "Shared/CircleProgressBar.razor.scss"
+  },
+  {
+    "outputFile": "Pages/WorkflowSummary.razor.css",
+    "inputFile": "Pages/WorkflowSummary.razor.scss"
+  },
+  {
+    "outputFile": "Specimens/SpecimenCard.razor.css",
+    "inputFile": "Specimens/SpecimenCard.razor.scss"
   }
 ]

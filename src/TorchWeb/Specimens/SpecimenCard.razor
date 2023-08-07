@@ -1,14 +1,21 @@
-﻿<figure class="specimen-card">
-    <img src="@Specimen.CardImage?.AbsoluteUrl(Config["Blossom:Authority"])" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
-    <figcaption>
-        <h3>@Specimen.CatalogNumber</h3>
-        <time>@Specimen.CreateDate.ToString("d")</time>
-        <aside>
-            @Status
-        </aside>
-        <button @onclick=Delete @onclick:stopPropagation=true>Delete</button>
-    </figcaption>
-</figure>
+﻿<article class="specimen-card @(Specimen.Status?.StartsWith("Error") == true ? "error" : "")">
+    <header>
+        @if (Specimen.CardImage != null)
+        {
+            <img src="@Specimen.CardImage?.AbsoluteUrl(Config["Blossom:Authority"])" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
+        }
+        else
+        {
+            <SpecimensIcon />
+        }
+        <h3>@Specimen.Name</h3>
+    </header>
+    <div class="right">
+        <span>@Specimen.Status</span>
+        <time>@((Specimen.StatusDate ?? Specimen.CreateDate).ToString("d"))</time>
+        <button class="more-btn">...</button>
+    </div>
+</article>
 
 @inject IConfiguration Config
 @inject IJSRuntime JS
@@ -25,13 +32,13 @@
         CatalogNumber = Specimen.CatalogNumber;
         CreateDate = Specimen.CreateDate;
 
-        Socket.On($"specimen_updated_{Specimen.Id}", (response) =>
-        {
-            CatalogNumber = response.GetValue<string>(0);
-            CreateDate = response.GetValue<DateTime>(0);
-            Status = response.GetValue<string>(1);
-            StateHasChanged();
-        });
+        //Socket.On($"specimen_updated_{Specimen.Id}", (response) =>
+        //{
+        //    CatalogNumber = response.GetValue<string>(0);
+        //    CreateDate = response.GetValue<DateTime>(0);
+        //    Status = response.GetValue<string>(1);
+        //    StateHasChanged();
+        //});
     }
 
     //void Go() => Nav.NavigateTo($"/collections/{Specimen}/{Specimen.Id}");

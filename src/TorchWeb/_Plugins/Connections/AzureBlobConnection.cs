@@ -37,7 +37,7 @@ public class AzureBlobConnection : Connection
         }
     }
 
-    internal override async Task<IEnumerable<Specimen>> GetSpecimensAsync(int take = 50, string? continuationToken = null)
+    internal override async Task<IEnumerable<Specimen>> GetAsync(int take = 50, string? continuationToken = null)
     {
         var blobs = Container.GetBlobsAsync(BlobTraits.Metadata).AsPages(continuationToken, take);
 
@@ -46,33 +46,25 @@ public class AzureBlobConnection : Connection
         {
             foreach (var item in page.Values)
             {
-                specimens.Add(new Specimen(Id, item.Metadata["Name"], item.Name));
+                var batchId = item.Name.Split('/').First();
+                var name = item.Name.Split('/').Last();
+                specimens.Add(new Specimen(Id, batchId, item.Metadata["Name"], name));
             }
         }
 
         return specimens;
     }
 
-    internal override async Task<Specimen> UploadSpecimenAsync(string fileName, Stream stream)
+    internal override async Task<Specimen> UploadAsync(string batchId, string fileName, Stream stream)
     {
         var name = Path.GetFileNameWithoutExtension(fileName);
-        var blobName = $"{Guid.NewGuid()}{Path.GetExtension(fileName)}";
-        
-        var blob = Container.GetBlobClient(blobName);
-        try
-        {
-            var result = await blob.UploadAsync(stream);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        var blobName = $"{batchId}/{fileName}";
 
-            var specimen = new Specimen(Id, name, blob.Name)
-            {
-                InputConnectionId = Id
-            };
-            Specimens.Add(specimen);
-            return specimen;
+        var blob = Container.GetBlobClient(blobName);
+        var result = await blob.UploadAsync(stream);
+
+        var specimen = new Specimen(Id, batchId, name, blob.Name);
+        Specimens.Add(specimen);
+        return specimen;
     }
 }

@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import importlib
+from token import OP
 import requests
 import imagehash
 import json
@@ -121,6 +122,10 @@ class Specimen(SQLModel, table=True):
     input_file: str
     name: str
     create_date: datetime
+    batch_id: str
+    processed_date: Optional[datetime]
+    status: Optional[str]
+    status_date: Optional[datetime]
     barcode: Optional[str]
     catalog_number: Optional[str]
     deleted: bool = Field(default=False)

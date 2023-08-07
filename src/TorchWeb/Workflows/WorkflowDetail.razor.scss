@@ -65,7 +65,6 @@ section {
     > aside {
         font-size: 14px;
         color: var(--grey-400);
-
     }
 
     .workflow-cards {
@@ -77,6 +76,8 @@ section {
     }
 
     .spec-cards {
+        max-height: 400px;
+        overflow-y: auto;
 
         .spec-card {
             display: flex;

@@ -19,7 +19,7 @@
     <section class="workflow-cards">
         @foreach (var connection in Workflow.Connections.OrderBy(x => x.Direction))
         {
-            <ConnectionCard Connection="connection" />
+            <ConnectionCard Connection="connection" OnUpload="Upload" />
         }
         @if (!Workflow.Connections.Any())
         {
@@ -35,28 +35,29 @@
 <section class="specimens-list-cards">
     <h2>Recent Specimens</h2>
     <section class="spec-cards">
-        <article class="spec-card">
-            <div class="left">
-                <img class="spec-img" src="/images/BRIT240602.jpg" />
-                <h1>Specimen Name</h1>
-            </div>
-            <div class="right">
-                <h1>Workflow Name</h1>
-                <h1>06/20/2023</h1>
-                @*<time>@Workflow.Create_date.ToString("MM/dd/yyyy")</time>*@
-                <button class="more-btn">...</button>
-            </div>
-        </article>
+        @foreach (var specimen in RecentSpecimens)
+        {
+            <SpecimenCard Specimen="specimen" />
+        }
     </section>
 </section>
 
 @inject IConfiguration Config
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
+    [Parameter] public EventCallback<InputFileChangeEventArgs> OnUpload { get; set; }
+    List<Specimen> RecentSpecimens = new();
 
     protected override async Task OnInitializedAsync()
     {
+        RecentSpecimens = Specimens.Query
+            .Where(x => x.InputConnection.WorkflowId == Workflow.Id)
+            .OrderByDescending(x => x.CreateDate)
+            .Take(10)
+            .ToList();
+        
         // Socket.On("specimen_added", response => RefreshSpecimens());
-
     }
+
+    async Task Upload(InputFileChangeEventArgs e) => await OnUpload.InvokeAsync(e);
 }

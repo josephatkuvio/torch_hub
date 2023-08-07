@@ -50,7 +50,7 @@ public class TorchAuthenticator
 
             if (user.CurrentWorkflowId == null)
             {
-                var workflow = user.CreateDefaultWorkflow();
+                var workflow = await user.CreateDefaultWorkflowAsync();
                 await Workflows.UpdateAsync(workflow);
                 user.SetCurrentWorkflow(workflow);
                 await Users.UpdateAsync(user);

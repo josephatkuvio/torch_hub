@@ -1,10 +1,8 @@
 ﻿using Sparc.Blossom.Authentication;
 using Sparc.Blossom.Data;
 using System.Security.Claims;
-using System.Security.Principal;
 using Torch.Web.Institutions;
 using Torch.Web.Workflows;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Torch.Web.Workflows.Connections;
 
 namespace Torch.Web.Users;
@@ -13,11 +11,12 @@ public class User : Entity<int>
 {
     public User()
     {
+        Email = "";
     }
   
     public User(ClaimsPrincipal user)
     {
-        Email = user.Get(ClaimTypes.Email) ?? user.Get(ClaimTypes.Name) ?? user.Get("name");
+        Email = user.Get(ClaimTypes.Email) ?? user.Get(ClaimTypes.Name) ?? user.Get("name") ?? "";
         FirstName = user.Get(ClaimTypes.GivenName);
         LastName = user.Get(ClaimTypes.Surname);
 
@@ -60,7 +59,7 @@ public class User : Entity<int>
         LastLoginDate = DateTime.UtcNow;
     }
 
-    internal Workflow CreateDefaultWorkflow()
+    internal async Task<Workflow> CreateDefaultWorkflowAsync()
     {
         if (CurrentWorkflow != null)
             return CurrentWorkflow;
@@ -73,6 +72,8 @@ public class User : Entity<int>
 
         workflow.Connections.Add(new AzureBlobConnection(workflow, "Input"));
         workflow.Connections.Add(new AzureBlobConnection(workflow, "Output"));
+
+        await workflow.InputConnection!.InitializeAsync();
 
         return workflow;
     }

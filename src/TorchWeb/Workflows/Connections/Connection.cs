@@ -33,13 +33,10 @@ public abstract class Connection
         return Task.FromResult(false);
     }
 
-    internal virtual Task<IEnumerable<Specimen>> GetSpecimensAsync(int take = 50, string? continuationToken = null)
+    internal virtual Task<IEnumerable<Specimen>> GetAsync(int take = 50, string? continuationToken = null)
     {
         return Task.FromResult(Enumerable.Empty<Specimen>());
     }
 
-    internal virtual Task<Specimen> UploadSpecimenAsync(string fileName, Stream stream)
-    {
-        throw new NotImplementedException();
-    }
+    internal abstract Task<Specimen> UploadAsync(string batchId, string fileName, Stream stream);
 }

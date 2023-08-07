@@ -1,0 +1,97 @@
+﻿<header class="workflow-header">
+    <h1>Summary</h1>
+</header>
+
+<div class="divider"></div>
+
+<section class="workflow-folders">
+    <h2>Processing</h2>
+    <section class="processing-cards">
+
+        <div class="nested-progress-bars">
+            <CircleProgressBar UploadPercentage="@UploadPercentage" ProcessPercentage="@ProcessPercentage" TransferPercentage="@TransferPercentage" />
+        </div>
+
+        <div class="text-info">
+            <div class="prog-data">
+                <div class="status-board-text completion">
+                    <h4>Completion</h4>
+                    <h1>@CompletionPercentage.ToString("N0")<span>%</span></h1>
+                </div>
+                <div class="status-board-text">
+                    <h4>Time Remaining</h4>
+                    <h1>@HoursLeft<span>hr</span>@MinutesLeft<span>min</span></h1>
+                </div>
+            </div>
+            <div class="progress-bar-caption">
+                <div class="progress-item">
+                    <div class="color-caption-circle uploading-circle"></div>
+                    <h4 class="title-caption">Uploaded</h4>
+                    <h4>@UploadCount</h4>
+                </div>
+                <div class="progress-item">
+                    <div class="color-caption-circle success-circle"></div>
+                    <h4 class="title-caption">Processed</h4>
+                    <h4>@ProcessCount</h4>
+                </div>
+                <div class="progress-item">
+                    <div class="color-caption-circle error-circle"></div>
+                    <h4 class="title-caption">Transferred</h4>
+                    <h4>@TransferCount</h4>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</section>
+
+
+<div class="divider"></div>
+
+<section class="workflow-list-cards">
+    <h2>Queue</h2>
+    @if (Workflow.InputConnection != null)
+    {
+        <section class="w-list-cards">
+            @foreach (var specimen in Workflow.InputConnection.Specimens)
+            {
+                <SpecimenCard Specimen="specimen" />
+            }
+        </section>
+    }
+</section>
+
+
+@code {
+    [Parameter] public Workflow Workflow { get; set; } = null!;
+    [Parameter] public int ToUploadCount { get; set; }
+    int UploadCount;
+    int ProcessCount;
+    int TransferCount;
+
+    protected override void OnParametersSet()
+    {
+        var query = Specimens.Query
+            .Where(x => x.InputConnectionId == Workflow.InputConnection!.Id)
+            .GroupBy(x => x.InputConnectionId)
+            .Select(x => new
+            {
+                UploadCount = x.Count(),
+                ProcessCount = x.Count(y => y.ProcessedDate != null),
+                TransferCount = x.Count(y => y.ProcessedDate != null && y.OutputConnectionId != null)
+            });
+
+        UploadCount = query.FirstOrDefault()?.UploadCount ?? 0;
+        ProcessCount = query.FirstOrDefault()?.ProcessCount ?? 0;
+        TransferCount = query.FirstOrDefault()?.TransferCount ?? 0;
+    }
+
+    int UploadPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)UploadCount / (UploadCount + ToUploadCount));
+    int ProcessPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)ProcessCount / UploadCount);
+    int TransferPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)TransferCount / UploadCount);
+
+    double CompletionPercentage => (UploadPercentage / 3.0) + (ProcessPercentage / 3.0) + (TransferPercentage / 3.0);
+
+    int HoursLeft => 1;
+    int MinutesLeft => 30;
+}

@@ -6,11 +6,12 @@ figure {
     }
 }
 
-.upload, .background {
+circle {
     fill: none;
     stroke-linecap: round;
-    stroke-dasharray: 100;
     stroke-width: 12px;
+    transform: rotate(-90deg);
+    transform-origin: center center;
 }
 
 .upload {

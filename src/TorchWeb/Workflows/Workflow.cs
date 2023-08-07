@@ -29,6 +29,8 @@ public class Workflow : Entity<int>
     public List<TorchTask> Tasks { get; private set; } = new();
     public List<WorkflowUser> Users { get; private set; } = new();
     public List<Connection> Connections { get; private set; } = new();
+    internal Connection? InputConnection => Connections.FirstOrDefault(x => x.Direction == "Input");
+    internal Connection? OutputConnection => Connections.FirstOrDefault(x => x.Direction == "Output");
 
     public void Delete() => DeletedDate = DateTime.UtcNow;
     public void AddTask(string funcName, string name, Dictionary<string, string>? parameters)

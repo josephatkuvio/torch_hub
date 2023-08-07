@@ -14,21 +14,15 @@
 *@    }
 </article>
 
-@inject IRepository<Connection> Connections
 @code {
     [Parameter] public Connection Connection { get; set; } = null!;
+    [Parameter] public EventCallback<InputFileChangeEventArgs> OnUpload { get; set; }
+    
     string inputFileId = Guid.NewGuid().ToString();
 
-    private async Task Upload(InputFileChangeEventArgs e)
+    async Task Upload(InputFileChangeEventArgs e)
     {
-        await Connection.InitializeAsync();
-
-        foreach (var file in e.GetMultipleFiles())
-        {
-            await Connection.UploadSpecimenAsync(file.Name, file.OpenReadStream());
-            await Connections.UpdateAsync(Connection);
-        }
-
+        await OnUpload.InvokeAsync(e);
         inputFileId = Guid.NewGuid().ToString();
     }
 }
