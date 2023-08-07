@@ -1,36 +1,59 @@
 .workflow-switcher {
     position: relative;
-    max-height: 497px;
-    overflow: auto;
 
     select {
-        display: flex;
-        width: 290px;
-        justify-content: center;
-        border-radius: 16px;
+        width: 299px;
+        height: auto;
         border: 1px solid #FFFFFF;
+        border-radius: 16px;
+        background-color: #29324A;
         color: #FFFFFF;
         padding: 8px 24px;
+        font-size: 12px;
+        font-weight: 400;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+
+        option {
+            background-color: #29324A;
+            color: #FFFFFF;
+            padding: 12px 24px;
+            font-size: 12px;
+            font-weight: 400;
+
+            &:hover {
+                background-color: #383E5C;
+            }
+        }
 
         optgroup {
+            color: #8D95BA;
             padding: 0px 24px 8px 24px;
             font-size: 10px;
             font-weight: 400;
-            color: #8D95BA;
-        }
-
-        option {
-            display: block;
-            background: #29324A;
-            position: absolute;
-            font-size: 12px;
-            font-weight: 400;
-            padding: 0px 24px 8px 24px;
-        }
-
-        &:hover {
-            background-color: #383E5C;
-            transition: all ease-in-out .3s;
         }
     }
+
+    hr {
+        height: 1px;
+        color: #8D95BA;
+        border: none;
+        margin: 0;
+    }
+
+    select::-ms-expand {
+        display: none;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
