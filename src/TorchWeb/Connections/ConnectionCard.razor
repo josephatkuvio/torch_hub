@@ -1,4 +1,4 @@
-﻿<article>
+﻿<article @onclick=Click>
     <img src="/images/folderIcon.svg" />
     <header>
         <h3>@Connection.Name</h3>
@@ -6,7 +6,7 @@
     </header>
     @if (Connection.Direction == "Input")
     {
-        <label for="files">
+        <label for="files" @onclick:stopPropagation=true>
             <img src="/images/upArrowIcon.svg" />
         </label>
         <InputFile id="files" @key=inputFileId OnChange="Upload" multiple accept="image/*,.dng" />
@@ -16,6 +16,7 @@
 @code {
     [Parameter] public Connection Connection { get; set; } = null!;
     [Parameter] public EventCallback<InputFileChangeEventArgs> OnUpload { get; set; }
+    [Parameter] public EventCallback<Connection> OnClick { get; set; }
     
     string inputFileId = Guid.NewGuid().ToString();
 
@@ -24,4 +25,6 @@
         await OnUpload.InvokeAsync(e);
         inputFileId = Guid.NewGuid().ToString();
     }
+
+    async Task Click(MouseEventArgs e) => await OnClick.InvokeAsync(Connection);
 }

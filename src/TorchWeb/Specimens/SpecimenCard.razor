@@ -1,7 +1,7 @@
 ﻿<article class="specimen-card @(Specimen.Status?.StartsWith("Error") == true ? "error" : "")">
     @if (Specimen.CardImage != null)
     {
-        <img src="@Specimen.CardImage?.AbsoluteUrl(Config["Blossom:Authority"])" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
+        <img src="@Specimen.CardImage.OutputFile" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
     }
     else
     {

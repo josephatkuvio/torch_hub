@@ -53,7 +53,8 @@ public class Specimen : Entity<int>
     public List<TorchTaskRun> TaskRuns { get; private set; } = new();
     public void Delete() => Deleted = true;
 
-    public SpecimenImage? CardImage => Images.OrderBy(x => x.Width ?? 1000000).FirstOrDefault();
+    public SpecimenImage? CardImage => 
+        Images.OrderBy(x => x.Width ?? 1000000).FirstOrDefault() ?? new SpecimenImage(Id, InputFile, "Original");
 
     internal IBrowserFile? File { get; }
 

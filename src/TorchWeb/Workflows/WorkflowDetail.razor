@@ -14,39 +14,57 @@
 
 <hr />
  
-<section>
-    <h2>Connections</h2>
-    <section class="workflow-cards">
-        @foreach (var connection in Workflow.Connections.OrderBy(x => x.Direction))
-        {
-            <ConnectionCard Connection="connection" OnUpload="Upload" />
-        }
-        @if (!Workflow.Connections.Any())
-        {
-            <aside>
-                No connections found for this workflow. Create your first connection in the Settings tab (third tab).
-            </aside>
-        }
+@if (ActiveFolder == null)
+{
+    <section>
+        <h2>Connections</h2>
+        <section class="workflow-cards">
+            @foreach (var connection in Workflow.Connections.OrderBy(x => x.Direction))
+            {
+                <ConnectionCard Connection="connection" OnUpload="Upload" OnClick=Go />
+            }
+            @if (!Workflow.Connections.Any())
+            {
+                <aside>
+                    No connections found for this workflow. Create your first connection in the Settings tab (third tab).
+                </aside>
+            }
+        </section>
     </section>
-</section>
 
-<hr />
+    <hr />
 
-<section class="specimens-list-cards">
-    <h2>Recent Specimens</h2>
-    <section class="spec-cards">
-        @foreach (var specimen in RecentSpecimens)
-        {
-            <SpecimenCard Specimen="specimen" />
-        }
+    <section class="specimens-list-cards">
+        <h2>Recent Specimens</h2>
+        <section class="spec-cards">
+            @foreach (var specimen in RecentSpecimens)
+            {
+                <SpecimenCard Specimen="specimen" />
+            }
+        </section>
     </section>
-</section>
+}
+else
+{
+    <section class="specimens-list-cards full">
+        <button @onclick="Back">Back</button>
+        <h2>@ActiveFolder.Name | @ActiveFolder.Direction</h2>
+        <section class="spec-cards">
+            @foreach (var specimen in AllSpecimens)
+            {
+                <SpecimenCard Specimen="specimen" />
+            }
+        </section>
+    </section>
+}
 
 @inject IConfiguration Config
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
     [Parameter] public EventCallback<InputFileChangeEventArgs> OnUpload { get; set; }
     List<Specimen> RecentSpecimens = new();
+    IEnumerable<Specimen> AllSpecimens = new List<Specimen>();
+    Connection? ActiveFolder;
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,8 +73,19 @@
             .OrderByDescending(x => x.CreateDate)
             .Take(10)
             .ToList();
-        
+
         // Socket.On("specimen_added", response => RefreshSpecimens());
+    }
+
+    async Task Go(Connection connection)
+    {
+        ActiveFolder = connection;
+        AllSpecimens = await connection.GetAsync(100);
+    }
+
+    void Back()
+    {
+        ActiveFolder = null;
     }
 
     async Task Upload(InputFileChangeEventArgs e) => await OnUpload.InvokeAsync(e);

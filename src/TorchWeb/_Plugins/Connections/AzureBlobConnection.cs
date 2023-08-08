@@ -46,9 +46,15 @@ public class AzureBlobConnection : Connection
         {
             foreach (var item in page.Values)
             {
+                
+                
                 var batchId = item.Name.Split('/').First();
                 var name = item.Name.Split('/').Last();
-                specimens.Add(new Specimen(Id, batchId, item.Metadata["Name"], name));
+                var url = Container.GetBlobClient(item.Name).Uri.ToString();
+
+                var specimen = Specimens.FirstOrDefault(x => x.BatchId == batchId && x.InputFile == name)
+                    ?? new Specimen(Id, batchId, item.Metadata.ContainsKey("Name") ? item.Metadata["Name"] : name, url);
+                specimens.Add(specimen);
             }
         }
 
