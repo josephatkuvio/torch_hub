@@ -1,20 +1,16 @@
 ﻿<article class="specimen-card @(Specimen.Status?.StartsWith("Error") == true ? "error" : "")">
-    <header>
-        @if (Specimen.CardImage != null)
-        {
-            <img src="@Specimen.CardImage?.AbsoluteUrl(Config["Blossom:Authority"])" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
-        }
-        else
-        {
-            <SpecimensIcon />
-        }
-        <h3>@Specimen.Name</h3>
-    </header>
-    <div class="right">
-        <span>@Specimen.Status</span>
-        <time>@((Specimen.StatusDate ?? Specimen.CreateDate).ToString("d"))</time>
-        <button class="more-btn">...</button>
-    </div>
+    @if (Specimen.CardImage != null)
+    {
+        <img src="@Specimen.CardImage?.AbsoluteUrl(Config["Blossom:Authority"])" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
+    }
+    else
+    {
+        <SpecimensIcon />
+    }
+    <h3>@Specimen.Name</h3>
+    <span>@Specimen.Status</span>
+    <time>@((Specimen.StatusDate ?? Specimen.CreateDate).ToString("d"))</time>
+    <button class="more-btn">...</button>
 </article>
 
 @inject IConfiguration Config
