@@ -4,7 +4,7 @@
         <h3>@Connection.Name</h3>
         <h4>@Connection.Direction | @(Connection.ContainerType.Replace("Connection", ""))</h4>
     </header>
-    @if (Connection.Direction == "Input")
+    @if (Connection.Direction == "Input" && ShowUploadButton)
     {
         <label for="files" @onclick:stopPropagation=true>
             <img src="/images/upArrowIcon.svg" />
@@ -15,6 +15,7 @@
 
 @code {
     [Parameter] public Connection Connection { get; set; } = null!;
+    [Parameter] public bool ShowUploadButton { get; set; } = true;
     [Parameter] public EventCallback<InputFileChangeEventArgs> OnUpload { get; set; }
     [Parameter] public EventCallback<Connection> OnClick { get; set; }
     

@@ -46,11 +46,11 @@
                 }
                 else if (activeTab == "settings" && !showDetail)
                 {
-                    <NewUIManageWorkflow OnContentClick="ToggleShowDetail" />
+                    <ManageWorkflow Workflow="CurrentWorkflow" OnContentClick="ToggleShowDetail" />
                 }
                 else if (activeTab == "settings" && showDetail)
                 {
-                    <NewUIWorkflowDetail OnBackClick="ToggleShowDetail" />
+                    <WorkflowDetail OnBackClick="ToggleShowDetail" />
                 }
             </section>
         }
@@ -69,7 +69,7 @@
             <section class="tab-content collapsed-summary-tab-content">
                 @if (!summaryCollapsed)
                 {
-                    <WorkflowSummary @ref=SummaryComponent Workflow="CurrentWorkflow" />
+                    <WorkflowSummary @ref=SummaryComponent Workflow="CurrentWorkflow" />                    
                 }
                 else
                 {

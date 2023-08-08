@@ -46,5 +46,9 @@
   {
     "outputFile": "Users/Logout.razor.css",
     "inputFile": "Users/Logout.razor.scss"
+  },
+  {
+    "outputFile": "Workflows/ManageWorkflow.razor.css",
+    "inputFile": "Workflows/ManageWorkflow.razor.scss"
   }
 ]
