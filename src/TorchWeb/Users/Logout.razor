@@ -1,0 +1,15 @@
+﻿<a class="logout-button @(isClicked ? "clicked" : "")" href="/Logout" @onclick="HandleClick">
+    <span class="icon-before"><UserProfileCheck /></span>
+    <span class="icon-after"><img src="/images/user-profile-x.svg" /></span>
+    <span class="button-text">Sign out</span>
+</a>
+
+@code {
+    private bool isClicked = false;
+
+    private void HandleClick()
+    {
+        isClicked = true;
+    }
+}
+
