@@ -1,0 +1,53 @@
+﻿<div class="workflow-switcher">
+    <select id="selected-workflow" value="@SelectedWorkflowId" @onchange="HandleSelectedWorkflowIdChanged" placeholder-text="@GetSelectedWorkflowName()">
+        @foreach (var workflowUser in User.WorkflowUsers)
+        {
+            var institution = workflowUser.Workflow.Institution;
+            <optgroup label="@institution.Name">
+                @foreach (var workflow in institution.Workflows)
+                {
+                    <option value="@workflow.Id">@workflow.Name</option>
+                }
+            </optgroup>
+            <hr />
+        }
+    </select>
+</div>
+
+
+@code {
+    [CascadingParameter] public User User { get; set; }
+    [Parameter] public EventCallback<int> SelectedWorkflowIdChanged { get; set; }
+
+    int SelectedWorkflowId;
+
+    string GetSelectedWorkflowName()
+    {
+        if (SelectedWorkflowId != 0)
+        {
+            var selectedWorkflow = User.WorkflowUsers
+                .SelectMany(wu => wu.Workflow.Institution.Workflows)
+                .FirstOrDefault(w => w.Id == SelectedWorkflowId);
+
+            if (selectedWorkflow != null)
+            {
+                return selectedWorkflow.Name;
+            }
+        }
+
+        return "";
+    }
+
+    protected override void OnInitialized()
+    {
+        SelectedWorkflowId = User.CurrentWorkflowId ?? 0;
+    }
+
+    void HandleSelectedWorkflowIdChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value.ToString(), out int newWorkflowId))
+        {
+            SelectedWorkflowIdChanged.InvokeAsync(newWorkflowId); 
+        }
+    }
+}

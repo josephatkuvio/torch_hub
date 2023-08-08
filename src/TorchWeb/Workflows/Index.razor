@@ -6,23 +6,29 @@
 
 <section class="new-ui-section @(summaryCollapsed ? "collapsed" : "")">
     <section class="tab-section">
-        <ul class="tab-list">
-            <li class="tab-item first-icon @(activeTab == "workflow" ? "active" : "")" @onclick='() => ChangeTab("workflow")'>
-                <a class='tab-link'>
-                    <img src="/images/Flowchart.svg" />
-                </a>
-            </li>
-            <li class="tab-item @(activeTab == "tasks" ? "active" : "")" @onclick='() => ChangeTab("tasks")'>
-                <a class='tab-link'>
-                    <img src="/images/ProgressIcon.svg" />
-                </a>
-            </li>
-            <li class="tab-item @(activeTab == "settings" ? "active" : "")" @onclick='() => ChangeTab("settings")'>
-                <a class='tab-link'>
-                    <img src="/images/ManageIcon.svg" />
-                </a>
-            </li>
-        </ul>
+        <div class="tab-and-select">
+            <ul class="tab-list">
+                <li class="tab-item first-icon @(activeTab == "workflow" ? "active" : "")" @onclick='() => ChangeTab("workflow")'>
+                    <a class='tab-link'>
+                        <img src="/images/Flowchart.svg" />
+                    </a>
+                </li>
+                <li class="tab-item @(activeTab == "tasks" ? "active" : "")" @onclick='() => ChangeTab("tasks")'>
+                    <a class='tab-link'>
+                        <img src="/images/ProgressIcon.svg" />
+                    </a>
+                </li>
+                <li class="tab-item @(activeTab == "settings" ? "active" : "")" @onclick='() => ChangeTab("settings")'>
+                    <a class='tab-link'>
+                        <img src="/images/ManageIcon.svg" />
+                    </a>
+                </li>
+            </ul>
+
+            <WorkflowSwitcher SelectedWorkflowIdChanged="HandleSelectedWorkflowChange" />
+
+            <Logout />
+        </div>
 
         @if (CurrentWorkflow != null)
         {
@@ -91,6 +97,23 @@
 
         //Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
         //await Socket.ConnectAsync();
+    }
+
+    private async Task HandleSelectedWorkflowChange(int newWorkflowId)
+    {
+        if (User.WorkflowUsers != null)
+        {
+            foreach (var workflowUser in User.WorkflowUsers)
+            {
+                var matchingWorkflow = workflowUser.Workflow.Institution.Workflows.FirstOrDefault(w => w.Id == newWorkflowId);
+                if (matchingWorkflow != null)
+                {
+                    CurrentWorkflow = matchingWorkflow; 
+                    activeTab = "workflow"; 
+                    break;
+                }
+            }
+        }
     }
 
     private async Task Upload(InputFileChangeEventArgs e) => await SummaryComponent!.Upload(e);

@@ -38,5 +38,13 @@
   {
     "outputFile": "Connections/ConnectionCard.razor.css",
     "inputFile": "Connections/ConnectionCard.razor.scss"
+  },
+  {
+    "outputFile": "Workflows/WorkflowSwitcher.razor.css",
+    "inputFile": "Workflows/WorkflowSwitcher.razor.scss"
+  },
+  {
+    "outputFile": "Users/Logout.razor.css",
+    "inputFile": "Users/Logout.razor.scss"
   }
 ]
