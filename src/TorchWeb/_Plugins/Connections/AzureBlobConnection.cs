@@ -63,6 +63,7 @@ public class AzureBlobConnection : Connection
         var blob = Container.GetBlobClient(blobName);
         var result = await blob.UploadAsync(stream);
         specimen.SetInputFile(name, blob.Uri.ToString());
+        Specimens.Add(specimen);
         return specimen;
     }
 }

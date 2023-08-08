@@ -6,12 +6,11 @@
     </header>
     @if (Connection.Direction == "Input")
     {
-        <InputFile @key=inputFileId OnChange="Upload" multiple />
-        
-@*        <button @onclick=Upload>
+        <label for="files">
             <img src="/images/upArrowIcon.svg" />
-        </button>
-*@    }
+        </label>
+        <InputFile id="files" @key=inputFileId OnChange="Upload" multiple accept="image/*,.dng" />
+    }
 </article>
 
 @code {

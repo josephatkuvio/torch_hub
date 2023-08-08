@@ -34,5 +34,9 @@
   {
     "outputFile": "Specimens/SpecimenCard.razor.css",
     "inputFile": "Specimens/SpecimenCard.razor.scss"
+  },
+  {
+    "outputFile": "Connections/ConnectionCard.razor.css",
+    "inputFile": "Connections/ConnectionCard.razor.scss"
   }
 ]

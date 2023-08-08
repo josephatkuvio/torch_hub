@@ -5,6 +5,7 @@ article {
     padding: 24px;
     min-width: 224px;
     max-width: 290px;
+    position: relative;
 
     > img {
         margin-bottom: 20px;
@@ -21,17 +22,28 @@ article {
         }
     }
 
-    button {
-        float: right;
-        position: relative;
-        bottom: 36px;
-        background: transparent;
+    label {
+        position: absolute;
+        bottom: 1.5rem;
+        right: 1.5rem;
         padding: 0;
 
         img {
-            width: 36px;
-            height: 36px;
+            width: 2.25rem;
+            height: 2.25rem;
         }
+    }
+
+    ::deep input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
     }
 
     .manage-card {
@@ -64,14 +76,5 @@ article {
         display: flex;
         flex-direction: column;
         gap: 10px;
-    }
-
-    label {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        font-size: 12px;
-        color: #5A6182;
-        font-weight: 400;
     }
 }

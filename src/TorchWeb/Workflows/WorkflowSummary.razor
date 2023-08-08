@@ -86,7 +86,7 @@
             .GroupBy(x => x.InputConnectionId)
             .Select(x => new
             {
-                UploadCount = x.Count(y => y.Status != "Uploaded"),
+                UploadCount = x.Count(y => y.Status == "Uploaded"),
                 ProcessCount = x.Count(y => y.ProcessedDate != null),
                 TransferCount = x.Count(y => y.ProcessedDate != null && y.OutputConnectionId != null)
             });
@@ -112,6 +112,7 @@
         {
             await Workflow.InputConnection.UploadAsync(specimen, specimen.File!.OpenReadStream(2_000_000_000));
             await Workflows.UpdateAsync(Workflow);
+            UploadCount++;
             StateHasChanged();
         }
 
