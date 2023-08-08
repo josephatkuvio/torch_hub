@@ -1,12 +1,12 @@
-﻿<div class="workflow-switcher">
-    <select id="selected-workflow" value="@SelectedWorkflowId" @onchange="HandleSelectedWorkflowIdChanged" placeholder-text="@GetSelectedWorkflowName()">
-        @foreach (var workflowUser in User.WorkflowUsers)
+﻿@using Microsoft.EntityFrameworkCore;
+<div class="workflow-switcher">
+    <select id="selected-workflow" value="@SelectedWorkflow.Id" @onchange="HandleSelectedWorkflowIdChanged">
+        @foreach (var institution in AllWorkflows)
         {
-            var institution = workflowUser.Workflow.Institution;
-            <optgroup label="@institution.Name">
-                @foreach (var workflow in institution.Workflows)
+            <optgroup label="@institution.Key">
+                @foreach (var workflow in institution)
                 {
-                    <option value="@workflow.Id">@workflow.Name</option>
+                    <option value="@workflow.Id" selected="@(SelectedWorkflow.Id == workflow.Id)">@workflow.Name</option>
                 }
             </optgroup>
             <hr />
@@ -16,38 +16,25 @@
 
 
 @code {
-    [CascadingParameter] public User User { get; set; }
+    [CascadingParameter] public User User { get; set; } = null!;
     [Parameter] public EventCallback<int> SelectedWorkflowIdChanged { get; set; }
-
-    int SelectedWorkflowId;
-
-    string GetSelectedWorkflowName()
-    {
-        if (SelectedWorkflowId != 0)
-        {
-            var selectedWorkflow = User.WorkflowUsers
-                .SelectMany(wu => wu.Workflow.Institution.Workflows)
-                .FirstOrDefault(w => w.Id == SelectedWorkflowId);
-
-            if (selectedWorkflow != null)
-            {
-                return selectedWorkflow.Name;
-            }
-        }
-
-        return "";
-    }
+    [Parameter] public Workflow SelectedWorkflow { get; set; } = null!;
+    List<IGrouping<Institution, Workflow>> AllWorkflows = new();
 
     protected override void OnInitialized()
     {
-        SelectedWorkflowId = User.CurrentWorkflowId ?? 0;
+        AllWorkflows = Workflows.Query
+            .Include(x => x.Institution)
+            .Where(x => x.Users.Any(y => y.UserId == User.Id))
+            .GroupBy(x => x.Institution)
+            .ToList();
     }
 
     void HandleSelectedWorkflowIdChanged(ChangeEventArgs e)
     {
         if (int.TryParse(e.Value.ToString(), out int newWorkflowId))
         {
-            SelectedWorkflowIdChanged.InvokeAsync(newWorkflowId); 
+            SelectedWorkflowIdChanged.InvokeAsync(newWorkflowId);
         }
     }
 }

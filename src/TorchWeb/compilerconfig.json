@@ -4,20 +4,20 @@
     "inputFile": "App.razor.scss"
   },
   {
-    "outputFile": "Workflows/Connections/ConnectionCard.razor.css",
-    "inputFile": "Workflows/Connections/ConnectionCard.razor.scss"
+    "outputFile": "Connections/ConnectionCard.razor.css",
+    "inputFile": "Connections/ConnectionCard.razor.scss"
   },
   {
     "outputFile": "Workflows/WorkflowDetail.razor.css",
     "inputFile": "Workflows/WorkflowDetail.razor.scss"
   },
   {
-    "outputFile": "Workflows/Tasks/TaskList.razor.css",
-    "inputFile": "Workflows/Tasks/TaskList.razor.scss"
+    "outputFile": "Tasks/TaskList.razor.css",
+    "inputFile": "Tasks/TaskList.razor.scss"
   },
   {
-    "outputFile": "Workflows/Tasks/TaskCard.razor.css",
-    "inputFile": "Workflows/Tasks/TaskCard.razor.scss"
+    "outputFile": "Tasks/TaskCard.razor.css",
+    "inputFile": "Tasks/TaskCard.razor.scss"
   },
   {
     "outputFile": "Workflows/Index.razor.css",
@@ -28,8 +28,8 @@
     "inputFile": "Shared/CircleProgressBar.razor.scss"
   },
   {
-    "outputFile": "Pages/WorkflowSummary.razor.css",
-    "inputFile": "Pages/WorkflowSummary.razor.scss"
+    "outputFile": "Workflows/WorkflowSummary.razor.css",
+    "inputFile": "Workflows/WorkflowSummary.razor.scss"
   },
   {
     "outputFile": "Specimens/SpecimenCard.razor.css",
