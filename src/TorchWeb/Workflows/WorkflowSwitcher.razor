@@ -3,7 +3,7 @@
     <select id="selected-workflow" value="@SelectedWorkflow.Id" @onchange="HandleSelectedWorkflowIdChanged">
         @foreach (var institution in AllWorkflows)
         {
-            <optgroup label="@institution.Key">
+            <optgroup label="@institution.Key.Name">
                 @foreach (var workflow in institution)
                 {
                     <option value="@workflow.Id" selected="@(SelectedWorkflow.Id == workflow.Id)">@workflow.Name</option>
