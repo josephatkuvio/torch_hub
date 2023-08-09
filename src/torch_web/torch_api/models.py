@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor
 import importlib
+from PIL import Image
 import requests
 import imagehash
 import json
@@ -105,6 +106,10 @@ class Specimen(SQLModel, table=True):
     deleted: bool = Field(default=False)
     images: List["SpecimenImage"] = Relationship(back_populates="specimen")
     tasks: List["TaskRun"] = Relationship(back_populates="specimen")
+    
+    def download(self):
+        return BytesIO(requests.get(self.input_file, stream=True).content)
+
 
 
 class TaskRun(SQLModel, table=True):
@@ -157,8 +162,25 @@ class SpecimenImage(SQLModel, table=True):
     hash_c: Optional[str]
     hash_d: Optional[str]
 
+    
+    def download(self):
+        return BytesIO(requests.get(self.output_file, stream=True).content)
+
+    
     def average_hash(self):
         return imagehash.hex_to_hash(f'{self.hash_a}{self.hash_b}{self.hash_c}{self.hash_d}')
+    
+
+    def hash(self, hash_size, hashfunc="average"):
+        with Image.open(self.download()) as im:
+            size = int(hash_size)
+            split_size = int(size/4)
+            result = str(imagehash.average_hash(im, size) if hashfunc == "average" else imagehash.phash(im))
+            split_hash = [result[i:i+split_size] for i in range(0, len(result), split_size)]
+            self.hash_a = split_hash[0]
+            self.hash_b = split_hash[1]
+            self.hash_c = split_hash[2]
+            self.hash_d = split_hash[3]
 
 
 class User(SQLModel, table=True):

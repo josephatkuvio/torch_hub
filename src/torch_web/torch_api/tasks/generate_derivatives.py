@@ -39,7 +39,7 @@ def parse_sizes(sizes):
 
 
 @torch_task("Generate Derivatives")
-def generate_derivatives(specimen: Specimen, sizes_to_generate):
+def generate_derivatives(specimen: Specimen, sizes_to_generate, hash_size=32):
     try:
         sizes = parse_sizes(sizes_to_generate)
 
@@ -52,8 +52,11 @@ def generate_derivatives(specimen: Specimen, sizes_to_generate):
         result = {}
         for derivative in derivatives_to_add.keys():
             new_derivative = generate_derivative(specimen, derivative, derivatives_to_add[derivative])
+
             if new_derivative is not None:
+                new_derivative.hash(hash_size)
                 specimen.images.append(new_derivative)
+                
                 result[derivative] = {
                     "url": new_derivative.url,
                     "size": new_derivative.size,
