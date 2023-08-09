@@ -18,7 +18,7 @@ def cast(v):
                 v[kk] = cast(vv)
             return v
         else: return v
-    except Exception as e:
+    except Exception:
         return None
 
 
@@ -27,15 +27,13 @@ def get_exif_data(specimen: Specimen):
     """
     Extract EXIF data from an image.
     Args:
-        image_path (str): Path to the image file.
+        specimen (Specimen): Working specimen context.
     Returns:
         dict: A dictionary containing the extracted EXIF data.
     """
 
     # Open the image
-    for img in specimen.images:
-        if img.size == 'FULL':
-            image = Image.open(img.image_bytes)
+    image = Image.open(specimen.download())
 
     # Extract EXIF data
     exif_data = image._getexif()
@@ -50,8 +48,3 @@ def get_exif_data(specimen: Specimen):
                     exif_info[TAGS[k]] = v
 
     return exif_info
-
-## Example usage
-#image_path = 'example.jpg'  # Replace with your own image file path
-#exif_info = get_exif_data(image_path)
-
