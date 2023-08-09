@@ -45,7 +45,7 @@ class Workflow(SQLModel, table=True):
             workflow = session.merge(self)
 
             for task in workflow.tasks:
-                task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now())
+                task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now(), parameters=task.parameters)
                 local_specimen.tasks.append(task_run)
                 session.commit()
                 
@@ -88,7 +88,6 @@ class Connection(SQLModel, table=True):
     application_id: Optional[str]
     application_key: Optional[str]
     workflow: Workflow = Relationship(back_populates="connections")
-    specimen_count: Optional[int]
     specimens: List["Specimen"] = Relationship(
         back_populates="input_connection", 
         sa_relationship_kwargs={
