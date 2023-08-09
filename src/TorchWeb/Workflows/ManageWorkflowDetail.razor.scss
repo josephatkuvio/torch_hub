@@ -1,6 +1,6 @@
 .manage-detail-page-section {
     overflow-y: auto;
-    height: calc(100% - 56px);
+    height: 100%;
 
     .detailed-workflow-header {
         display: flex;
@@ -68,8 +68,7 @@
         display: flex;
         flex-direction: column;
         gap: 32px;
-        margin-top: 60px;
-        overflow-y: auto;
+        margin-top: 54px;
 
         .library-card {
             width: 100%;
@@ -138,6 +137,12 @@
                         font-size: 17px;
                     }
 
+                    input:not([type='checkbox']) {
+                        padding: 12px 24px;
+                        border-radius: 16px;
+                        border: 1px solid var(--gray-200, #E6E8F2);
+                    }
+
                     input[type="text"],
                     input[type="password"] {
                         margin-top: 8px;
@@ -146,10 +151,63 @@
 
                     input[type=checkbox] {
                         border-radius: 4px;
+                        border-color: #0B0F1C;
+                        --border-radius: 0;
+                    }
+
+                    input[type="password"] {
+                        width: 100%;
+                        padding-right: 40px;
+                        position: relative;
+                    }
+
+                    .password-input {
+                        display: flex;
+                        align-items: center;
+                        position: relative;
+                    }
+
+                    .toggle-password-button {
+                        position: absolute;
+                        right: 0px;
+                        transform: translateY(-35%);
+                        background-color: transparent;
+                        color: #0B0F1C;
+                        width: auto;
+                        padding: 12px 24px;
+                        align-items: center;
+                        border-radius: 0px 16px 16px 0px;
+                        border: 1px solid var(--gray-200, #E6E8F2);
+                        margin-top: 0;
+                        top: 30%;
+                    }
+
+                    .fas {
+                        font-weight: normal;
+                    }
+
+                    input[type="text"].input-with-checkbox {
+                        margin-bottom: 8px;
+                    }
+
+                    .checkbox-container {
+                        display: flex;
+                        align-items: center;
+                        margin-bottom: 24px;
+                    }
+
+                    .checkbox-container label {
+                        margin-left: 8px;
+                        font-size: 14px;
                     }
 
                     button {
                         margin-top: 8px;
+                        display: flex;
+                        justify-content: center;
+                        width: 120px;
+                        margin-left: auto;
+                        border-radius: 12px;
                     }
                 }
             }

@@ -17,34 +17,46 @@
 </header>
 
 <section class="manage-workflow-folders">
-    <section class="workflow-cards">
+    @if (SelectedConnection == null)
+    {
+        <section class="workflow-cards">
 
-        @foreach (var connection in Workflow.Connections.OrderBy(x => x.Direction))
-        {
-            <div class="connect-card-manage">
-                <ConnectionCard Connection="connection" OnClick=HandleContentClick ShowUploadButton="false" />
-            </div>
-        }
-        @if (!Workflow.Connections.Any())
-        {
-            <aside>
-                No connections found. Add connections to manage your workflow.
-            </aside>
-        }
+            @foreach (var connection in Workflow.Connections.OrderBy(x => x.Direction))
+            {
+                <div class="connect-card-manage">
+                    <ConnectionCard Connection="connection" OnClick=Go ShowUploadButton="false" />
+                </div>
+            }
+            @if (!Workflow.Connections.Any())
+            {
+                <aside>
+                    No connections found. Add connections to manage your workflow.
+                </aside>
+            }
 
-    </section>
+        </section>
+    }
+    else
+    {
+        <ManageWorkflowDetail SelectedConnection="SelectedConnection" OnDetailBackClick="HandleBackClick" />
+    }
 </section>
 
 
 
 
 @code {
-    [Parameter] public EventCallback OnContentClick { get; set; }
+    Connection? SelectedConnection;
 
     [Parameter] public Workflow Workflow { get; set; } = null!;
 
-    private async Task HandleContentClick()
+    async Task Go(Connection connection)
     {
-        await OnContentClick.InvokeAsync();
+        SelectedConnection = connection;
+    }
+
+    private async Task HandleBackClick()
+    {
+        SelectedConnection = null;
     }
 }

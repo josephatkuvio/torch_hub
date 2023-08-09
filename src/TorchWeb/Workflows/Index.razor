@@ -46,11 +46,11 @@
                 }
                 else if (activeTab == "settings" && !showDetail)
                 {
-                    <ManageWorkflow Workflow="CurrentWorkflow" OnContentClick="ToggleShowDetail" />
+                    <ManageWorkflow Workflow="CurrentWorkflow" />
                 }
                 else if (activeTab == "settings" && showDetail)
                 {
-                    <ManageWorkflowDetail OnBackClick="ToggleShowDetail" />
+                    <ManageWorkflowDetail />
                 }
             </section>
         }

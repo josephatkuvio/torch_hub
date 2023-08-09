@@ -58,6 +58,7 @@
 
 .manage-workflow-folders {
     overflow-y: auto;
+    height: calc(100% - 56px);
 
     .workflow-cards {
         display: flex;
@@ -67,7 +68,7 @@
         flex-wrap: wrap;
 
         .connect-card-manage {
-            cursor: pointer;            
+            cursor: pointer;
         }
 
         .workflow-card {

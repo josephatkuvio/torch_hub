@@ -50,7 +50,12 @@
                     <label>User Name</label>
                     <input type="text" placeholder="User Name" />
                     <label>Password</label>
-                    <input type="password" placeholder="Password" />
+                    <div class="password-input">
+                        <input type="password" placeholder="Password" />
+                        <button type="button" class="toggle-password-button" @onclick="TogglePasswordVisibility">
+                            <i class="@(showPassword ? "fas fa-eye" : "fas fa-eye-slash")"></i>
+                        </button>
+                    </div>
                     <button type="submit">Confirm</button>
                 </form>
             </div>
@@ -64,13 +69,20 @@
             <div class="fields-right">
                 <form>
                     <label>Directory</label>
-                    <input type="text" placeholder="Example" />
-                    <input type="checkbox">
-                    <label>Save this directory in the library</label><br>
+                    <input class="input-with-checkbox" type="text" placeholder="Example" />
+                    <div class="checkbox-container">
+                        <input type="checkbox">
+                        <label>Save this directory in the library</label>
+                    </div>
                     <label>Input</label>
                     <input type="text" placeholder="Example" />
                     <label>Password</label>
-                    <input type="password" placeholder="Password" />
+                    <div class="password-input">
+                        <input type="password" placeholder="Password" />
+                        <button type="button" class="toggle-password-button" @onclick="TogglePasswordVisibility">
+                            <i class="@(showPassword ? "fas fa-eye" : "fas fa-eye-slash")"></i>
+                        </button>
+                    </div>
                     <button type="submit">Confirm</button>
                 </form>
             </div>
@@ -84,10 +96,19 @@
 
 
 @code {
-    [Parameter] public EventCallback OnBackClick { get; set; }
+    [Parameter] public Connection? SelectedConnection { get; set; }
+    [Parameter] public EventCallback OnDetailBackClick { get; set; }
+
+    private bool showPassword = false;
+    private string password = "";
 
     private async Task HandleBackClick()
     {
-        await OnBackClick.InvokeAsync();
+        await OnDetailBackClick.InvokeAsync();
+    }    
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
     }
 }
