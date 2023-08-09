@@ -62,7 +62,8 @@ class Workflow(SQLModel, table=True):
             local_specimen.set_status('Processed');
             local_specimen.processed_date = datetime.now()
             session.commit()
-            asyncio.run(socketio.emit('specimen_processed', { "id": local_specimen.id, "status": local_specimen.status }));
+            
+            asyncio.run(socketio.emit('specimen_processed', { "id": local_specimen.id, "status": local_specimen.status }, f'workflow-{local_specimen.input_connection.workflow_id}'));
 
 
 class CatalogTask(SQLModel):

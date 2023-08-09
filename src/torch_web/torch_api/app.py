@@ -7,7 +7,7 @@ from fastapi import FastAPI, BackgroundTasks
 from torch_api.database import create_db_and_tables, engine
 from torch_api.models import CatalogTask, Specimen, Workflow
 from torch_api.torch_tasks import get_all_tasks
-from torch_api.socket import init
+from torch_api.socket import init, sio
 
 app = FastAPI()
 init(app)
@@ -56,6 +56,12 @@ def specimens_update_external_url(collection_id:int, specimens: list[Specimen]):
         session.commit()
 
     return updated_specimens
+
+
+@sio.event
+def monitor_workflow(sid, workflow_id):
+    print(f'{sid} entering room {workflow_id}')
+    sio.enter_room(sid, f'workflow-{workflow_id}')
 
 
 def main():

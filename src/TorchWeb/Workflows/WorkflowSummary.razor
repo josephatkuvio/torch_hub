@@ -81,11 +81,12 @@
     string BatchId = Guid.NewGuid().ToString();
     List<Specimen> SpecimenQueue = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        await Socket.EmitAsync("monitor_workflow", Workflow.Id);
+
         Socket.On("specimen_processed", async (data) =>
         {
-            Console.WriteLine("oh shit!");
             ProcessCount++;
             await InvokeAsync(StateHasChanged);
         });
