@@ -50,5 +50,9 @@
   {
     "outputFile": "Workflows/ManageWorkflow.razor.css",
     "inputFile": "Workflows/ManageWorkflow.razor.scss"
+  },
+  {
+    "outputFile": "Workflows/ManageWorkflowDetail.razor.css",
+    "inputFile": "Workflows/ManageWorkflowDetail.razor.scss"
   }
 ]

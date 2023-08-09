@@ -1,0 +1,93 @@
+﻿<section class="manage-detail-page-section">
+    <header class="detailed-workflow-header">
+        <div class="workflow-detail-header">
+            <div class="header-left">
+                <aside class="back" @onclick="HandleBackClick">
+                    <img class="sort-icon-img" src="/images/backArrow.svg" />
+                </aside>
+                <h1>Workflow Name</h1>
+            </div>
+            <div class="header-right">
+                <button class="workflow-detail-buttons">
+                    <img class="sort-icon-img edit-icon" src="/images/Edit save.svg" />
+                </button>
+                <button class="workflow-detail-buttons">
+                    <img class="sort-icon-img trash-icon" src="/images/Trashcan.svg" />
+                </button>
+            </div>
+        </div>
+        <div class="header-bottom-text">
+            <h4>Last Updated: 24 FEB 2016</h4>
+            <h4>Created by: Christina J</h4>
+            <h4>Connection: Short link here?</h4>
+        </div>
+    </header>
+
+
+    ﻿<section class="workflow-connection-detail">
+
+        <section class="library-card">
+            <article class="lib-article">
+                <div class="left">
+                    <img class="sort-icon-img" src="/images/iIcon.svg" />
+                    <h1>Would you like to view previous workflow settings?</h1>
+                </div>
+                <div class="right">
+                    <button class="more-btn">Open Library</button>
+                </div>
+            </article>
+        </section>
+
+        <section class="workflow-connection-settings">
+            <div class="title-left">
+                <h1>Authentication</h1>
+                <label>Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</label>
+            </div>
+            <div class="fields-right">
+                <form>
+                    <label>Host</label>
+                    <input type="text" placeholder="Host" />
+                    <label>User Name</label>
+                    <input type="text" placeholder="User Name" />
+                    <label>Password</label>
+                    <input type="password" placeholder="Password" />
+                    <button type="submit">Confirm</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="workflow-connection-settings">
+            <div class="title-left">
+                <h1>Directory</h1>
+                <label>Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</label>
+            </div>
+            <div class="fields-right">
+                <form>
+                    <label>Directory</label>
+                    <input type="text" placeholder="Example" />
+                    <input type="checkbox">
+                    <label>Save this directory in the library</label><br>
+                    <label>Input</label>
+                    <input type="text" placeholder="Example" />
+                    <label>Password</label>
+                    <input type="password" placeholder="Password" />
+                    <button type="submit">Confirm</button>
+                </form>
+            </div>
+        </section>
+
+    </section>
+</section>
+
+
+
+
+
+@code {
+    [Parameter] public EventCallback OnBackClick { get; set; }
+
+    private async Task HandleBackClick()
+    {
+        await OnBackClick.InvokeAsync();
+    }
+}
