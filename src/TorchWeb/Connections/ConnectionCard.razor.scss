@@ -7,6 +7,11 @@ article {
     max-width: 290px;
     position: relative;
 
+    &:hover {
+        cursor: pointer;
+        background: #F8F9FD;
+    }
+
     > img {
         margin-bottom: 20px;
     }

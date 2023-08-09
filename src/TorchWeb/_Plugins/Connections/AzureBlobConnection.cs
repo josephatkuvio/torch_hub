@@ -28,7 +28,7 @@ public class AzureBlobConnection : Connection
     {
         try
         {
-            await Container.CreateIfNotExistsAsync();
+            await Container.CreateIfNotExistsAsync(PublicAccessType.Blob);
             return true;
         }
         catch (Exception ex)
