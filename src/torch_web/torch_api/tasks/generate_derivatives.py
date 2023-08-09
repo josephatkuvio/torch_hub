@@ -1,3 +1,4 @@
+import datetime
 import os
 import traceback
 import requests
@@ -40,71 +41,58 @@ def parse_sizes(sizes):
 
 @torch_task("Generate Derivatives")
 def generate_derivatives(specimen: Specimen, sizes_to_generate, hash_size=32):
-    try:
-        sizes = parse_sizes(sizes_to_generate)
+    sizes = parse_sizes(sizes_to_generate)
 
-        derivatives_to_add = {
-            size: config
-            for size, config in sizes.items()
-            if not any(image.size == size for image in specimen.images)
-        }
+    derivatives_to_add = {
+        size: config
+        for size, config in sizes.items()
+        if not any(image.size == size for image in specimen.images)
+    }
 
-        result = {}
-        for derivative in derivatives_to_add.keys():
-            new_derivative = generate_derivative(specimen, derivative, derivatives_to_add[derivative])
+    result = {}
+    original_image = specimen.download()
+    
+    for derivative in derivatives_to_add.keys():
+        new_derivative = generate_derivative(specimen, original_image, derivative, derivatives_to_add[derivative])
 
-            if new_derivative is not None:
-                new_derivative.hash(hash_size)
-                specimen.images.append(new_derivative)
+        if new_derivative is not None:
+            new_derivative.hash(hash_size)
+            specimen.images.append(new_derivative)
                 
-                result[derivative] = {
-                    "url": new_derivative.url,
-                    "size": new_derivative.size,
-                    "width": new_derivative.width,
-                    "height": new_derivative.height
-                }
+            result[derivative] = {
+                "url": new_derivative.output_file,
+                "size": new_derivative.size,
+                "width": new_derivative.width,
+                "height": new_derivative.height
+            }
 
-        return result
-    except Exception as e:
-        return f"Unable to create derivatives: {e}"
+    return result
 
 
-def generate_derivative(specimen: Specimen, size, width) -> Optional[SpecimenImage]:
-    full_image_path = Path(specimen.upload_path)
-    derivative_file_name = full_image_path.stem + "_" + size + full_image_path.suffix
-    derivative_path = str(specimen.collection_id) + '/' + str(specimen.id) + '/' + derivative_file_name
+def generate_derivative(specimen: Specimen, image: BytesIO, size: str, width: int) -> Optional[SpecimenImage]:
+    full_image_path = Path(specimen.input_file)
+    derivative_file_name = f"{full_image_path.stem}_{size}{full_image_path.suffix}"
+    derivative_path = f"{specimen.batch_id}/_artifacts/{derivative_file_name}"
 
-    try:
-        img_bytes = specimen.image_bytes()
-        if img_bytes is None:
-            img_bytes = BytesIO(requests.get(specimen.upload_path, stream=True).content)
-        img = Image.open(img_bytes)
-        print('opened')
+    img = Image.open(image)
 
-        if width is not None:
-            img.thumbnail((width, width))
+    if width is not None:
+        img.thumbnail((width, width))
 
-        # img.save(derivative_path)
-        blob_service_client = BlobServiceClient.from_connection_string(os.environ.get("AZURE_STORAGE_CONNECTION_STRING"))
-        blob_client = blob_service_client.get_blob_client(container='torchhub', blob=derivative_path)
-        image_stream = BytesIO()
-        img.save(image_stream, format='JPEG')
-        print('saved')
-        image_stream.seek(0)
-        blob_client.upload_blob(image_stream.read(), overwrite=True)
-        print('uploaded')
+    blob_service_client = BlobServiceClient.from_connection_string(os.environ.get("AZURE_STORAGE_CONNECTION_STRING"))
+    blob_client = blob_service_client.get_blob_client(container=f"workflow-{specimen.input_connection.workflow_id}-input", blob=derivative_path)
+    image_stream = BytesIO()
+    img.save(image_stream, format='JPEG')
+    image_stream.seek(0)
+    blob_client.upload_blob(image_stream.read(), overwrite=True)
 
-        specimen_image = SpecimenImage(
-            specimen_id=specimen.id,
-            size=size,
-            height=img.height,
-            width=img.width,
-            url=blob_client.url,
-            external_url = blob_client.url
-        )
+    specimen_image = SpecimenImage(
+        specimen_id=specimen.id,
+        size=size,
+        height=img.height,
+        width=img.width,
+        output_file=blob_client.url,
+        create_date=datetime.datetime.now()
+    )
 
-        return specimen_image
-
-    except Exception as e:
-        print("Unable to create derivative:", traceback.format_exc())
-        return None
+    return specimen_image

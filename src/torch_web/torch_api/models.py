@@ -88,6 +88,7 @@ class Connection(SQLModel, table=True):
     application_key: Optional[str]
     workflow: Workflow = Relationship(back_populates="connections")
     specimen_count: Optional[int]
+    specimens: List["Specimen"] = Relationship(back_populates="input_connection")
 
 
 class Specimen(SQLModel, table=True):
@@ -106,6 +107,7 @@ class Specimen(SQLModel, table=True):
     deleted: bool = Field(default=False)
     images: List["SpecimenImage"] = Relationship(back_populates="specimen")
     tasks: List["TaskRun"] = Relationship(back_populates="specimen")
+    input_connection: Connection = Relationship(back_populates="specimens", foreign_key="Specimen.input_connection_id")
     
     def download(self):
         return BytesIO(requests.get(self.input_file, stream=True).content)
