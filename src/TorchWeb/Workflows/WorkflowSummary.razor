@@ -116,6 +116,8 @@
             StateHasChanged();
         }
 
+        await TorchApi.StartWorkflowAsync(Workflow.Id, BatchId);
+
         BatchId = Guid.NewGuid().ToString();
         SpecimenQueue.Clear();
     }

@@ -1,12 +1,11 @@
 from concurrent.futures import ThreadPoolExecutor
 import importlib
-from token import OP
 import requests
 import imagehash
 import json
 
 from io import BytesIO
-from typing import Dict, List, Optional
+from typing import List, Optional
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship, Session, Column, JSON
 from .database import engine
@@ -44,14 +43,12 @@ class Workflow(SQLModel, table=True):
             session.merge(specimen)
             session.merge(self)
 
-            input_file = BytesIO(requests.get(specimen.input_file, stream=True).content)
-        
             for task in self.tasks:
-                specimen_task = SpecimenTask(specimen_id=specimen.id, task_id=task.id, start_date=datetime.datetime.now())
-                specimen.tasks.append(specimen_task)
+                task_run = TaskRun(specimen=specimen, task=task, start_date=datetime.datetime.now())
+                specimen.tasks.append(task_run)
                 session.commit()
                 
-                task.start(specimen)
+                task_run.start()
 
             #context.socketio.emit('specimen_added', specimen_id);
 
@@ -74,29 +71,6 @@ class Task(SQLModel, table=True):
     workflow: Workflow = Relationship(back_populates="tasks")
     parameters: dict = Field(default={}, sa_column=Column(JSON))
     runs: List["TaskRun"] = Relationship(back_populates="task")
-
-    def start(self, specimen: "Specimen"):
-        with Session(engine) as session:
-            session.merge(self)
-
-            self.run_state = 'Running'
-            #context.socketio.emit('specimen_task_updated', specimen_task)
-            
-            module = importlib.import_module('tasks.' + self.func_name)
-            func = getattr(module, self.func_name)
-            result = func(specimen, **self.parameters_dict())
-            session.commit()
-            
-            if isinstance(result, str):
-                self.run_state = 'Error'
-                self.error_message = result
-            else:
-                self.end_date = datetime.datetime.now()
-                self.run_state = 'Success'
-                self.run_message = json.dumps(result)
-                session.commit()
-
-            #context.socketio.emit('specimen_task_updated', specimen_task)
 
 
 class Connection(SQLModel, table=True):
@@ -137,13 +111,36 @@ class TaskRun(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     task_id: int = Field(foreign_key="task.id")
     specimen_id: int = Field(foreign_key="specimen.id")
-    parameters: Dict = Field(default={}, sa_column=Column(JSON))
+    parameters: dict = Field(default={}, sa_column=Column(JSON))
     start_date: datetime
     end_date: Optional[datetime]
     status: Optional[str]
     result: Optional[str]
     task: Task = Relationship(back_populates="runs")
     specimen: Specimen = Relationship(back_populates="tasks")
+    
+    def start(self):
+        with Session(engine) as session:
+            session.merge(self)
+
+            self.status = 'Running'
+            session.commit()
+            #context.socketio.emit('specimen_task_updated', specimen_task)
+            
+            module = importlib.import_module('tasks.' + self.task.func_name)
+            func = getattr(module, self.task.func_name)
+            
+            try:
+                result = func(self.specimen, **self.parameters)
+                self.end_date = datetime.datetime.now()
+                self.status = 'Success'
+                self.result = json.dumps(result)
+            except Exception as ex:
+                self.status = 'Error'
+                self.result = str(ex)
+
+            session.commit()
+            #context.socketio.emit('specimen_task_updated', specimen_task)
 
 
 class SpecimenImage(SQLModel, table=True):
