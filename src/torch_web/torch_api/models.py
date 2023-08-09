@@ -1,3 +1,4 @@
+import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import importlib
 from threading import local
@@ -11,6 +12,7 @@ from typing import Optional
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship, Session, Column, JSON
 from .database import engine
+from .socket import sio as socketio
 
      
 class Institution(SQLModel, table=True):
@@ -35,7 +37,7 @@ class Workflow(SQLModel, table=True):
     users: list["WorkflowUser"] = Relationship(back_populates="workflow")
     connections: list["Connection"] = Relationship(back_populates="workflow")
 
-    def start_many(self, specimens: list["Specimen"], max_workers:int=10):
+    def start_many(self, specimens: list["Specimen"], max_workers: int=10):
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             for specimen in specimens:
                 executor.submit(self.start, specimen)
@@ -60,7 +62,7 @@ class Workflow(SQLModel, table=True):
             local_specimen.set_status('Processed');
             local_specimen.processed_date = datetime.now()
             session.commit()
-            #context.socketio.emit('specimen_added', specimen_id);
+            asyncio.run(socketio.emit('specimen_processed', { "id": local_specimen.id, "status": local_specimen.status }));
 
 
 class CatalogTask(SQLModel):

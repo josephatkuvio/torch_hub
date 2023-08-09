@@ -1,6 +1,6 @@
 # Main Environment
 fastapi
-fastapi-socketio
+python-socketio
 sqlmodel
 uvicorn[standard]
 python-dotenv

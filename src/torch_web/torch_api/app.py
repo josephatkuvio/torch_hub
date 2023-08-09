@@ -3,15 +3,14 @@ import os
 
 from sqlmodel import Session, select
 from fastapi import FastAPI, BackgroundTasks
-from fastapi_socketio import SocketManager
 
 from torch_api.database import create_db_and_tables, engine
 from torch_api.models import CatalogTask, Specimen, Workflow
 from torch_api.torch_tasks import get_all_tasks
-
+from torch_api.socket import init
 
 app = FastAPI()
-socket_manager = SocketManager(app=app)
+init(app)
 
 
 @app.get("/")
@@ -38,6 +37,8 @@ def workflows_start(workflow_id: int, batch_id: str, background_tasks: Backgroun
         specimens = session.exec(query).all()
         workflow = session.get(Workflow, workflow_id)
         background_tasks.add_task(workflow.start_many, specimens)
+    
+    return { "status": "started" }
 
 
 @app.put('/collections/{collection_id}', operation_id="UpdateExternalUrl")

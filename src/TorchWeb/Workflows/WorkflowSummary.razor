@@ -64,6 +64,8 @@
 
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; } = null!;
+
     int UploadCount;
     int ProcessCount;
     int TransferCount;
@@ -79,14 +81,29 @@
     string BatchId = Guid.NewGuid().ToString();
     List<Specimen> SpecimenQueue = new();
 
+    protected override void OnInitialized()
+    {
+        Socket.On("specimen_processed", async (data) =>
+        {
+            Console.WriteLine("oh shit!");
+            ProcessCount++;
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+
     protected override void OnParametersSet()
+    {
+        RefreshCounts();
+    }
+
+    void RefreshCounts()
     {
         var query = Specimens.Query
             .Where(x => x.InputConnectionId == Workflow.InputConnection!.Id)
             .GroupBy(x => x.InputConnectionId)
             .Select(x => new
             {
-                UploadCount = x.Count(y => y.Status == "Uploaded"),
+                UploadCount = x.Count(),
                 ProcessCount = x.Count(y => y.ProcessedDate != null),
                 TransferCount = x.Count(y => y.ProcessedDate != null && y.OutputConnectionId != null)
             });

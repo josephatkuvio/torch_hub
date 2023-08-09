@@ -64,24 +64,26 @@
                 </a>
             </li>
         </ul>
-        @if (CurrentWorkflow != null)
+        @if (CurrentWorkflow != null && Socket?.Connected == true)
         {
-            <section class="tab-content collapsed-summary-tab-content">
-                @if (!summaryCollapsed)
-                {
-                    <WorkflowSummary @ref=SummaryComponent Workflow="CurrentWorkflow" />
-                }
-                else
-                {
-                    <NewUICollapsedSummary />
-                }
-            </section>
+            <CascadingValue Value="Socket">
+                <section class="tab-content collapsed-summary-tab-content">
+                    @if (!summaryCollapsed)
+                    {
+                        <WorkflowSummary @ref=SummaryComponent Workflow="CurrentWorkflow" />
+                    }
+                    else
+                    {
+                        <NewUICollapsedSummary />
+                    }
+                </section>
+            </CascadingValue>
         }
     </section>
 
 </section>
 
-
+@inject IConfiguration Config
 @code {
     [CascadingParameter] public User User { get; set; } = null!;
     [Parameter] public int? WorkflowId { get; set; }
@@ -101,9 +103,12 @@
         if (CurrentWorkflow == null && WorkflowId != null)
             CurrentWorkflow = await Workflows.FindAsync(WorkflowId);
 
-        User.SetCurrentWorkflow(CurrentWorkflow);
-        //Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"]);
-        //await Socket.ConnectAsync();
+        User.SetCurrentWorkflow(CurrentWorkflow!);
+        Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"], new SocketIOClient.SocketIOOptions
+        {
+            Path = "/ws/socket.io"
+        });
+        await Socket.ConnectAsync();
     }
 
     private void HandleSelectedWorkflowChange(int newWorkflowId)

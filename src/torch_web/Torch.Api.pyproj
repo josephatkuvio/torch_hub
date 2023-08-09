@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="torch_api\database.py" />
     <Compile Include="torch_api\models.py" />
+    <Compile Include="torch_api\socket.py" />
     <Compile Include="torch_api\tasks\check_duplicate.py" />
     <Compile Include="torch_api\tasks\get_exif_data.py" />
     <Compile Include="torch_api\tasks\recognize_text.py" />
