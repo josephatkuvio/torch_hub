@@ -69,9 +69,10 @@
     int UploadCount;
     int ProcessCount;
     int TransferCount;
+    int TaskCount;
 
     int UploadPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)UploadCount / (UploadCount + SpecimenQueue.Count(x => x.Status != "Uploaded")));
-    int ProcessPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)ProcessCount / UploadCount);
+    int ProcessPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)TaskCount / (UploadCount * Workflow.Tasks.Count));
     int TransferPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)TransferCount / UploadCount);
 
     double CompletionPercentage => (UploadPercentage / 3.0) + (ProcessPercentage / 3.0) + (TransferPercentage / 3.0);
@@ -84,6 +85,12 @@
     protected override async Task OnInitializedAsync()
     {
         await Socket.EmitAsync("monitor_workflow", Workflow.Id);
+
+        Socket.On("task_completed", async (data) =>
+        {
+            TaskCount++;
+            await InvokeAsync(StateHasChanged);
+        });
 
         Socket.On("specimen_processed", async (data) =>
         {
@@ -112,6 +119,7 @@
         UploadCount = query.FirstOrDefault()?.UploadCount ?? 0;
         ProcessCount = query.FirstOrDefault()?.ProcessCount ?? 0;
         TransferCount = query.FirstOrDefault()?.TransferCount ?? 0;
+        TaskCount = ProcessCount * Workflow.Tasks.Count;
     }
 
     public async Task Upload(InputFileChangeEventArgs e)

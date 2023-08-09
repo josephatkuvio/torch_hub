@@ -14,6 +14,10 @@ from sqlmodel import Field, SQLModel, Relationship, Session, Column, JSON
 from .database import engine
 from .socket import sio as socketio
 
+
+def emit(workflow_id, event, data):
+    asyncio.run(socketio.emit(event, data, f'workflow-{workflow_id}'))
+
      
 class Institution(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -54,16 +58,18 @@ class Workflow(SQLModel, table=True):
                 task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now(), parameters=task.parameters)
                 local_specimen.tasks.append(task_run)
                 session.commit()
-                
+                emit(local_specimen.input_connection.workflow_id, 'task_started', { "id": local_specimen.id, "status": local_specimen.status });
+
                 task_run.start()
                 session.refresh(local_specimen)
+                emit(local_specimen.input_connection.workflow_id, 'task_completed', { "id": local_specimen.id, "status": local_specimen.status });
 
                     
             local_specimen.set_status('Processed');
             local_specimen.processed_date = datetime.now()
             session.commit()
             
-            asyncio.run(socketio.emit('specimen_processed', { "id": local_specimen.id, "status": local_specimen.status }, f'workflow-{local_specimen.input_connection.workflow_id}'));
+            emit(local_specimen.input_connection.workflow_id, 'specimen_processed', { "id": local_specimen.id, "status": local_specimen.status });
 
 
 class CatalogTask(SQLModel):
