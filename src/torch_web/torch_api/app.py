@@ -1,7 +1,6 @@
 import uvicorn
 import os
 
-from typing import List
 from sqlmodel import Session, select
 from fastapi import FastAPI, BackgroundTasks
 from fastapi_socketio import SocketManager
@@ -21,7 +20,7 @@ def root():
 
 
 @app.get("/tasks", operation_id="GetAllTasks")
-async def tasks_getall() -> List[CatalogTask]:
+async def tasks_getall() -> list[CatalogTask]:
     for module in os.listdir(os.path.dirname(__file__) + '/tasks'):
         if module == '__init__.py' or module[-3:] != '.py':
             continue
@@ -42,7 +41,7 @@ def workflows_start(workflow_id: int, batch_id: str, background_tasks: Backgroun
 
 
 @app.put('/collections/{collection_id}', operation_id="UpdateExternalUrl")
-def specimens_update_external_url(collection_id:int, specimens: List[Specimen]):
+def specimens_update_external_url(collection_id:int, specimens: list[Specimen]):
     updated_specimens = []
     
     with Session(engine) as session:

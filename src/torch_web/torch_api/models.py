@@ -1,12 +1,13 @@
 from concurrent.futures import ThreadPoolExecutor
 import importlib
+from threading import local
 from PIL import Image
 import requests
 import imagehash
 import json
 
 from io import BytesIO
-from typing import List, Optional
+from typing import Optional
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship, Session, Column, JSON
 from .database import engine
@@ -19,7 +20,7 @@ class Institution(SQLModel, table=True):
     created_date: datetime
     owner_id: int = Field(foreign_key="user.id")
     deleted_date: Optional[datetime]
-    workflows: List["Workflow"] = Relationship(back_populates="institution")
+    workflows: list["Workflow"] = Relationship(back_populates="institution")
 
 
 class Workflow(SQLModel, table=True):
@@ -30,11 +31,11 @@ class Workflow(SQLModel, table=True):
     created_date: datetime
     deleted_date: Optional[datetime]
     institution: Institution = Relationship(back_populates="workflows")
-    tasks: List["Task"] = Relationship(back_populates="workflow")
-    users: List["WorkflowUser"] = Relationship(back_populates="workflow")
-    connections: List["Connection"] = Relationship(back_populates="workflow")
+    tasks: list["Task"] = Relationship(back_populates="workflow")
+    users: list["WorkflowUser"] = Relationship(back_populates="workflow")
+    connections: list["Connection"] = Relationship(back_populates="workflow")
 
-    def start_many(self, specimens: List["Specimen"], max_workers:int=10):
+    def start_many(self, specimens: list["Specimen"], max_workers:int=10):
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             for specimen in specimens:
                 executor.submit(self.start, specimen)
@@ -44,6 +45,9 @@ class Workflow(SQLModel, table=True):
             local_specimen = session.merge(specimen)
             workflow = session.merge(self)
 
+            local_specimen.set_status('Processing');
+            session.commit()
+            
             for task in workflow.tasks:
                 task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now(), parameters=task.parameters)
                 local_specimen.tasks.append(task_run)
@@ -52,6 +56,10 @@ class Workflow(SQLModel, table=True):
                 task_run.start()
                 session.refresh(local_specimen)
 
+                    
+            local_specimen.set_status('Processed');
+            local_specimen.processed_date = datetime.now()
+            session.commit()
             #context.socketio.emit('specimen_added', specimen_id);
 
 
@@ -72,7 +80,7 @@ class Task(SQLModel, table=True):
     last_updated_date: Optional[datetime]
     workflow: Workflow = Relationship(back_populates="tasks")
     parameters: dict = Field(default={}, sa_column=Column(JSON))
-    runs: List["TaskRun"] = Relationship(back_populates="task")
+    runs: list["TaskRun"] = Relationship(back_populates="task")
 
 
 class Connection(SQLModel, table=True):
@@ -88,7 +96,7 @@ class Connection(SQLModel, table=True):
     application_id: Optional[str]
     application_key: Optional[str]
     workflow: Workflow = Relationship(back_populates="connections")
-    specimens: List["Specimen"] = Relationship(
+    specimens: list["Specimen"] = Relationship(
         back_populates="input_connection", 
         sa_relationship_kwargs={
             "primaryjoin": "Connection.id==Specimen.input_connection_id",
@@ -110,14 +118,18 @@ class Specimen(SQLModel, table=True):
     barcode: Optional[str]
     catalog_number: Optional[str]
     deleted: bool = Field(default=False)
-    images: List["SpecimenImage"] = Relationship(back_populates="specimen")
-    tasks: List["TaskRun"] = Relationship(back_populates="specimen")
+    images: list["SpecimenImage"] = Relationship(back_populates="specimen")
+    tasks: list["TaskRun"] = Relationship(back_populates="specimen")
     input_connection: Connection = Relationship(
         back_populates="specimens", 
         sa_relationship_kwargs=dict(foreign_keys="[Specimen.input_connection_id]"))
     
     def download(self):
         return BytesIO(requests.get(self.input_file, stream=True).content)
+    
+    def set_status(self, status: str):
+        self.status = status
+        self.status_date = datetime.now()
 
 
 
@@ -138,6 +150,7 @@ class TaskRun(SQLModel, table=True):
             task_run = session.merge(self)
 
             task_run.status = 'Running'
+            task_run.start_date = datetime.now()
             session.commit()
             #context.socketio.emit('specimen_task_updated', specimen_task)
             
@@ -200,8 +213,8 @@ class User(SQLModel, table=True):
     last_login_date: Optional[datetime]
     current_workflow_id: Optional[int] = Field(foreign_key="workflow.id")
     current_workflow: Optional["Workflow"] = Relationship()
-    identities: List["Identity"] = Relationship(back_populates="user")
-    workflows: List["WorkflowUser"] = Relationship(back_populates="user")
+    identities: list["Identity"] = Relationship(back_populates="user")
+    workflows: list["WorkflowUser"] = Relationship(back_populates="user")
 
 
 class Identity(SQLModel, table=True):
