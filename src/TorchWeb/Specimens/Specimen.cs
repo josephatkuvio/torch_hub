@@ -54,7 +54,8 @@ public class Specimen : Entity<int>
     public void Delete() => Deleted = true;
 
     public SpecimenImage? CardImage => 
-        Images.OrderBy(x => x.Width ?? 1000000).FirstOrDefault() ?? new SpecimenImage(Id, InputFile, "Original");
+        Images.OrderBy(x => x.Width ?? 1000000).FirstOrDefault() ?? 
+        (InputFile.StartsWith("http") ? new SpecimenImage(Id, InputFile, "Original") : null);
 
     internal IBrowserFile? File { get; }
 

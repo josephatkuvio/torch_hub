@@ -1,4 +1,3 @@
-import datetime
 import os
 import traceback
 import requests
@@ -8,6 +7,7 @@ from typing import Optional
 
 from PIL import Image
 from io import BytesIO
+from datetime import datetime
 from torch_tasks import torch_task
 from torch_api.models import Specimen, SpecimenImage
 from azure.storage.blob import BlobServiceClient
@@ -92,7 +92,7 @@ def generate_derivative(specimen: Specimen, image: BytesIO, size: str, width: in
         height=img.height,
         width=img.width,
         output_file=blob_client.url,
-        create_date=datetime.datetime.now()
+        create_date=datetime.now()
     )
 
     return specimen_image

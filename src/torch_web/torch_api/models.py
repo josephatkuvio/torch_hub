@@ -32,7 +32,7 @@ class Workflow(SQLModel, table=True):
     institution: Institution = Relationship(back_populates="workflows")
     tasks: List["Task"] = Relationship(back_populates="workflow")
     users: List["WorkflowUser"] = Relationship(back_populates="workflow")
-    connections: List["Connection"] = Relationship(back_populates="workflow")     
+    connections: List["Connection"] = Relationship(back_populates="workflow")
 
     def start_many(self, specimens: List["Specimen"], max_workers:int=10):
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -41,15 +41,16 @@ class Workflow(SQLModel, table=True):
 
     def start(self, specimen: "Specimen"):
         with Session(engine) as session:
-            session.merge(specimen)
-            session.merge(self)
+            local_specimen = session.merge(specimen)
+            workflow = session.merge(self)
 
-            for task in self.tasks:
-                task_run = TaskRun(specimen=specimen, task=task, start_date=datetime.datetime.now())
-                specimen.tasks.append(task_run)
+            for task in workflow.tasks:
+                task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now())
+                local_specimen.tasks.append(task_run)
                 session.commit()
                 
                 task_run.start()
+                session.refresh(local_specimen)
 
             #context.socketio.emit('specimen_added', specimen_id);
 
@@ -88,7 +89,12 @@ class Connection(SQLModel, table=True):
     application_key: Optional[str]
     workflow: Workflow = Relationship(back_populates="connections")
     specimen_count: Optional[int]
-    specimens: List["Specimen"] = Relationship(back_populates="input_connection")
+    specimens: List["Specimen"] = Relationship(
+        back_populates="input_connection", 
+        sa_relationship_kwargs={
+            "primaryjoin": "Connection.id==Specimen.input_connection_id",
+            "lazy": "joined"
+        })
 
 
 class Specimen(SQLModel, table=True):
@@ -107,7 +113,9 @@ class Specimen(SQLModel, table=True):
     deleted: bool = Field(default=False)
     images: List["SpecimenImage"] = Relationship(back_populates="specimen")
     tasks: List["TaskRun"] = Relationship(back_populates="specimen")
-    input_connection: Connection = Relationship(back_populates="specimens", foreign_key="Specimen.input_connection_id")
+    input_connection: Connection = Relationship(
+        back_populates="specimens", 
+        sa_relationship_kwargs=dict(foreign_keys="[Specimen.input_connection_id]"))
     
     def download(self):
         return BytesIO(requests.get(self.input_file, stream=True).content)
@@ -128,23 +136,23 @@ class TaskRun(SQLModel, table=True):
     
     def start(self):
         with Session(engine) as session:
-            session.merge(self)
+            task_run = session.merge(self)
 
-            self.status = 'Running'
+            task_run.status = 'Running'
             session.commit()
             #context.socketio.emit('specimen_task_updated', specimen_task)
             
-            module = importlib.import_module('tasks.' + self.task.func_name)
-            func = getattr(module, self.task.func_name)
+            module = importlib.import_module('tasks.' + task_run.task.func_name)
+            func = getattr(module, task_run.task.func_name)
             
             try:
-                result = func(self.specimen, **self.parameters)
-                self.end_date = datetime.datetime.now()
-                self.status = 'Success'
-                self.result = json.dumps(result)
+                result = func(task_run.specimen, **task_run.parameters)
+                task_run.end_date = datetime.now()
+                task_run.status = 'Success'
+                task_run.result = json.dumps(result)
             except Exception as ex:
-                self.status = 'Error'
-                self.result = str(ex)
+                task_run.status = 'Error'
+                task_run.result = str(ex)
 
             session.commit()
             #context.socketio.emit('specimen_task_updated', specimen_task)
