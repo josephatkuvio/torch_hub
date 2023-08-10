@@ -1,5 +1,9 @@
-﻿<article class="specimen-card @(Status.Status.StartsWith("Error") == true ? "error" : "")">
-    @if (Specimen.CardImage != null)
+﻿<article class="specimen-card @(IsError ? "error" : "")">
+    @if (IsError)
+    {
+        <ErrorIcon />
+    }
+    else if (Specimen.CardImage != null)
     {
         <img src="@Specimen.CardImage.OutputFile" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
     }
@@ -28,6 +32,14 @@
             </div>
         </div>
     }
+    else if (IsError)
+    {
+        <div class="progress">
+            <div>
+                <header>@Status.Status</header>
+            </div>
+        </div>
+    }
 </article>
 
 @inject IConfiguration Config
@@ -38,6 +50,7 @@
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; } = null!;
     TaskStatus Status = null!;
     bool IsMonitoring;
+    bool IsError => Status?.Status.StartsWith("Error") == true;
 
     record TaskStatus(string Status, DateTime StatusDate, int SuccessCount, int ErrorCount, int TotalTaskCount);
     protected override void OnInitialized()
@@ -58,7 +71,6 @@
 
     async Task UpdateStatus(SocketIOClient.SocketIOResponse response)
     {
-        Console.WriteLine("oh snap");
         Status = response.GetValue<TaskStatus>(0);
         await InvokeAsync(StateHasChanged);
     }

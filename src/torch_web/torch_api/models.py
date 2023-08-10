@@ -63,22 +63,27 @@ class Workflow(SQLModel, table=True):
             local_specimen.set_status('Starting...');
             session.commit()
             
-            for task in workflow.tasks:
+            sorted_tasks = sorted(workflow.tasks, key=lambda x: x.sort_order)
+            for task in sorted_tasks:
                 task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now(), parameters=task.parameters)
                 local_specimen.tasks.append(task_run)
                 local_specimen.set_status(f'Running {task_run.task.name}...');
                 session.commit()
                 emit(local_specimen, workflow, 'task_started');
 
-                task_run.start()
+                task_run_status = task_run.start()
                 session.refresh(local_specimen)
                 emit(local_specimen, workflow, 'task_completed');
-
-                    
-            local_specimen.set_status('Processed');
-            local_specimen.processed_date = datetime.now()
-            session.commit()
             
+                if task_run_status.startswith("Error"):
+                    local_specimen.set_status(task_run_status);
+                    break
+                    
+            if not local_specimen.status.startswith("Error"):
+                local_specimen.set_status('Processed');
+                local_specimen.processed_date = datetime.now()
+            
+            session.commit()
             emit(local_specimen, workflow, 'specimen_processed');
 
 
@@ -171,7 +176,6 @@ class TaskRun(SQLModel, table=True):
             task_run.status = 'Running'
             task_run.start_date = datetime.now()
             session.commit()
-            #context.socketio.emit('specimen_task_updated', specimen_task)
             
             module = importlib.import_module('tasks.' + task_run.task.func_name)
             func = getattr(module, task_run.task.func_name)
@@ -182,11 +186,11 @@ class TaskRun(SQLModel, table=True):
                 task_run.status = 'Success'
                 task_run.result = json.dumps(result)
             except Exception as ex:
-                task_run.status = 'Error'
+                task_run.status = 'Error: ' + task_run.task.name
                 task_run.result = str(ex)
 
             session.commit()
-            #context.socketio.emit('specimen_task_updated', specimen_task)
+            return task_run.status
 
 
 class SpecimenImage(SQLModel, table=True):

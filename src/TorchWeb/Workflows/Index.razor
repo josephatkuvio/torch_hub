@@ -126,10 +126,7 @@
 
     private void SelectBatch(Batch batch)
     {
-        if (CurrentBatch?.Id == batch?.Id)
-            CurrentBatch = null;
-        else
-            CurrentBatch = batch;
+        CurrentBatch = batch;
     }
 
     private async Task Upload(InputFileChangeEventArgs e)

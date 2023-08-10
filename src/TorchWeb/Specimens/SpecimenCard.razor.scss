@@ -96,9 +96,10 @@
     &.error {
         background: #FEF1F4;
         color: #B50021;
+        row-gap: 0rem;
 
-        h1 {
-            color: #B50021;
+        h3, span, time {
+            color: #B50021 !important;
         }
 
         .err-btn {
