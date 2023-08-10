@@ -1,4 +1,4 @@
-﻿<article class="specimen-card @(Specimen.Status?.StartsWith("Error") == true ? "error" : "")">
+﻿<article class="specimen-card @(Status.Status.StartsWith("Error") == true ? "error" : "")">
     @if (Specimen.CardImage != null)
     {
         <img src="@Specimen.CardImage.OutputFile" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
@@ -8,9 +8,26 @@
         <SpecimensIcon />
     }
     <h3>@Specimen.Name</h3>
-    <span>@Specimen.Status</span>
-    <time>@((Specimen.StatusDate ?? Specimen.CreateDate).ToString("d"))</time>
+    <span>@Specimen.BatchId</span>
+    <time>@Status.StatusDate.ToString("d")</time>
     <button class="more-btn">...</button>
+
+    @if (Status.TotalTaskCount > 0)
+    {
+        <div class="progress">
+            <progress value="@Status.SuccessCount" max="@Status.TotalTaskCount">
+                @((int)((double)Status.SuccessCount / Status.TotalTaskCount * 100))%
+            </progress>
+            <div>
+                <header>@Status.Status</header>
+                <aside>
+                    <span>Success: @Status.SuccessCount</span>
+                    <span>Errored: @Status.ErrorCount</span>
+                    <span>Not Yet Processed: @(Status.TotalTaskCount - Status.SuccessCount - Status.ErrorCount)</span>
+                </aside>
+            </div>
+        </div>
+    }
 </article>
 
 @inject IConfiguration Config
@@ -19,22 +36,31 @@
 @code {
     [Parameter] public Specimen Specimen { get; set; } = null!;
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; } = null!;
-    string? CatalogNumber;
-    DateTime? CreateDate;
-    string? Status;
+    TaskStatus Status = null!;
+    bool IsMonitoring;
 
+    record TaskStatus(string Status, DateTime StatusDate, int SuccessCount, int ErrorCount, int TotalTaskCount);
     protected override void OnInitialized()
     {
-        CatalogNumber = Specimen.CatalogNumber;
-        CreateDate = Specimen.CreateDate;
+        Status = new(Specimen.Status ?? "", Specimen.StatusDate ?? Specimen.CreateDate, 0, 0, 0);
+    }
 
-        //Socket.On($"specimen_updated_{Specimen.Id}", (response) =>
-        //{
-        //    CatalogNumber = response.GetValue<string>(0);
-        //    CreateDate = response.GetValue<DateTime>(0);
-        //    Status = response.GetValue<string>(1);
-        //    StateHasChanged();
-        //});
+    protected override void OnParametersSet()
+    {
+        if (!IsMonitoring && Socket != null && Specimen.ProcessedDate == null)
+        {
+            IsMonitoring = true;
+            Socket.On($"task_started_{Specimen.Id}", async (response) => await UpdateStatus(response));
+            Socket.On($"task_completed_{Specimen.Id}", async (response) => await UpdateStatus(response));
+            Socket.On($"specimen_processed_{Specimen.Id}", async (response) => await UpdateStatus(response));
+        }
+    }
+
+    async Task UpdateStatus(SocketIOClient.SocketIOResponse response)
+    {
+        Console.WriteLine("oh snap");
+        Status = response.GetValue<TaskStatus>(0);
+        await InvokeAsync(StateHasChanged);
     }
 
     //void Go() => Nav.NavigateTo($"/collections/{Specimen}/{Specimen.Id}");

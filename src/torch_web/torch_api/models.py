@@ -15,8 +15,17 @@ from .database import engine
 from .socket import sio as socketio
 
 
-def emit(specimen, event, data):
+def emit(specimen: "Specimen", workflow: "Workflow", event):
+    data = { 
+        'Status': specimen.status, 
+        'StatusDate': specimen.status_date.isoformat(), 
+        'SuccessCount': len([task for task in specimen.tasks if task.status == 'Success']),
+        'ErrorCount': len([task for task in specimen.tasks if task.status == 'Error']),
+        'TotalTaskCount': len(workflow.tasks)
+    }
+    
     asyncio.run(socketio.emit(event, data, [specimen.batch_id, f'workflow-{specimen.input_connection.workflow_id}']))
+    asyncio.run(socketio.emit(f'{event}_{specimen.id}', data, [specimen.batch_id, f'workflow-{specimen.input_connection.workflow_id}']))
 
      
 class Institution(SQLModel, table=True):
@@ -51,25 +60,26 @@ class Workflow(SQLModel, table=True):
             local_specimen = session.merge(specimen)
             workflow = session.merge(self)
 
-            local_specimen.set_status('Processing');
+            local_specimen.set_status('Starting...');
             session.commit()
             
             for task in workflow.tasks:
                 task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now(), parameters=task.parameters)
                 local_specimen.tasks.append(task_run)
+                local_specimen.set_status(f'Running {task_run.task.name}...');
                 session.commit()
-                emit(local_specimen, 'task_started', { "id": local_specimen.id, "status": local_specimen.status });
+                emit(local_specimen, workflow, 'task_started');
 
                 task_run.start()
                 session.refresh(local_specimen)
-                emit(local_specimen, 'task_completed', { "id": local_specimen.id, "status": local_specimen.status });
+                emit(local_specimen, workflow, 'task_completed');
 
                     
             local_specimen.set_status('Processed');
             local_specimen.processed_date = datetime.now()
             session.commit()
             
-            emit(local_specimen, 'specimen_processed', { "id": local_specimen.id, "status": local_specimen.status });
+            emit(local_specimen, workflow, 'specimen_processed');
 
 
 class CatalogTask(SQLModel):

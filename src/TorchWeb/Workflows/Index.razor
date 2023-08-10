@@ -4,69 +4,68 @@
 @using Torch.Web.Tasks
 @using Torch.Web.Pages
 
+<CascadingValue Value="Socket">
+    <section class="new-ui-section @(summaryCollapsed ? "collapsed" : "")">
+        <section class="tab-section">
+            <div class="tab-and-select">
+                <ul class="tab-list">
+                    <li class="tab-item first-icon @(activeTab == "workflow" ? "active" : "")" @onclick='() => ChangeTab("workflow")'>
+                        <a class='tab-link'>
+                            <img src="/images/Flowchart.svg" />
+                        </a>
+                    </li>
+                    <li class="tab-item @(activeTab == "tasks" ? "active" : "")" @onclick='() => ChangeTab("tasks")'>
+                        <a class='tab-link'>
+                            <img src="/images/ProgressIcon.svg" />
+                        </a>
+                    </li>
+                    <li class="tab-item @(activeTab == "settings" ? "active" : "")" @onclick='() => ChangeTab("settings")'>
+                        <a class='tab-link'>
+                            <img src="/images/ManageIcon.svg" />
+                        </a>
+                    </li>
+                </ul>
 
-<section class="new-ui-section @(summaryCollapsed ? "collapsed" : "")">
-    <section class="tab-section">
-        <div class="tab-and-select">
-            <ul class="tab-list">
-                <li class="tab-item first-icon @(activeTab == "workflow" ? "active" : "")" @onclick='() => ChangeTab("workflow")'>
-                    <a class='tab-link'>
-                        <img src="/images/Flowchart.svg" />
-                    </a>
-                </li>
-                <li class="tab-item @(activeTab == "tasks" ? "active" : "")" @onclick='() => ChangeTab("tasks")'>
-                    <a class='tab-link'>
-                        <img src="/images/ProgressIcon.svg" />
-                    </a>
-                </li>
-                <li class="tab-item @(activeTab == "settings" ? "active" : "")" @onclick='() => ChangeTab("settings")'>
-                    <a class='tab-link'>
-                        <img src="/images/ManageIcon.svg" />
-                    </a>
-                </li>
-            </ul>
+                @if (CurrentWorkflow != null)
+                {
+                    <WorkflowSwitcher SelectedWorkflow=CurrentWorkflow SelectedWorkflowIdChanged="HandleSelectedWorkflowChange" />
+                }
+                <Logout />
+            </div>
 
             @if (CurrentWorkflow != null)
             {
-                <WorkflowSwitcher SelectedWorkflow=CurrentWorkflow SelectedWorkflowIdChanged="HandleSelectedWorkflowChange" />
+                <section class="tab-content">
+                    @if (activeTab == "workflow")
+                    {
+                        <WorkflowDetail @ref=DetailComponent Workflow ="CurrentWorkflow" OnBatchSelect="SelectBatch" />
+                    }
+                    else if (activeTab == "tasks")
+                    {
+                        <TaskList Workflow="CurrentWorkflow" />
+                    }
+                    else if (activeTab == "settings" && !showDetail)
+                    {
+                        <NewUIManageWorkflow OnContentClick="ToggleShowDetail" />
+                    }
+                    else if (activeTab == "settings" && showDetail)
+                    {
+                        <NewUIWorkflowDetail OnBackClick="ToggleShowDetail" />
+                    }
+                </section>
             }
-            <Logout />
-        </div>
+        </section>
 
-        @if (CurrentWorkflow != null)
-        {
-            <section class="tab-content">
-                @if (activeTab == "workflow")
-                {
-                    <WorkflowDetail Workflow="CurrentWorkflow" OnBatchSelect="SelectBatch" />
-                }
-                else if (activeTab == "tasks")
-                {
-                    <TaskList Workflow="CurrentWorkflow" />
-                }
-                else if (activeTab == "settings" && !showDetail)
-                {
-                    <NewUIManageWorkflow OnContentClick="ToggleShowDetail" />
-                }
-                else if (activeTab == "settings" && showDetail)
-                {
-                    <NewUIWorkflowDetail OnBackClick="ToggleShowDetail" />
-                }
-            </section>
-        }
-    </section>
-
-    <section class="tab-section summary-section">
-        <ul class="tab-list">
-            <li class="tab-item summary active" @onclick="ToggleSummary">
-                <a class="tab-link" name="summary">
-                    <img src="/images/summaryIcon.svg" />
-                </a>
-            </li>
-        </ul>
-        @if (CurrentWorkflow != null && Socket?.Connected == true)
-        {
-            <CascadingValue Value="Socket">
+        <section class="tab-section summary-section">
+            <ul class="tab-list">
+                <li class="tab-item summary active" @onclick="ToggleSummary">
+                    <a class="tab-link" name="summary">
+                        <img src="/images/summaryIcon.svg" />
+                    </a>
+                </li>
+            </ul>
+            @if (CurrentWorkflow != null && Socket?.Connected == true)
+            {
                 <section class="tab-content collapsed-summary-tab-content">
                     @if (!summaryCollapsed)
                     {
@@ -77,15 +76,14 @@
                         <NewUICollapsedSummary />
                     }
                 </section>
-            </CascadingValue>
-            <label for="files">
-                Upload Specimens
-            </label>
-            <InputFile id="files" @key=NewBatchId OnChange="Upload" multiple accept="image/*,.dng" />
-        }
+                <label for="files">
+                    Upload Specimens
+                </label>
+                <InputFile id="files" @key=NewBatchId OnChange="Upload" multiple accept="image/*,.dng" />
+            }
+        </section>
     </section>
-
-</section>
+</CascadingValue>
 
 @inject IConfiguration Config
 @inject IWebHostEnvironment Env
@@ -96,6 +94,7 @@
     Workflow? CurrentWorkflow;
     Batch? CurrentBatch;
     WorkflowSummary? SummaryComponent;
+    WorkflowDetail? DetailComponent;
     public SocketIOClient.SocketIO Socket { get; set; } = null!;
 
     private string activeTab = "workflow";
@@ -112,9 +111,9 @@
 
         User.SetCurrentWorkflow(CurrentWorkflow!);
         Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"], new SocketIOClient.SocketIOOptions
-        {
-            Path = "/ws/socket.io"
-        });
+            {
+                Path = "/ws/socket.io"
+            });
         await Socket.ConnectAsync();
 
         NewBatchId = Batch.NewId(Env.ContentRootPath);
@@ -140,6 +139,7 @@
 
         await SummaryComponent!.Upload(e);
         CurrentWorkflow = await Workflows.FindAsync(CurrentWorkflow!.Id);
+        await DetailComponent!.Go(CurrentBatch);
         NewBatchId = Batch.NewId(Env.ContentRootPath);
     }
 

@@ -95,7 +95,7 @@ else
             .ToList();
     }
 
-    async Task Go(Batch batch)
+    public async Task Go(Batch batch)
     {
         ActiveBatch = batch;
         AllSpecimens = Specimens.Query
