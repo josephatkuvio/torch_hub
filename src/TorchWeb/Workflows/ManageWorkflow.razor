@@ -33,7 +33,16 @@
                     No connections found. Add connections to manage your workflow.
                 </aside>
             }
+        </section>
 
+        <section class="workflow-users">
+            <h2>Workflow Users</h2>
+            <ul>
+                @foreach (var workflowUser in Workflow.Users)
+                {
+                    <li>@workflowUser.User.FirstName @workflowUser.User.LastName - @workflowUser.User.Email</li>
+                }
+            </ul>
         </section>
     }
     else
@@ -42,10 +51,8 @@
     }
 </section>
 
-
-
-
 @code {
+    [Parameter] public User User { get; set; } = null!;
     Connection? SelectedConnection;
 
     [Parameter] public Workflow Workflow { get; set; } = null!;
