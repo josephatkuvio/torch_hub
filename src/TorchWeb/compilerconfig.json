@@ -54,5 +54,9 @@
   {
     "outputFile": "Workflows/ManageWorkflowDetail.razor.css",
     "inputFile": "Workflows/ManageWorkflowDetail.razor.scss"
+  },
+  {
+    "outputFile": "Connections/ConnectionModal.razor.css",
+    "inputFile": "Connections/ConnectionModal.razor.scss"
   }
 ]

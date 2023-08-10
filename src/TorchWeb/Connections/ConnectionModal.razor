@@ -1,0 +1,52 @@
+﻿@inherits SparcModal
+
+<div class="connection-library">
+
+    <header>
+        <div class="top-text">
+            <img src="/images/calendarIcon.svg" />
+            <h1>Recently Used Connection</h1>
+        </div>
+        <div class="bottom-text">
+            <h4>Apply previously used workflow settings. The workflow library stores history for up to [n] days.</h4>
+        </div>
+    </header>
+
+    <div class="container-body">
+        @*@if (Connections != null)
+        {*@
+        <table>
+            <tr>
+                <th>Connection Name</th>
+                <th>Institution Name</th>
+                <th>Created</th>
+                <th>Action</th>
+            </tr>
+            @*@foreach (var connection in Connections)
+            {*@
+            <tr class="table-content">
+                <td>Connection Name</td>
+                <td>Institution Name</td>
+                <td>08/04/2023</td>
+                <td class="btn"><button>Apply Connection</button></td>
+            </tr>
+
+            <tr class="table-content">
+                <td>Connection Name</td>
+                <td>Institution Name</td>
+                <td>09/04/2023</td>
+                <td class="btn"><button>Apply Connection</button></td>
+            </tr>
+            @*}*@
+        </table>
+        @*}*@
+    </div>
+
+    <button class="close-btn" @onclick=Cancel>Close</button>
+</div>
+
+
+
+
+@code {
+}

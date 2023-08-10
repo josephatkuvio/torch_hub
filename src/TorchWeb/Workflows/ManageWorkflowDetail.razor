@@ -33,7 +33,7 @@
                     <h1>Would you like to view previous workflow settings?</h1>
                 </div>
                 <div class="right">
-                    <button class="more-btn">Open Library</button>
+                    <button class="more-btn" @onclick="OpenConnectionLibraryModal">Open Library</button>
                 </div>
             </article>
         </section>
@@ -92,9 +92,7 @@
 </section>
 
 
-
-
-
+@inject IModalService Modal
 @code {
     [Parameter] public Connection? SelectedConnection { get; set; }
     [Parameter] public EventCallback OnDetailBackClick { get; set; }
@@ -110,5 +108,11 @@
     private void TogglePasswordVisibility()
     {
         showPassword = !showPassword;
+    }
+
+    async Task OpenConnectionLibraryModal()
+    {
+        var modal = Modal.Show<ConnectionModal>();
+        await modal.Result;
     }
 }
