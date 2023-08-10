@@ -81,4 +81,5 @@ button.tiny svg, button.tiny img {
 
 .custom-modal {
   width: 627px;
+  transform: translate(60%, 0%);
 }
