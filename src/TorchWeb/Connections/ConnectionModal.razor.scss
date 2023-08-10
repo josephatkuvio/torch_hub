@@ -1,3 +1,7 @@
+.connection-library {
+    overflow-y: auto;
+}
+
 header {
     display: flex;
     flex-direction: column;
@@ -36,17 +40,33 @@ header {
 
     th, td {
         border-bottom: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
         vertical-align: baseline;
     }
+
+    th:not(:first-child) {
+        text-align: center;
+    }
+
 
     th {
         border-top: 1px solid #ddd;
         font-size: 12px;
         color: #8D95BA;
         font-weight: 400;
+        padding: 16px 8px;
     }
+
+    td:first-child,
+    td:last-child {
+        text-align: left;
+        padding: 24px 0px 24px 0px;
+    }
+
+    td:not(:first-child):not(:last-child) {
+        text-align: center;
+        padding: 24px 16px 24px 16px;
+    }
+
 
     td {
         font-size: 14px;
@@ -56,6 +76,8 @@ header {
 
     .btn {
         text-align: center;
+        display: flex;
+        justify-content: center;
     }
 
     .btn button {

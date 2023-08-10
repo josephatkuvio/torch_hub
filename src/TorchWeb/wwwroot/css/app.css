@@ -78,3 +78,7 @@ button.tiny svg, button.tiny img {
   background: #7f56d9;
   border-radius: 10px;
 }
+
+.custom-modal {
+  width: 627px;
+}

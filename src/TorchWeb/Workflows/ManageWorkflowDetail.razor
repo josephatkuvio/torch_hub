@@ -103,16 +103,24 @@
     private async Task HandleBackClick()
     {
         await OnDetailBackClick.InvokeAsync();
-    }    
+    }
 
     private void TogglePasswordVisibility()
     {
         showPassword = !showPassword;
     }
 
+
     async Task OpenConnectionLibraryModal()
     {
-        var modal = Modal.Show<ConnectionModal>();
+        var options = new ModalOptions()
+            {
+                HideHeader = true,
+                Position = ModalPosition.TopCenter,
+                Size = ModalSize.Custom,
+                SizeCustomClass = "custom-modal"
+            };
+        var modal = Modal.Show<ConnectionModal>("", options);
         await modal.Result;
     }
 }
