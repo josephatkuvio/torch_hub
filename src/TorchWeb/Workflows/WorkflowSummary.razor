@@ -1,5 +1,9 @@
 ﻿<header class="workflow-header">
     <h1>Summary</h1>
+    @if (Batch != null)
+    {
+        <aside>@Batch.Id</aside>
+    }
 </header>
 
 <div class="divider"></div>
@@ -64,6 +68,7 @@
 
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
+    [Parameter] public Batch? Batch { get; set; }
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; } = null!;
 
     int UploadCount;
@@ -79,13 +84,11 @@
 
     int HoursLeft => 1;
     int MinutesLeft => 30;
-    string BatchId = Guid.NewGuid().ToString();
     List<Specimen> SpecimenQueue = new();
+    string? MonitoringBatchId;
 
     protected override async Task OnInitializedAsync()
     {
-        await Socket.EmitAsync("monitor_workflow", Workflow.Id);
-
         Socket.On("task_completed", async (data) =>
         {
             TaskCount++;
@@ -99,15 +102,26 @@
         });
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
+        var newMonitoringBatchId = Batch?.Id ?? $"workflow-{Workflow.Id}";
+
+        if (newMonitoringBatchId != MonitoringBatchId)
+        {
+            if (MonitoringBatchId != null)
+                await Socket.EmitAsync("leave_batch", MonitoringBatchId);
+            
+            MonitoringBatchId = newMonitoringBatchId;
+            await Socket.EmitAsync("monitor_batch", newMonitoringBatchId);
+        }
+        
         RefreshCounts();
     }
 
     void RefreshCounts()
     {
         var query = Specimens.Query
-            .Where(x => x.InputConnectionId == Workflow.InputConnection!.Id)
+            .Where(x => x.InputConnectionId == Workflow.InputConnection!.Id && (Batch == null || x.BatchId == Batch.Id))
             .GroupBy(x => x.InputConnectionId)
             .Select(x => new
             {
@@ -124,12 +138,12 @@
 
     public async Task Upload(InputFileChangeEventArgs e)
     {
-        if (Workflow?.InputConnection == null)
+        if (Workflow?.InputConnection == null || Batch == null)
             return;
 
         foreach (var file in e.GetMultipleFiles(10000))
         {
-            SpecimenQueue.Add(new Specimen(Workflow.InputConnection.Id, BatchId, file));
+            SpecimenQueue.Add(new Specimen(Workflow.InputConnection.Id, Batch.Id, file));
         }
 
         StateHasChanged();
@@ -142,9 +156,7 @@
             StateHasChanged();
         }
 
-        await TorchApi.StartWorkflowAsync(Workflow.Id, BatchId);
-
-        BatchId = Guid.NewGuid().ToString();
+        await TorchApi.StartWorkflowAsync(Workflow.Id, Batch.Id);
         SpecimenQueue.Clear();
     }
 }

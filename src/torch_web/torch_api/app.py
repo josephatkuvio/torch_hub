@@ -59,9 +59,15 @@ def specimens_update_external_url(collection_id:int, specimens: list[Specimen]):
 
 
 @sio.event
-def monitor_workflow(sid, workflow_id):
-    print(f'{sid} entering room {workflow_id}')
-    sio.enter_room(sid, f'workflow-{workflow_id}')
+def monitor_batch(sid, batch_id):
+    print(f'{sid} monitoring batch {batch_id}')
+    sio.enter_room(sid, batch_id)
+
+
+@sio.event
+def leave_batch(sid, batch_id):
+    print(f'{sid} leaving batch {batch_id}')
+    sio.leave_room(sid, batch_id)
 
 
 def main():

@@ -118,4 +118,23 @@ section {
     .full .spec-cards {
         max-height: 600px;
     }
+
+    .full > header {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 0.87rem;
+        button {
+            background: transparent;
+            color: var(--grey-900);
+            border: 1px solid var(--grey-900);
+            padding: 0.1rem 0.5rem;
+            font-size: 12px;
+            margin-top: 3px;
+            &:hover {
+                background: var(--grey-200);
+            }
+        }
+    }
 }
+

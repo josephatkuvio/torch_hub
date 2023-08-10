@@ -15,8 +15,8 @@ from .database import engine
 from .socket import sio as socketio
 
 
-def emit(workflow_id, event, data):
-    asyncio.run(socketio.emit(event, data, f'workflow-{workflow_id}'))
+def emit(specimen, event, data):
+    asyncio.run(socketio.emit(event, data, [specimen.batch_id, f'workflow-{specimen.input_connection.workflow_id}']))
 
      
 class Institution(SQLModel, table=True):
@@ -58,18 +58,18 @@ class Workflow(SQLModel, table=True):
                 task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now(), parameters=task.parameters)
                 local_specimen.tasks.append(task_run)
                 session.commit()
-                emit(local_specimen.input_connection.workflow_id, 'task_started', { "id": local_specimen.id, "status": local_specimen.status });
+                emit(local_specimen, 'task_started', { "id": local_specimen.id, "status": local_specimen.status });
 
                 task_run.start()
                 session.refresh(local_specimen)
-                emit(local_specimen.input_connection.workflow_id, 'task_completed', { "id": local_specimen.id, "status": local_specimen.status });
+                emit(local_specimen, 'task_completed', { "id": local_specimen.id, "status": local_specimen.status });
 
                     
             local_specimen.set_status('Processed');
             local_specimen.processed_date = datetime.now()
             session.commit()
             
-            emit(local_specimen.input_connection.workflow_id, 'specimen_processed', { "id": local_specimen.id, "status": local_specimen.status });
+            emit(local_specimen, 'specimen_processed', { "id": local_specimen.id, "status": local_specimen.status });
 
 
 class CatalogTask(SQLModel):

@@ -3,7 +3,7 @@ using Torch.Web.Institutions;
 
 namespace Torch.Web.Workflows;
 
-public class Workflow : Entity<int>
+public partial class Workflow : Entity<int>
 {
     public Workflow(int institutionId, string name, string description)
     {

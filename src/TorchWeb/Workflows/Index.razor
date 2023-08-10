@@ -38,7 +38,7 @@
             <section class="tab-content">
                 @if (activeTab == "workflow")
                 {
-                    <WorkflowDetail Workflow="CurrentWorkflow" OnUpload="Upload" />
+                    <WorkflowDetail Workflow="CurrentWorkflow" OnBatchSelect="SelectBatch" />
                 }
                 else if (activeTab == "tasks")
                 {
@@ -70,7 +70,7 @@
                 <section class="tab-content collapsed-summary-tab-content">
                     @if (!summaryCollapsed)
                     {
-                        <WorkflowSummary @ref=SummaryComponent Workflow="CurrentWorkflow" />
+                        <WorkflowSummary @ref=SummaryComponent Workflow="CurrentWorkflow" Batch="CurrentBatch" />
                     }
                     else
                     {
@@ -78,23 +78,30 @@
                     }
                 </section>
             </CascadingValue>
+            <label for="files">
+                Upload Specimens
+            </label>
+            <InputFile id="files" @key=NewBatchId OnChange="Upload" multiple accept="image/*,.dng" />
         }
     </section>
 
 </section>
 
 @inject IConfiguration Config
+@inject IWebHostEnvironment Env
 @code {
     [CascadingParameter] public User User { get; set; } = null!;
     [Parameter] public int? WorkflowId { get; set; }
 
     Workflow? CurrentWorkflow;
+    Batch? CurrentBatch;
     WorkflowSummary? SummaryComponent;
     public SocketIOClient.SocketIO Socket { get; set; } = null!;
 
     private string activeTab = "workflow";
     private bool showDetail = false;
     private bool summaryCollapsed = false;
+    private string NewBatchId = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -109,6 +116,8 @@
             Path = "/ws/socket.io"
         });
         await Socket.ConnectAsync();
+
+        NewBatchId = Batch.NewId(Env.ContentRootPath);
     }
 
     private void HandleSelectedWorkflowChange(int newWorkflowId)
@@ -116,7 +125,23 @@
         Nav.NavigateTo($"/Workflows/{newWorkflowId}", true);
     }
 
-    private async Task Upload(InputFileChangeEventArgs e) => await SummaryComponent!.Upload(e);
+    private void SelectBatch(Batch batch)
+    {
+        if (CurrentBatch?.Id == batch?.Id)
+            CurrentBatch = null;
+        else
+            CurrentBatch = batch;
+    }
+
+    private async Task Upload(InputFileChangeEventArgs e)
+    {
+        CurrentBatch = new(NewBatchId, DateTime.UtcNow, 0);
+        StateHasChanged();
+
+        await SummaryComponent!.Upload(e);
+        CurrentWorkflow = await Workflows.FindAsync(CurrentWorkflow!.Id);
+        NewBatchId = Batch.NewId(Env.ContentRootPath);
+    }
 
     private void ChangeTab(string tabName)
     {
