@@ -15,6 +15,12 @@
             {
                 <TaskCard Task="task" OnDelete="Delete" OnReorder="Reorder" />
             }
+            @if (!Workflow.Tasks.Any())
+            {
+                <aside>
+                    Choose tasks from the right side to begin setting up your workflow.
+                </aside>
+            }
         </section>
     </section>
 

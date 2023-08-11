@@ -23,10 +23,10 @@
             {
                 <BatchCard Batch="batch" OnClick=Go />
             }
-            @if (!Workflow.Connections.Any())
+            @if (!RecentBatches.Any())
             {
                 <aside>
-                    No recent batches found for this workflow. Upload specimens to automatically start your first batch.
+                    No recent batches found for this workflow. Upload specimens to start your first batch.
                 </aside>
             }
         </section>
@@ -42,6 +42,12 @@
             @foreach (var specimen in RecentSpecimens)
             {
                 <SpecimenCard Specimen="specimen" />
+            }
+            @if (!RecentSpecimens.Any())
+            {
+                <aside>
+                    No recently processed specimens found for this workflow. Upload specimens to start your first batch.
+                </aside>
             }
         </section>
     </section>
