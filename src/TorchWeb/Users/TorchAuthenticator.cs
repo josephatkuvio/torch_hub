@@ -45,23 +45,17 @@ public class TorchAuthenticator
                     user = new(auth.User);
                     user.AddIdentity(providerName, providerId);
                     await Users.AddAsync(user);
+
+                    var workflow = user.CreateDefaultWorkflow();
+                    await Users.UpdateAsync(user);
+
+                    await workflow.InputConnection!.InitializeAsync();
                 }
                 else
                 {
                     user.AddIdentity(providerName, providerId);
                     await Users.UpdateAsync(user);
                 }
-            }
-
-            if (user.CurrentWorkflowId == null)
-            {
-                var workflow = await user.CreateDefaultWorkflowAsync();
-                await Workflows.UpdateAsync(workflow);
-                user.SetCurrentWorkflow(workflow);
-            }
-            else
-            {
-                user.SetCurrentWorkflow(user.CurrentWorkflow!);
             }
 
             await Users.ExecuteAsync(user, u => u.Login());

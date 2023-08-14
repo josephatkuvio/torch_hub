@@ -52,7 +52,7 @@ public class User : Entity<int>
         CurrentWorkflowId = workflow.Id;
         
         if (!WorkflowUsers.Any(x => x.WorkflowId == workflow.Id))
-            WorkflowUsers.Add(new(workflow.Id, Id, "Admin"));
+            WorkflowUsers.Add(new(workflow, this, "Admin"));
     }
 
     public bool IsInRole(string role, int workflowId) => WorkflowUsers.Any(x => x.WorkflowId == workflowId && x.Role == role);
@@ -62,7 +62,7 @@ public class User : Entity<int>
         LastLoginDate = DateTime.UtcNow;
     }
 
-    internal async Task<Workflow> CreateDefaultWorkflowAsync()
+    internal Workflow CreateDefaultWorkflow()
     {
         if (CurrentWorkflow != null)
             return CurrentWorkflow;
@@ -76,7 +76,7 @@ public class User : Entity<int>
         workflow.Connections.Add(new AzureBlobConnection(workflow, "Input"));
         workflow.Connections.Add(new AzureBlobConnection(workflow, "Output"));
 
-        await workflow.InputConnection!.InitializeAsync();
+        SetCurrentWorkflow(workflow);
 
         return workflow;
     }

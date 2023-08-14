@@ -102,14 +102,21 @@
     private bool summaryCollapsed = false;
     private string NewBatchId = "";
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         WorkflowId ??= User.CurrentWorkflowId;
+        if (CurrentWorkflow != null && CurrentWorkflow.Id == WorkflowId)
+            return;
 
         if (CurrentWorkflow == null && WorkflowId != null)
             CurrentWorkflow = await Workflows.FindAsync(WorkflowId);
 
-        User.SetCurrentWorkflow(CurrentWorkflow!);
+        if (CurrentWorkflow != null && User.CurrentWorkflowId != CurrentWorkflow.Id)
+        {
+            User.SetCurrentWorkflow(CurrentWorkflow!);
+            await Users.UpdateAsync(User);
+        }
+        
         Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"], new SocketIOClient.SocketIOOptions
             {
                 Path = "/ws/socket.io"
