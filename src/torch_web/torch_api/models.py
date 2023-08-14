@@ -11,8 +11,8 @@ from io import BytesIO
 from typing import Optional
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship, Session, Column, JSON
-from .database import engine
-from .socket import sio as socketio
+from torch_api.database import engine
+from torch_api.socket import sio as socketio
 
 
 def emit(specimen: "Specimen", workflow: "Workflow", event):
