@@ -24,7 +24,7 @@ async def tasks_getall() -> list[CatalogTask]:
         for module in os.listdir(os.path.dirname(__file__) + '/tasks'):
             if module == '__init__.py' or module[-3:] != '.py':
                 continue
-            __import__('tasks.' + module[:-3], locals(), globals())
+            __import__('torch_api.tasks.' + module[:-3], locals(), globals())
         del module
 
         tasks = get_all_tasks()
