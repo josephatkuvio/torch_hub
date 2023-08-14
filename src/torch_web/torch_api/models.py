@@ -177,7 +177,7 @@ class TaskRun(SQLModel, table=True):
             task_run.start_date = datetime.now()
             session.commit()
             
-            module = importlib.import_module('tasks.' + task_run.task.func_name)
+            module = importlib.import_module('torch_api.tasks.' + task_run.task.func_name)
             func = getattr(module, task_run.task.func_name)
             
             try:
