@@ -1,4 +1,4 @@
-﻿<article class="specimen-card @(IsError ? "error" : "")">
+﻿<article class="specimen-card @(IsError ? "error" : "")" @onclick=ViewDetail>
     @if (IsError)
     {
         <ErrorIcon />
@@ -44,6 +44,7 @@
 
 @inject IConfiguration Config
 @inject IJSRuntime JS
+@inject IModalService Modal
 
 @code {
     [Parameter] public Specimen Specimen { get; set; } = null!;
@@ -67,6 +68,17 @@
             Socket.On($"task_completed_{Specimen.Id}", async (response) => await UpdateStatus(response));
             Socket.On($"specimen_processed_{Specimen.Id}", async (response) => await UpdateStatus(response));
         }
+    }
+
+    async Task ViewDetail()
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("Specimen", Specimen);
+        var options = new ModalOptions();
+        options.Size = ModalSize.Automatic;
+
+        var modal = Modal.Show<SpecimenDetail>(Specimen.Name, parameters, options);
+        await modal.Result;
     }
 
     async Task UpdateStatus(SocketIOClient.SocketIOResponse response)

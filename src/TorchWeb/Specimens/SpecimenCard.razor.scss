@@ -8,6 +8,11 @@
     padding: 1rem 2rem;
     margin: 0.81rem 0;
 
+    &:hover {
+        border: 1px solid var(--grey-400);
+        cursor: pointer;
+    }
+
     > img, > svg {
         width: 32px;
         height: 32px;

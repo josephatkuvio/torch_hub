@@ -8,7 +8,7 @@ article {
 
     &:hover {
         cursor: pointer;
-        background: #F8F9FD;
+        border-color: var(--grey-400);
     }
 
     > img {

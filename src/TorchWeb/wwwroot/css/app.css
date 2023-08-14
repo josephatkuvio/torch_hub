@@ -67,6 +67,9 @@ button.tiny svg, button.tiny img {
   height: 0.9375rem;
   margin: 0;
 }
+button.bm-close span {
+  color: var(--grey-900);
+}
 
 ::-webkit-scrollbar {
   width: 4px;

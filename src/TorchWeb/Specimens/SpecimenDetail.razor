@@ -1,43 +1,90 @@
-﻿@page "/collections/{CollectionId:int}/{SpecimenId:int}"
+﻿@using Microsoft.EntityFrameworkCore;
+@inherits SparcModal
 
 <div class="specimen-detail">
     @if (FullSpecimen != null)
     {
         <section class="tasks">
-            @foreach (var task in FullSpecimen.TaskRuns.OrderBy(x => x.StartDate))
+            @foreach (var run in FullSpecimen.TaskRuns.OrderBy(x => x.StartDate))
             {
-                <TaskCard TaskRun="task"  />
+                var derivatives = run.To<Dictionary<string, Derivative>>("Generate Derivatives");
+                var json = run.ResultJson();
+                <article>
+                    <header>
+                        <TaskCard Task="run.Task" />
+                    </header>
+                    <footer>
+                        @if (derivatives != null)
+                        {
+                            <div class="images">
+                                @foreach (var key in derivatives.Keys)
+                                {
+                                    var img = derivatives[key];
+                                    <figure @onclick="@(() => Select(key))">
+                                        <img src="@img!.url" alt="@key" />
+                                        <figcaption>
+                                            @key (@img.width x @img.height)
+                                        </figcaption>
+                                    </figure>
+                                }
+                            </div>
+                        }
+                        else if (json != null)
+                        {
+                            <dl class="results">
+                                @foreach (var item in json.RootElement.EnumerateObject())
+                                {
+                                    <dt>@item.Name</dt>
+                                    @if (item.Value.ToString()?.StartsWith("http") == true)
+                                    {
+                                        <dd>
+                                            <a href="@item.Value.ToString()" target="_blank">@item.Value</a>
+                                        </dd>
+                                    }
+                                    else
+                                    {
+                                        <dd>
+                                            @item.Value
+                                        </dd>
+                                    }
+                                }
+                            </dl>
+                        }
+                        else
+                        {
+                            <aside>@run.Result</aside>
+                        }
+                    </footer>
+                </article>
             }
         </section>
         <figure>
-            @if (ImageUrl != null)
-            {
-                <img src="@SelectedImageUrl" alt="@FullSpecimen.CatalogNumber" />
-            }
+            <img src="@LargeImageSource" alt="@LargeImageAlt" />
         </figure>
     }
 </div>
 
 @inject IConfiguration Config
 @code {
-    [Parameter] public int CollectionId { get; set; }
-    [Parameter] public int SpecimenId { get; set; }
-    [Parameter] public Specimen? Specimen { get; set; }
+    [Parameter] public Specimen Specimen { get; set; } = null!;
     SpecimenImage? SelectedImage;
     Specimen? FullSpecimen;
+    record Derivative(string url, int width, int height);
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        FullSpecimen = Specimen == null
-            ? await Specimens.FindAsync(SpecimenId)
-            : await Specimens.FindAsync(Specimen.Id);
-
-        SelectedImage = FullSpecimen!.Images.FirstOrDefault();
+        FullSpecimen = Specimens.Query
+            .Include(x => x.Images)
+            .Include(x => x.TaskRuns)
+            .ThenInclude(x => x.Task)
+            .FirstOrDefault(x => x.Id == Specimen.Id);
     }
 
-    string? ImageUrl => FullSpecimen!.CardImage?.AbsoluteUrl(Config["Blossom:Authority"]);
+    string LargeImageSource => SelectedImage?.OutputFile ?? Specimen.InputFile;
+    string LargeImageAlt => SelectedImage?.Size ?? Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d");
 
-    string? SelectedImageUrl => SelectedImage?.OutputFile ?? ImageUrl;
-
-    void Select(SpecimenImage img) => SelectedImage = img;
+    void Select(string key)
+    {
+        SelectedImage = Specimen.Images.FirstOrDefault(x => x.Size == key);
+    }
 }

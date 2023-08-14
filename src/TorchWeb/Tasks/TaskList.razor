@@ -13,7 +13,7 @@
         <section class="workflow-cards">
             @foreach (var task in Workflow.Tasks.OrderBy(x => x.SortOrder))
             {
-                <TaskCard Task="task" OnDelete="Delete" OnReorder="Reorder" />
+                <TaskCard Task="task" OnDelete="Delete" OnReorder="Reorder" IsEditable=true />
             }
             @if (!Workflow.Tasks.Any())
             {
