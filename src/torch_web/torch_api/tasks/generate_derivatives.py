@@ -8,7 +8,7 @@ from typing import Optional
 from PIL import Image
 from io import BytesIO
 from datetime import datetime
-from torch_tasks import torch_task
+from torch_api.torch_tasks import torch_task
 from torch_api.models import Specimen, SpecimenImage
 from azure.storage.blob import BlobServiceClient
 

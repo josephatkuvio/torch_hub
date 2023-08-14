@@ -1,7 +1,7 @@
 from ctypes import ArgumentError
 import re
 from torch_api.models import Specimen
-from torch_tasks import torch_task
+from torch_api.torch_tasks import torch_task
 
 @torch_task("Extract Catalog Number")
 def check_catalog_number(specimen: Specimen, catalog_number_regex, catalog_group_name='catNum'):

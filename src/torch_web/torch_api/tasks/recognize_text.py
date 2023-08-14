@@ -1,4 +1,4 @@
-from torch_tasks import torch_task
+from torch_api.torch_tasks import torch_task
 from torch_api.models import Specimen
 
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
