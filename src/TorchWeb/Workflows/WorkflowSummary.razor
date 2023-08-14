@@ -110,11 +110,11 @@
         {
             if (MonitoringBatchId != null)
                 await Socket.EmitAsync("leave_batch", MonitoringBatchId);
-            
+
             MonitoringBatchId = newMonitoringBatchId;
             await Socket.EmitAsync("monitor_batch", newMonitoringBatchId);
         }
-        
+
         RefreshCounts();
     }
 
@@ -147,6 +147,8 @@
         }
 
         StateHasChanged();
+
+        await Workflow.InputConnection.InitializeAsync();
 
         foreach (var specimen in SpecimenQueue)
         {
