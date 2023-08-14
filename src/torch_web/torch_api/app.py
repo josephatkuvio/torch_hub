@@ -2,7 +2,7 @@ import uvicorn
 import os
 
 from sqlmodel import Session, select
-from fastapi import FastAPI, BackgroundTasks
+from fastapi import FastAPI, BackgroundTasks, HTTPException
 
 from torch_api.database import create_db_and_tables, engine
 from torch_api.models import CatalogTask, Specimen, Workflow
@@ -30,7 +30,7 @@ async def tasks_getall() -> list[CatalogTask]:
         tasks = get_all_tasks()
         return tasks
     except Exception as e:
-        return e
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/workflows/{workflow_id}/{batch_id}", operation_id="StartWorkflow")
