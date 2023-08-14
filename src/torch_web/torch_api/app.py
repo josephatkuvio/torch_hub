@@ -20,14 +20,17 @@ def root():
 
 @app.get("/tasks", operation_id="GetAllTasks")
 async def tasks_getall() -> list[CatalogTask]:
-    for module in os.listdir(os.path.dirname(__file__) + '/tasks'):
-        if module == '__init__.py' or module[-3:] != '.py':
-            continue
-        __import__('tasks.' + module[:-3], locals(), globals())
-    del module
+    try:
+        for module in os.listdir(os.path.dirname(__file__) + '/tasks'):
+            if module == '__init__.py' or module[-3:] != '.py':
+                continue
+            __import__('tasks.' + module[:-3], locals(), globals())
+        del module
 
-    tasks = get_all_tasks()
-    return tasks
+        tasks = get_all_tasks()
+        return tasks
+    except Exception as e:
+        return e
 
 
 @app.post("/workflows/{workflow_id}/{batch_id}", operation_id="StartWorkflow")
