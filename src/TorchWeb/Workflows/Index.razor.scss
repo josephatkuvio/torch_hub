@@ -32,7 +32,7 @@
         display: flex;
         justify-content: space-between;
     }
-    
+
     .tab-list {
         display: flex;
         flex-wrap: wrap;
@@ -141,5 +141,37 @@
         background-color: #FFFFFF;
         border-radius: 0px 20px 20px 20px;
         padding: 24px;
+    }
+
+    .collapsed-summary-tab-content {
+        height: calc(100% - 120px);
+    }
+
+    .summary-section {
+        label {
+            height: 3rem;
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 0.8125rem 1.875rem;
+            border-radius: 0.75rem;
+            background: var(--blue-500, #2AD7FD);
+            box-shadow: -15.277257919311523px 22.91588592529297px 29.599687576293945px 0px rgba(0, 0, 0, 0.12), -3.819314479827881px 7.638628959655762px 12.412772178649902px 0px rgba(11, 18, 43, 0.15), 0.9548286199569702px 2.864485740661621px 1.9096572399139404px 0px rgba(17, 15, 39, 0.20);
+            &:hover {
+                background: var(--blue-600, #1FC7D4);
+            }
+        }
+
+        ::deep input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
     }
 }

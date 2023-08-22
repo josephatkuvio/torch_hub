@@ -50,6 +50,9 @@
   <ItemGroup>
     <Compile Include="torch_api\database.py" />
     <Compile Include="torch_api\models.py" />
+    <Compile Include="torch_api\plugins\s3.py" />
+    <Compile Include="torch_api\plugins\sftp.py" />
+    <Compile Include="torch_api\socket.py" />
     <Compile Include="torch_api\tasks\check_duplicate.py" />
     <Compile Include="torch_api\tasks\get_exif_data.py" />
     <Compile Include="torch_api\tasks\recognize_text.py" />
@@ -60,10 +63,10 @@
     <Compile Include="torch_api\tasks\check_orientation.py" />
     <Compile Include="torch_api\tasks\generate_derivatives.py" />
     <Compile Include="torch_api\tasks\herbar.py" />
-    <Compile Include="torch_api\tasks\upload.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="torch_api\" />
+    <Folder Include="torch_api\plugins\" />
     <Folder Include="torch_api\tasks\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />

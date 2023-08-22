@@ -73,6 +73,12 @@ button {
             margin: 0;
         }
     }
+
+    &.bm-close {
+        span {
+            color: var(--grey-900);
+        }
+    }
 }
 
 ::-webkit-scrollbar {

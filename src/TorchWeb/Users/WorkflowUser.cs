@@ -4,10 +4,17 @@ namespace Torch.Web.Workflows;
 
 public class WorkflowUser
 {
-    public WorkflowUser(int workflowId, int userId, string role)
+    private WorkflowUser()
     {
-        WorkflowId = workflowId;
-        UserId = userId;
+        Role = "";
+    }
+    
+    public WorkflowUser(Workflow workflow, User user, string role)
+    {
+        Workflow = workflow;
+        WorkflowId = workflow.Id;
+        User = user;
+        UserId = user.Id;
         Role = role;
         CreatedDate = DateTime.UtcNow;
     }

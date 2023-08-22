@@ -1,0 +1,83 @@
+.specimen-detail {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 32px;
+
+    > section {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    > figure {
+        img {
+            max-inline-size: 100%;
+            max-height: 80vh;
+            block-size: auto;
+            object-fit: contain;
+        }
+    }
+}
+
+.tasks {
+    padding-right: 2rem;
+
+    > article {
+        margin-bottom: 4rem;
+
+        > footer {
+            padding-left: 5rem;
+        }
+    }
+}
+
+dl {
+    font-size: 17px;
+    margin: 16px 0;
+    display: none;
+
+    dt {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    dd {
+        overflow: hidden;
+    }
+
+    &.results {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+}
+
+.images {
+    display: flex;
+    gap: 10px;
+
+    figure {
+        background: linear-gradient(0.36deg, rgba(255, 255, 255, 0.59) 0.41%, rgba(255, 255, 255, 0) 179.92%);
+        border-radius: 22px;
+        width: 174px;
+        padding: 16px;
+
+        img {
+            max-inline-size: 100%;
+            block-size: auto;
+            object-fit: contain;
+        }
+
+        figcaption {
+            color: #434966;
+            font-size: 12px;
+            padding-top: 16px;
+        }
+    }
+}
+
+.selected .task header {
+    border: 1px solid #7f56d9;
+    background-color: #f4ebff;
+}

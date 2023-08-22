@@ -1,12 +1,12 @@
-﻿<article @onclick=Click>
-    <img src="/images/folderIcon.svg" />
-    <header>
+﻿<article>
+    <img src="/images/folderIcon.svg" @onclick=Click />
+    <header @onclick=Click>
         <h3>@Connection.Name</h3>
         <h4>@Connection.Direction | @(Connection.ContainerType.Replace("Connection", ""))</h4>
     </header>
     @if (Connection.Direction == "Input" && ShowUploadButton)
     {
-        <label for="files" @onclick:stopPropagation=true>
+        <label for="files">
             <img src="/images/upArrowIcon.svg" />
         </label>
         <InputFile id="files" @key=inputFileId OnChange="Upload" multiple accept="image/*,.dng" />

@@ -1,0 +1,15 @@
+﻿<article @onclick=Click>
+    <img src="/images/folderIcon.svg" />
+    <header>
+        <h3>@Batch.Id</h3>
+        <h4>@Batch.CreateDate.ToString("dd MMM yyyy")</h4>
+    </header>
+    <aside>@Batch.SpecimenCount</aside>
+</article>
+
+@code {
+    [Parameter] public Batch Batch { get; set; } = null!;
+    [Parameter] public EventCallback<Batch> OnClick { get; set; }
+    
+    async Task Click(MouseEventArgs e) => await OnClick.InvokeAsync(Batch);
+}

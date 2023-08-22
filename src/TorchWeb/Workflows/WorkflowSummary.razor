@@ -1,5 +1,9 @@
 ﻿<header class="workflow-header">
     <h1>Summary</h1>
+    @if (Batch != null)
+    {
+        <aside>@Batch.Id</aside>
+    }
 </header>
 
 <div class="divider"></div>
@@ -64,29 +68,64 @@
 
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
+    [Parameter] public Batch? Batch { get; set; }
+    [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; } = null!;
+
     int UploadCount;
     int ProcessCount;
     int TransferCount;
+    int TaskCount;
 
     int UploadPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)UploadCount / (UploadCount + SpecimenQueue.Count(x => x.Status != "Uploaded")));
-    int ProcessPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)ProcessCount / UploadCount);
+    int ProcessPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)TaskCount / (UploadCount * Workflow.Tasks.Count));
     int TransferPercentage => UploadCount == 0 ? 0 : (int)(100 * (double)TransferCount / UploadCount);
 
     double CompletionPercentage => (UploadPercentage / 3.0) + (ProcessPercentage / 3.0) + (TransferPercentage / 3.0);
 
     int HoursLeft => 1;
     int MinutesLeft => 30;
-    string BatchId = Guid.NewGuid().ToString();
     List<Specimen> SpecimenQueue = new();
+    string? MonitoringBatchId;
 
-    protected override void OnParametersSet()
+    protected override async Task OnInitializedAsync()
+    {
+        Socket.On("task_completed", async (data) =>
+        {
+            TaskCount++;
+            await InvokeAsync(StateHasChanged);
+        });
+
+        Socket.On("specimen_processed", async (data) =>
+        {
+            ProcessCount++;
+            await InvokeAsync(StateHasChanged);
+        });
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var newMonitoringBatchId = Batch?.Id ?? $"workflow-{Workflow.Id}";
+
+        if (newMonitoringBatchId != MonitoringBatchId)
+        {
+            if (MonitoringBatchId != null)
+                await Socket.EmitAsync("leave_batch", MonitoringBatchId);
+
+            MonitoringBatchId = newMonitoringBatchId;
+            await Socket.EmitAsync("monitor_batch", newMonitoringBatchId);
+        }
+
+        RefreshCounts();
+    }
+
+    void RefreshCounts()
     {
         var query = Specimens.Query
-            .Where(x => x.InputConnectionId == Workflow.InputConnection!.Id)
+            .Where(x => x.InputConnectionId == Workflow.InputConnection!.Id && (Batch == null || x.BatchId == Batch.Id))
             .GroupBy(x => x.InputConnectionId)
             .Select(x => new
             {
-                UploadCount = x.Count(y => y.Status == "Uploaded"),
+                UploadCount = x.Count(),
                 ProcessCount = x.Count(y => y.ProcessedDate != null),
                 TransferCount = x.Count(y => y.ProcessedDate != null && y.OutputConnectionId != null)
             });
@@ -94,19 +133,22 @@
         UploadCount = query.FirstOrDefault()?.UploadCount ?? 0;
         ProcessCount = query.FirstOrDefault()?.ProcessCount ?? 0;
         TransferCount = query.FirstOrDefault()?.TransferCount ?? 0;
+        TaskCount = ProcessCount * Workflow.Tasks.Count;
     }
 
     public async Task Upload(InputFileChangeEventArgs e)
     {
-        if (Workflow?.InputConnection == null)
+        if (Workflow?.InputConnection == null || Batch == null)
             return;
 
         foreach (var file in e.GetMultipleFiles(10000))
         {
-            SpecimenQueue.Add(new Specimen(Workflow.InputConnection.Id, BatchId, file));
+            SpecimenQueue.Add(new Specimen(Workflow.InputConnection.Id, Batch.Id, file));
         }
 
         StateHasChanged();
+
+        await Workflow.InputConnection.InitializeAsync();
 
         foreach (var specimen in SpecimenQueue)
         {
@@ -116,7 +158,7 @@
             StateHasChanged();
         }
 
-        BatchId = Guid.NewGuid().ToString();
+        await TorchApi.StartWorkflowAsync(Workflow.Id, Batch.Id);
         SpecimenQueue.Clear();
     }
 }

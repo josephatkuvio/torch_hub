@@ -58,5 +58,13 @@
   {
     "outputFile": "Connections/ConnectionModal.razor.css",
     "inputFile": "Connections/ConnectionModal.razor.scss"
+  },
+  {
+    "outputFile": "Connections/BatchCard.razor.css",
+    "inputFile": "Connections/BatchCard.razor.scss"
+  },
+  {
+    "outputFile": "Specimens/SpecimenDetail.razor.css",
+    "inputFile": "Specimens/SpecimenDetail.razor.scss"
   }
 ]

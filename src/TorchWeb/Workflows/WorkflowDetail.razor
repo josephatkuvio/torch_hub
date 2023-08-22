@@ -1,32 +1,32 @@
 ﻿@using Torch.Web.Workflows.Connections
-    <header>
-        <h1>@Workflow.Name</h1>
-        <div class="header-right">
-            <button class="sort-button">Sort</button>
-            <img class="sort-icon-img" src="/images/sortIcon.svg" />
-            <div class="search-box">
-                <input type="text" placeholder="Search" />
-                <i class="fa fa-search"></i>
-            </div>
-            <i class="sort"></i>
+<header>
+    <h1>@Workflow.Name</h1>
+    <div class="header-right">
+        <button class="sort-button">Sort</button>
+        <img class="sort-icon-img" src="/images/sortIcon.svg" />
+        <div class="search-box">
+            <input type="text" placeholder="Search" />
+            <i class="fa fa-search"></i>
         </div>
-    </header>
+        <i class="sort"></i>
+    </div>
+</header>
 
 <hr />
- 
-@if (ActiveFolder == null)
+
+@if (ActiveBatch == null)
 {
     <section>
-        <h2>Connections</h2>
+        <h2>Recent Batches</h2>
         <section class="workflow-cards">
-            @foreach (var connection in Workflow.Connections.OrderBy(x => x.Direction))
+            @foreach (var batch in RecentBatches)
             {
-                <ConnectionCard Connection="connection" OnUpload="Upload" OnClick=Go ShowUploadButton="true" />
+                <BatchCard Batch="batch" OnClick=Go />
             }
-            @if (!Workflow.Connections.Any())
+            @if (!RecentBatches.Any())
             {
                 <aside>
-                    No connections found for this workflow. Create your first connection in the Settings tab (third tab).
+                    No recent batches found for this workflow. Upload specimens to start your first batch.
                 </aside>
             }
         </section>
@@ -35,11 +35,19 @@
     <hr />
 
     <section class="specimens-list-cards">
-        <h2>Recent Specimens</h2>
+        <header>
+            <h2>Recent Specimens</h2>
+        </header>
         <section class="spec-cards">
             @foreach (var specimen in RecentSpecimens)
             {
                 <SpecimenCard Specimen="specimen" />
+            }
+            @if (!RecentSpecimens.Any())
+            {
+                <aside>
+                    No recently processed specimens found for this workflow. Upload specimens to start your first batch.
+                </aside>
             }
         </section>
     </section>
@@ -47,8 +55,10 @@
 else
 {
     <section class="specimens-list-cards full">
-        <button @onclick="Back">Back</button>
-        <h2>@ActiveFolder.Name | @ActiveFolder.Direction</h2>
+        <header>
+            <button @onclick="Back">Back</button>
+            <h2>@ActiveBatch.Id | @ActiveBatch.CreateDate.ToString("dd MMM yyyy")</h2>
+        </header>
         <section class="spec-cards">
             @foreach (var specimen in AllSpecimens)
             {
@@ -61,32 +71,51 @@ else
 @inject IConfiguration Config
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
-    [Parameter] public EventCallback<InputFileChangeEventArgs> OnUpload { get; set; }
+    [Parameter] public EventCallback<Batch> OnBatchSelect { get; set; }
     List<Specimen> RecentSpecimens = new();
+    List<Batch> RecentBatches = new();
     IEnumerable<Specimen> AllSpecimens = new List<Specimen>();
-    Connection? ActiveFolder;
+    Batch? ActiveBatch;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnParametersSet()
     {
+        RecentBatches = Specimens.Query
+            .Where(x => x.InputConnection.WorkflowId == Workflow.Id)
+            .GroupBy(x => x.BatchId)
+            .Select(x => new
+            {
+                x.Key,
+                CreateDate = x.Max(y => y.CreateDate),
+                Count = x.Count()
+            })
+            .OrderByDescending(x => x.CreateDate)
+            .Take(6)
+            .ToList()
+            .Select(x => new Batch(x.Key, x.CreateDate, x.Count))
+            .ToList();
+
         RecentSpecimens = Specimens.Query
             .Where(x => x.InputConnection.WorkflowId == Workflow.Id)
             .OrderByDescending(x => x.CreateDate)
             .Take(10)
             .ToList();
-
-        // Socket.On("specimen_added", response => RefreshSpecimens());
     }
 
-    async Task Go(Connection connection)
+    public async Task Go(Batch batch)
     {
-        ActiveFolder = connection;
-        AllSpecimens = await connection.GetAsync(100);
+        ActiveBatch = batch;
+        AllSpecimens = Specimens.Query
+            .Where(x => x.InputConnection.WorkflowId == Workflow.Id && x.BatchId == batch.Id)
+            .OrderByDescending(x => x.CreateDate)
+            .Take(100)
+            .ToList();
+
+        await OnBatchSelect.InvokeAsync(ActiveBatch);
     }
 
-    void Back()
+    async Task Back()
     {
-        ActiveFolder = null;
+        ActiveBatch = null;
+        await OnBatchSelect.InvokeAsync(null);
     }
-
-    async Task Upload(InputFileChangeEventArgs e) => await OnUpload.InvokeAsync(e);
 }

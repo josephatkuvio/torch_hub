@@ -1,4 +1,4 @@
-from torch_tasks import torch_task
+from torch_api.torch_tasks import torch_task
 from torch_api.models import Specimen
 
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
@@ -29,7 +29,7 @@ def recognize_text(specimen: Specimen):
     client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(subscription_key))
     
     # Call API with URL and raw response (allows you to get the operation location)
-    read_response = client.read(specimen.upload_path, raw=True)
+    read_response = client.read(specimen.input_file, raw=True)
 
     # Get the operation location (URL with an ID at the end) from the response
     read_operation_location = read_response.headers["Operation-Location"]
@@ -53,5 +53,7 @@ def recognize_text(specimen: Specimen):
                 key = str(i)
                 i += 1
                 results[key] = line.text
+    else:
+        raise ValueError(f"Unable to extract text from image: {read_result}")
 
     return results

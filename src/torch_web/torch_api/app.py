@@ -1,18 +1,16 @@
 import uvicorn
 import os
 
-from typing import List
 from sqlmodel import Session, select
-from fastapi import FastAPI, BackgroundTasks
-from fastapi_socketio import SocketManager
+from fastapi import FastAPI, BackgroundTasks, HTTPException
 
 from torch_api.database import create_db_and_tables, engine
 from torch_api.models import CatalogTask, Specimen, Workflow
 from torch_api.torch_tasks import get_all_tasks
-
+from torch_api.socket import init, sio
 
 app = FastAPI()
-socket_manager = SocketManager(app=app)
+init(app)
 
 
 @app.get("/")
@@ -21,15 +19,18 @@ def root():
 
 
 @app.get("/tasks", operation_id="GetAllTasks")
-async def tasks_getall() -> List[CatalogTask]:
-    for module in os.listdir(os.path.dirname(__file__) + '/tasks'):
-        if module == '__init__.py' or module[-3:] != '.py':
-            continue
-        __import__('tasks.' + module[:-3], locals(), globals())
-    del module
+async def tasks_getall() -> list[CatalogTask]:
+    try:
+        for module in os.listdir(os.path.dirname(__file__) + '/tasks'):
+            if module == '__init__.py' or module[-3:] != '.py':
+                continue
+            __import__('torch_api.tasks.' + module[:-3], locals(), globals())
+        del module
 
-    tasks = get_all_tasks()
-    return tasks
+        tasks = get_all_tasks()
+        return tasks
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/workflows/{workflow_id}/{batch_id}", operation_id="StartWorkflow")
@@ -39,10 +40,12 @@ def workflows_start(workflow_id: int, batch_id: str, background_tasks: Backgroun
         specimens = session.exec(query).all()
         workflow = session.get(Workflow, workflow_id)
         background_tasks.add_task(workflow.start_many, specimens)
+    
+    return { "status": "started" }
 
 
 @app.put('/collections/{collection_id}', operation_id="UpdateExternalUrl")
-def specimens_update_external_url(collection_id:int, specimens: List[Specimen]):
+def specimens_update_external_url(collection_id:int, specimens: list[Specimen]):
     updated_specimens = []
     
     with Session(engine) as session:
@@ -56,6 +59,18 @@ def specimens_update_external_url(collection_id:int, specimens: List[Specimen]):
         session.commit()
 
     return updated_specimens
+
+
+@sio.event
+def monitor_batch(sid, batch_id):
+    print(f'{sid} monitoring batch {batch_id}')
+    sio.enter_room(sid, batch_id)
+
+
+@sio.event
+def leave_batch(sid, batch_id):
+    print(f'{sid} leaving batch {batch_id}')
+    sio.leave_room(sid, batch_id)
 
 
 def main():

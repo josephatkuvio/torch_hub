@@ -13,6 +13,7 @@ public class SpecimenImage
     public int Id { get; private set; }
     public int SpecimenId { get; private set; }
     public string OutputFile { get; private set; }
+    public string? Url { get; private set; }
     public string Size { get; private set; }
     public int? Height { get; private set; }
     public int? Width { get; private set; }
@@ -22,8 +23,4 @@ public class SpecimenImage
     public string? HashB { get; private set; }
     public string? HashC { get; private set; }
     public string? HashD { get; private set; }
-
-    public string? AbsoluteUrl(string? baseUrl) =>
-        (OutputFile.StartsWith("http") ? "" : baseUrl)
-        + OutputFile;
 }

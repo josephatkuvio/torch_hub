@@ -8,13 +8,18 @@
     padding: 1rem 2rem;
     margin: 0.81rem 0;
 
+    &:hover {
+        border: 1px solid var(--grey-400);
+        cursor: pointer;
+    }
+
     > img, > svg {
         width: 32px;
         height: 32px;
         object-fit: cover;
     }
 
-    h3 {
+    h3, span, time {
         margin-bottom: 0;
         font-size: 14px;
         font-weight: 400;
@@ -25,33 +30,42 @@
     }
 
     .progress {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 5px;
+        grid-column: 1 / span 5;
 
-        .progress-bar {
-            position: absolute;
-            left: 96px;
-            right: 252px;
-            height: 7px;
-            background-color: #E6E8F2;
-            border-radius: 10px;
+        progress {
+            width: 100%;
+            height: 0.4375rem;
+            -webkit-appearance: none;
+            appearance: none;
 
-            &::after {
-                content: "";
-                position: absolute;
-                height: 100%;
-                width: 45%;
+            &::-webkit-progress-bar {
+                background-color: #E6E8F2;
+                border-radius: 10px;
+            }
+
+            &::-webkit-progress-value {
                 background-color: #29324A;
                 border-radius: 10px;
             }
         }
 
-        .percentage-container {
+        > div {
             display: flex;
             justify-content: space-between;
-            width: 100%;
+            margin-top: 0.31rem;
+
+            header, aside span {
+                font-size: 0.75rem;
+                color: var(--grey-600);
+                text-align: right;
+            }
+
+            aside {
+                display: flex;
+                justify-content: flex-end;
+                gap: 1.13rem;
+                margin-top: 0.31rem;
+            }
         }
     }
 
@@ -87,9 +101,10 @@
     &.error {
         background: #FEF1F4;
         color: #B50021;
+        row-gap: 0rem;
 
-        h1 {
-            color: #B50021;
+        h3, span, time {
+            color: #B50021 !important;
         }
 
         .err-btn {

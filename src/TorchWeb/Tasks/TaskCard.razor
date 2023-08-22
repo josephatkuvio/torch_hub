@@ -1,7 +1,7 @@
-﻿<article class="@(isExpanded ? "expanded" : "")">
+﻿<article class="@(IsEditable ? "expanded" : "")">
     <header>
         <h2>@((Task.SortOrder ?? 0).ToString("00"))</h2>
-        @if (isExpanded)
+        @if (IsEditable)
         {
             <button class="order" @onclick="MoveUp" @onclick:stopPropagation=true>
                 <img class="detail-icon-img" src="/images/up.svg" />
@@ -13,33 +13,40 @@
     </header>
 
     <div>
-        <header @onclick="ToggleExpandCollapse">
+        <header>
             <h2>@Task.Name</h2>
-            <div class="right-btns">
-                @*<button class="tiny" @onclick:stopPropagation=true>
-                    <img src="/images/close_icon.svg" />
+            @if (IsEditable)
+            {
+                <div class="right-btns">
+                    @*<button class="tiny" @onclick:stopPropagation=true>
+                <img src="/images/close_icon.svg" />
                 </button>
                 <button class="tiny" @onclick:stopPropagation=true>
-                    <img src="/images/greenEditSaveIcon.svg" />
+                <img src="/images/greenEditSaveIcon.svg" />
                 </button>*@
-                <button class="tiny" @onclick=Delete @onclick:stopPropagation=true>
-                    <img src="/images/Trashcan.svg" />
-                </button>
-            </div>
-            @if (isExpanded)
-            {
+                    <button class="tiny" @onclick=Delete @onclick:stopPropagation=true>
+                        <img src="/images/Trashcan.svg" />
+                    </button>
+                </div>
                 <h3>@Task.Description</h3>
             }
         </header>
 
-        @if (isExpanded)
+        @if (Task.Parameters.Keys.Any())
         {
             <footer>
                 @foreach (var key in Task.Parameters.Keys)
                 {
                     <label>
                         @key
-                        <input @bind="@Task.Parameters[key]" @bind:after=Save />
+                        @if (IsEditable)
+                        {
+                            <input @bind="@Task.Parameters[key]" @bind:after=Save />
+                        }
+                        else
+                        {
+                            <span>@Task.Parameters[key]</span>
+                        }
                     </label>
                 }
             </footer>
@@ -52,13 +59,7 @@
     [Parameter] public TorchTask Task { get; set; } = null!;
     [Parameter] public EventCallback<TorchTask> OnDelete { get; set; }
     [Parameter] public EventCallback<TorchTask> OnReorder { get; set; }
-    private bool isExpanded = true;
-    
-
-    private void ToggleExpandCollapse()
-    {
-        isExpanded = !isExpanded;
-    }
+    [Parameter] public bool IsEditable { get; set; }
 
     async Task MoveUp()
     {
