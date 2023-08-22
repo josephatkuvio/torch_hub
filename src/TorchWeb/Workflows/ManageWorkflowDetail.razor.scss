@@ -137,14 +137,15 @@
                         font-size: 17px;
                     }
 
-                    input:not([type='checkbox']) {
+                    input:not([type='checkbox']), select {
                         padding: 12px 24px;
                         border-radius: 16px;
                         border: 1px solid var(--gray-200, #E6E8F2);
                     }
 
                     input[type="text"],
-                    input[type="password"] {
+                    input[type="password"],
+                    select {
                         margin-top: 8px;
                         margin-bottom: 24px;
                     }
@@ -155,7 +156,7 @@
                         --border-radius: 0;
                     }
 
-                    input[type="password"] {
+                    .password-input input {
                         width: 100%;
                         padding-right: 40px;
                         position: relative;

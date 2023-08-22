@@ -1,4 +1,5 @@
 import os
+import tempfile
 import traceback
 import requests
 
@@ -72,27 +73,27 @@ def generate_derivatives(specimen: Specimen, sizes_to_generate, hash_size=32):
 def generate_derivative(specimen: Specimen, image: BytesIO, size: str, width: int) -> Optional[SpecimenImage]:
     full_image_path = Path(specimen.input_file)
     derivative_file_name = f"{full_image_path.stem}_{size}{full_image_path.suffix}"
-    derivative_path = f"{specimen.batch_id}/_artifacts/{derivative_file_name}"
+    derivative_path = f"{specimen.batch_id}/{derivative_file_name}"
 
     img = Image.open(image)
 
     if width is not None:
         img.thumbnail((width, width))
 
-    blob_service_client = BlobServiceClient.from_connection_string(os.environ.get("AZURE_STORAGE_CONNECTION_STRING"))
-    blob_client = blob_service_client.get_blob_client(container=f"workflow-{specimen.input_connection.workflow_id}-input", blob=derivative_path)
     image_stream = BytesIO()
     img.save(image_stream, format='JPEG')
     image_stream.seek(0)
-    blob_client.upload_blob(image_stream.read(), overwrite=True)
+    
+    path = os.path.join(tempfile.mkdtemp(), derivative_file_name)
+    with open(path, "wb") as f:
+        f.write(image_stream.read())
 
     specimen_image = SpecimenImage(
         specimen_id=specimen.id,
         size=size,
         height=img.height,
         width=img.width,
-        url=blob_client.url,
-        output_file=blob_client.url,
+        output_file=path,
         create_date=datetime.now()
     )
 

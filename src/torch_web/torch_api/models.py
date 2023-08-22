@@ -17,7 +17,7 @@ from azure.identity import DefaultAzureCredential
 
 from torch_api.database import engine
 from torch_api.socket import sio as socketio
-from torch_api.plugins import sftp, s3
+from torch_api.plugins import sftp, s3, azureblob
 
 
 def emit(specimen: "Specimen", workflow: "Workflow", event):
@@ -141,6 +141,9 @@ class Connection(SQLModel, table=True):
         })
     
     def get_password(self):
+        if self.password_key is None:
+            return None
+        
         client = SecretClient(vault_url=os.environ.get('AZURE_KEY_VAULT_URI'), credential=DefaultAzureCredential())
         return client.get_secret(self.password_key)
         
@@ -152,14 +155,17 @@ class Connection(SQLModel, table=True):
         image_bytes = image.download()
         password = self.get_password()
         o = urlparse(self.host)
-        url = f'{o.netloc}{os.path.dirname(o.path)}/{os.path.basename(image.url)}'
+        url = f'{self.host}/{os.path.basename(image.output_file)}'
 
-        if self.container_type == "sftp":
+        if self.container_type == "SFTPConnection":
             image.output_file = sftp.upload(url, self.user_id, password, image_bytes)
 
-        elif self.container_type == "s3":
+        elif self.container_type == "AmazonS3Connection":
             image.output_file = s3.upload(url, self.user_id, password, image_bytes)
         
+        elif self.container_type == "AzureBlobConnection":
+            image.output_file = azureblob.upload(url, image_bytes)
+            
         else:
             raise NotImplementedError(f"Upload type {self.container_type} is not yet implemented.")
 
@@ -246,7 +252,11 @@ class SpecimenImage(SQLModel, table=True):
 
     
     def download(self):
-        return BytesIO(requests.get(self.url, stream=True).content)
+        if self.output_file.startswith("http"):
+            return BytesIO(requests.get(self.url, stream=True).content)
+        else:
+            with open(self.output_file, 'rb') as f:
+                return BytesIO(f.read())
 
     
     def average_hash(self):

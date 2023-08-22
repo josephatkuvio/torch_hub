@@ -7,19 +7,22 @@ namespace Torch.Web.Workflows.Connections;
 
 public class AzureBlobConnection : Connection
 {
-    public AzureBlobConnection(int workflowId, string direction, string name = "Default Connection", string host = "torchhub")
+    public AzureBlobConnection(int workflowId, string direction, string name, string host)
         : base(workflowId, nameof(AzureBlobConnection), direction, name, host)
     {
-        Client = new BlobServiceClient(new Uri($"https://{host}.blob.core.windows.net"), new DefaultAzureCredential());
+        var uri = new Uri(host);
+        Client = new BlobServiceClient(new Uri($"https://{uri.Host}"), new DefaultAzureCredential());
+
+        ContainerName = uri.PathAndQuery.Split('/').First(x => !string.IsNullOrWhiteSpace(x));
     }
 
-    public AzureBlobConnection(Workflow workflow, string direction, string name = "Default Connection", string host = "torchhub")
+    public AzureBlobConnection(Workflow workflow, string direction, string name, string host)
         : this(workflow.Id, direction, name, host)
     {
         Workflow = workflow;
     }
 
-    private string ContainerName => $"workflow-{WorkflowId}-{Direction.ToLower()}";
+    private string ContainerName { get; set; }
 
     private BlobServiceClient Client { get; }
 

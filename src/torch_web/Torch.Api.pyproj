@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="torch_api\database.py" />
     <Compile Include="torch_api\models.py" />
+    <Compile Include="torch_api\plugins\azureblob.py" />
     <Compile Include="torch_api\plugins\s3.py" />
     <Compile Include="torch_api\plugins\sftp.py" />
     <Compile Include="torch_api\socket.py" />

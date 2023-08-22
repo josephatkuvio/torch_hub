@@ -5,7 +5,7 @@
     }
     else if (Specimen.CardImage != null)
     {
-        <img src="@Specimen.CardImage.Url" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
+        <img src="@Specimen.CardImage.OutputFile" alt="@(Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d"))" />
     }
     else
     {

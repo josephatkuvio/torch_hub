@@ -5,7 +5,7 @@
                 <aside class="back" @onclick="HandleBackClick">
                     <img class="sort-icon-img" src="/images/backArrow.svg" />
                 </aside>
-                <h1>Workflow Name</h1>
+                <h1>@SelectedConnection.Name</h1>
             </div>
             <div class="header-right">
                 <button class="workflow-detail-buttons">
@@ -17,9 +17,7 @@
             </div>
         </div>
         <div class="header-bottom-text">
-            <h4>Last Updated: 24 FEB 2016</h4>
-            <h4>Created by: Christina J</h4>
-            <h4>Connection: Short link here?</h4>
+            <h4>Connection Type: @SelectedConnection.Direction</h4>
         </div>
     </header>
 
@@ -30,7 +28,7 @@
             <article class="lib-article">
                 <div class="left">
                     <img class="sort-icon-img" src="/images/iIcon.svg" />
-                    <h1>Would you like to view previous workflow settings?</h1>
+                    <h1>Would you like to import a connection from another workflow?</h1>
                 </div>
                 <div class="right">
                     <button class="more-btn" @onclick="OpenConnectionLibraryModal">Open Library</button>
@@ -41,60 +39,39 @@
         <section class="workflow-connection-settings">
             <div class="title-left">
                 <h1>Authentication</h1>
-                <label>Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</label>
+                <label>Select the type (Azure Blob, S3, or SFTP) and enter the host name and login credentials for this connection. Your password is stored securely and cannot be viewed again once entered.</label>
             </div>
             <div class="fields-right">
                 <form>
+                    <label>Connection Type</label>
+                    <select @bind=SelectedConnection.ContainerType>
+                        <option value="AzureBlobConnection">Azure Blob Storage</option>
+                        <option value="AmazonS3Connection">Amazon S3</option>
+                        <option value="SFTPConnection">SFTP</option>
+                    </select>
+                    
                     <label>Host</label>
-                    <input type="text" placeholder="Host" />
+                    <input type="text" placeholder="Host" @bind=SelectedConnection.Host />
                     <label>User Name</label>
-                    <input type="text" placeholder="User Name" />
+                    <input type="text" placeholder="User Name" @bind=SelectedConnection.UserId />
                     <label>Password</label>
                     <div class="password-input">
-                        <input type="password" placeholder="Password" />
+                        <input type="@(showPassword ? "password" : "text")" placeholder="Password" @bind=password />
                         <button type="button" class="toggle-password-button" @onclick="TogglePasswordVisibility">
-                            <i class="@(showPassword ? "fas fa-eye" : "fas fa-eye-slash")"></i>
+                            <i class="@(showPassword ? "fas fa-eye-slash" : "fas fa-eye")"></i>
                         </button>
                     </div>
                     <button type="submit">Confirm</button>
                 </form>
             </div>
         </section>
-
-        <section class="workflow-connection-settings">
-            <div class="title-left">
-                <h1>Directory</h1>
-                <label>Porem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.</label>
-            </div>
-            <div class="fields-right">
-                <form>
-                    <label>Directory</label>
-                    <input class="input-with-checkbox" type="text" placeholder="Example" />
-                    <div class="checkbox-container">
-                        <input type="checkbox">
-                        <label>Save this directory in the library</label>
-                    </div>
-                    <label>Input</label>
-                    <input type="text" placeholder="Example" />
-                    <label>Password</label>
-                    <div class="password-input">
-                        <input type="password" placeholder="Password" />
-                        <button type="button" class="toggle-password-button" @onclick="TogglePasswordVisibility">
-                            <i class="@(showPassword ? "fas fa-eye" : "fas fa-eye-slash")"></i>
-                        </button>
-                    </div>
-                    <button type="submit">Confirm</button>
-                </form>
-            </div>
-        </section>
-
     </section>
 </section>
 
 
 @inject IModalService Modal
 @code {
-    [Parameter] public Connection? SelectedConnection { get; set; }
+    [Parameter] public Connection SelectedConnection { get; set; } = null!;
     [Parameter] public EventCallback OnDetailBackClick { get; set; }
 
     private bool showPassword = false;

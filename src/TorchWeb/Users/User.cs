@@ -73,8 +73,8 @@ public class User : Entity<int>
         var workflow = new Workflow(institution, "My First Workflow", "Set up your first workflow");
         institution.Workflows.Add(workflow);
 
-        workflow.Connections.Add(new AzureBlobConnection(workflow, "Input"));
-        workflow.Connections.Add(new AzureBlobConnection(workflow, "Output"));
+        workflow.Connections.Add(new AzureBlobConnection(workflow, "Input", "Input Connection", $"https://torchhub.blob.core.windows.net/{Connection.RandomString(32)}"));
+        workflow.Connections.Add(new AzureBlobConnection(workflow, "Output", "Output Connection", $"https://torchhub.blob.core.windows.net/{Connection.RandomString(32)}"));
 
         SetCurrentWorkflow(workflow);
 
