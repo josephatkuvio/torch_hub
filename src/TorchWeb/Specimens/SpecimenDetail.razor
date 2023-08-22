@@ -80,7 +80,7 @@
             .FirstOrDefault(x => x.Id == Specimen.Id);
     }
 
-    string LargeImageSource => SelectedImage?.OutputFile ?? Specimen.InputFile;
+    string LargeImageSource => SelectedImage?.Url ?? Specimen.InputFile;
     string LargeImageAlt => SelectedImage?.Size ?? Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d");
 
     void Select(string key)

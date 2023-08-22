@@ -65,31 +65,39 @@ class Workflow(SQLModel, table=True):
             local_specimen = session.merge(specimen)
             workflow = session.merge(self)
 
-            local_specimen.set_status('Starting...');
+            local_specimen.set_status('Starting...')
             session.commit()
             
             sorted_tasks = sorted(workflow.tasks, key=lambda x: x.sort_order)
             for task in sorted_tasks:
                 task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now(), parameters=task.parameters)
                 local_specimen.tasks.append(task_run)
-                local_specimen.set_status(f'Running {task_run.task.name}...');
+                local_specimen.set_status(f'Running {task_run.task.name}...')
                 session.commit()
-                emit(local_specimen, workflow, 'task_started');
+                emit(local_specimen, workflow, 'task_started')
 
                 task_run_status = task_run.start()
                 session.refresh(local_specimen)
-                emit(local_specimen, workflow, 'task_completed');
+                emit(local_specimen, workflow, 'task_completed')
             
                 if task_run_status.startswith("Error"):
-                    local_specimen.set_status(task_run_status);
+                    local_specimen.set_status(task_run_status)
                     break
                     
             if not local_specimen.status.startswith("Error"):
-                local_specimen.set_status('Processed');
+                local_specimen.set_status('Processed')
                 local_specimen.processed_date = datetime.now()
             
             session.commit()
-            emit(local_specimen, workflow, 'specimen_processed');
+            emit(local_specimen, workflow, 'specimen_processed')
+
+            output_connection = next((c for c in workflow.connections if c.direction == 'Output'), None)
+            if output_connection is not None:
+                for image in local_specimen.images:
+                    output_connection.upload(image)
+                
+                session.commit()
+                emit(local_specimen, workflow, 'specimen_uploaded')
 
 
 class CatalogTask(SQLModel):
