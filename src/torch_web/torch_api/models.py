@@ -96,6 +96,8 @@ class Workflow(SQLModel, table=True):
                 for image in local_specimen.images:
                     output_connection.upload(image)
                 
+                local_specimen.set_status('Processed and Transferred')
+                local_specimen.output_connection_id = output_connection.id
                 session.commit()
                 emit(local_specimen, workflow, 'specimen_uploaded')
 

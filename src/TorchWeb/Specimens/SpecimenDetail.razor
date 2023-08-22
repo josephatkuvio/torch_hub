@@ -19,11 +19,11 @@
                             <div class="images">
                                 @foreach (var key in derivatives.Keys)
                                 {
-                                    var img = derivatives[key];
-                                    <figure @onclick="@(() => Select(key))">
-                                        <img src="@img!.url" alt="@key" />
+                                    var img = Specimen.Images.FirstOrDefault(x => x.Size == key);
+                                    <figure @onclick="@(() => Select(key))" class="@(SelectedImage == img ? "selected" : "")">
+                                        <img src="@img?.OutputFile" alt="@key" />
                                         <figcaption>
-                                            @key (@img.width x @img.height)
+                                            @key (@img?.Width x @img?.Height)
                                         </figcaption>
                                     </figure>
                                 }
@@ -80,11 +80,14 @@
             .FirstOrDefault(x => x.Id == Specimen.Id);
     }
 
-    string LargeImageSource => SelectedImage?.Url ?? Specimen.InputFile;
+    string LargeImageSource => SelectedImage?.Url ?? SelectedImage?.OutputFile ?? Specimen.InputFile;
     string LargeImageAlt => SelectedImage?.Size ?? Specimen.CatalogNumber ?? Specimen.CreateDate.ToString("d");
 
     void Select(string key)
     {
-        SelectedImage = Specimen.Images.FirstOrDefault(x => x.Size == key);
+        if (SelectedImage?.Size == key)
+            SelectedImage = null;
+        else
+            SelectedImage = Specimen.Images.FirstOrDefault(x => x.Size == key);
     }
 }

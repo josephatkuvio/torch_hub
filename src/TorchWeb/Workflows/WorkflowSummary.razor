@@ -100,6 +100,12 @@
             ProcessCount++;
             await InvokeAsync(StateHasChanged);
         });
+
+        Socket.On("specimen_uploaded", async (data) =>
+        {
+            TransferCount++;
+            await InvokeAsync(StateHasChanged);
+        });
     }
 
     protected override async Task OnParametersSetAsync()

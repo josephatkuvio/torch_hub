@@ -12,6 +12,7 @@ circle {
     stroke-width: 12px;
     transform: rotate(-90deg);
     transform-origin: center center;
+    transition: stroke-dashoffset ease-in 0.3s;
 }
 
 .upload {

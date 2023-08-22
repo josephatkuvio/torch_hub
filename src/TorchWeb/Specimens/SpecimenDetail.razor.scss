@@ -74,6 +74,16 @@ dl {
             font-size: 12px;
             padding-top: 16px;
         }
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &.selected {
+            figcaption {
+                font-weight: 600;
+            }
+        }
     }
 }
 
