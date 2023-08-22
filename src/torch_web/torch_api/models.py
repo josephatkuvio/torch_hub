@@ -91,7 +91,7 @@ class Workflow(SQLModel, table=True):
             session.commit()
             emit(local_specimen, workflow, 'specimen_processed')
 
-            output_connection = next((c for c in workflow.connections if c.direction == 'Output'), None)
+            output_connection = next((c for c in workflow.connections if c.direction == 'Output' and c.deleted_date is None), None)
             if output_connection is not None:
                 for image in local_specimen.images:
                     output_connection.upload(image)
@@ -134,6 +134,8 @@ class Connection(SQLModel, table=True):
     password_key: Optional[str]
     application_id: Optional[str]
     application_key: Optional[str]
+    created_date: Optional[datetime]
+    deleted_date: Optional[datetime]
     workflow: Workflow = Relationship(back_populates="connections")
     specimens: list["Specimen"] = Relationship(
         back_populates="input_connection", 

@@ -6,6 +6,9 @@ from urllib.parse import urlparse
 
 
 def upload(url: str, username: str, password: str, file_bytes: BytesIO):
+    if not url.startswith('s3'):
+        url = f's3://{url}'
+    
     o = urlparse(url)
     host = o.netloc
     folder = os.path.dirname(o.path)
@@ -14,6 +17,7 @@ def upload(url: str, username: str, password: str, file_bytes: BytesIO):
         bucket = os.path.dirname(bucket)
     
     folder = folder.replace(bucket, '')
+    bucket = bucket.replace('/', '')
     filename = f'{folder}/{os.path.basename(o.path)}'
     
     client = Minio(host, access_key=username, secret_key=password)

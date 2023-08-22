@@ -14,7 +14,10 @@ public class TorchContext : DbContext
     protected override void OnModelCreating(ModelBuilder model)
     {
         model.Entity<Connection>().ToTable("connection").HasDiscriminator(x => x.ContainerType);
+        model.Entity<Connection>().HasQueryFilter(x => x.DeletedDate == null);
         model.Entity<AzureBlobConnection>();
+        model.Entity<AmazonS3Connection>();
+        model.Entity<SFTPConnection>();
 
         model.Entity<Institution>().ToTable("institution");
         model.Entity<Specimen>().ToTable("specimen");

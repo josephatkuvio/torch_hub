@@ -1,4 +1,5 @@
-﻿<section class="manage-detail-page-section">
+﻿@using Torch.Web.Workflows.Connections;
+<section class="manage-detail-page-section">
     <header class="detailed-workflow-header">
         <div class="workflow-detail-header">
             <div class="header-left">
@@ -44,7 +45,7 @@
             <div class="fields-right">
                 <form>
                     <label>Connection Type</label>
-                    <select @bind=SelectedConnection.ContainerType>
+                    <select @bind=ContainerType>
                         <option value="AzureBlobConnection">Azure Blob Storage</option>
                         <option value="AmazonS3Connection">Amazon S3</option>
                         <option value="SFTPConnection">SFTP</option>
@@ -56,12 +57,12 @@
                     <input type="text" placeholder="User Name" @bind=SelectedConnection.UserId />
                     <label>Password</label>
                     <div class="password-input">
-                        <input type="@(showPassword ? "password" : "text")" placeholder="Password" @bind=password />
+                        <input type="@(showPassword ? "text" : "password")" placeholder="Password" @bind=password />
                         <button type="button" class="toggle-password-button" @onclick="TogglePasswordVisibility">
-                            <i class="@(showPassword ? "fas fa-eye-slash" : "fas fa-eye")"></i>
+                            <i class="@(showPassword ? "fas fa-eye" : "fas fa-eye-slash")"></i>
                         </button>
                     </div>
-                    <button type="submit">Confirm</button>
+                    <button type="button" @onclick=Save>Save</button>
                 </form>
             </div>
         </section>
@@ -76,6 +77,12 @@
 
     private bool showPassword = false;
     private string password = "";
+    private string ContainerType = null!;
+
+    protected override void OnParametersSet()
+    {
+        ContainerType = SelectedConnection.ContainerType;
+    }
 
     private async Task HandleBackClick()
     {
@@ -86,7 +93,6 @@
     {
         showPassword = !showPassword;
     }
-
 
     async Task OpenConnectionLibraryModal()
     {
@@ -99,5 +105,23 @@
             };
         var modal = Modal.Show<ConnectionModal>("", options);
         await modal.Result;
+    }
+
+    async Task Save()
+    {
+        if (SelectedConnection.ContainerType != ContainerType)
+        {
+            var newConnection = SelectedConnection.ChangeContainerType(ContainerType);
+            await newConnection.SetPasswordAsync(password);
+            await Connections.AddAsync(newConnection);
+        }
+        else
+        {
+            await SelectedConnection.SetPasswordAsync(password);
+        }
+
+        await Connections.UpdateAsync(SelectedConnection);
+
+        await HandleBackClick();
     }
 }
