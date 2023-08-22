@@ -9,9 +9,10 @@ psycopg2
 
 # Task Dependencies
 imagehash
-boto3
+minio
 Pillow
 azure-storage-blob
 azure-identity
 azure-cognitiveservices-vision-computervision
+azure-keyvault-secrets
 paramiko

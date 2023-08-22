@@ -25,7 +25,7 @@ def check_duplicate(specimen: Specimen, max_distance=35):
 
             if len(too_close_images) > 0:
                 distance = abs(too_close_images[0].average_hash() - img.average_hash())
-                raise ValueError(f"Specimen image {img.output_file} is too similar to {too_close_images[0].url}. Distance is {distance}")
+                raise ValueError(f"Specimen image {img.url} is too similar to {too_close_images[0].url}. Distance is {distance}")
             else:
                 result[img.name] = f"No duplicates found within distance {distance}"
 

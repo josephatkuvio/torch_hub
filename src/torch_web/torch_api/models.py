@@ -1,18 +1,23 @@
 import asyncio
-from concurrent.futures import ThreadPoolExecutor
 import importlib
-from threading import local
-from PIL import Image
+import os
 import requests
 import imagehash
 import json
 
+from PIL import Image
+from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 from typing import Optional
 from datetime import datetime
+from urllib.parse import urlparse
 from sqlmodel import Field, SQLModel, Relationship, Session, Column, JSON
+from azure.keyvault.secrets import SecretClient
+from azure.identity import DefaultAzureCredential
+
 from torch_api.database import engine
 from torch_api.socket import sio as socketio
+from torch_api.plugins import sftp, s3
 
 
 def emit(specimen: "Specimen", workflow: "Workflow", event):
@@ -126,6 +131,29 @@ class Connection(SQLModel, table=True):
             "primaryjoin": "Connection.id==Specimen.input_connection_id",
             "lazy": "joined"
         })
+    
+    def get_password(self):
+        client = SecretClient(vault_url=os.environ.get('AZURE_KEY_VAULT_URI'), credential=DefaultAzureCredential())
+        return client.get_secret(self.password_key)
+        
+    
+    def upload(self, image: "SpecimenImage"):
+        if (self.direction != 'Output'):
+            raise Exception("Cannot upload to an input connection")
+
+        image_bytes = image.download()
+        password = self.get_password()
+        o = urlparse(self.host)
+        url = f'{o.netloc}{os.path.dirname(o.path)}/{os.path.basename(image.url)}'
+
+        if self.container_type == "sftp":
+            image.output_file = sftp.upload(url, self.user_id, password, image_bytes)
+
+        elif self.container_type == "s3":
+            image.output_file = s3.upload(url, self.user_id, password, image_bytes)
+        
+        else:
+            raise NotImplementedError(f"Upload type {self.container_type} is not yet implemented.")
 
 
 class Specimen(SQLModel, table=True):
@@ -202,6 +230,7 @@ class SpecimenImage(SQLModel, table=True):
     create_date: datetime
     specimen_id: int = Field(foreign_key="specimen.id")
     specimen: Specimen = Relationship(back_populates="images")
+    url: Optional[str]
     hash_a: Optional[str]
     hash_b: Optional[str]
     hash_c: Optional[str]
@@ -209,7 +238,7 @@ class SpecimenImage(SQLModel, table=True):
 
     
     def download(self):
-        return BytesIO(requests.get(self.output_file, stream=True).content)
+        return BytesIO(requests.get(self.url, stream=True).content)
 
     
     def average_hash(self):

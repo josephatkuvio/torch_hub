@@ -60,7 +60,7 @@ def generate_derivatives(specimen: Specimen, sizes_to_generate, hash_size=32):
             specimen.images.append(new_derivative)
                 
             result[derivative] = {
-                "url": new_derivative.output_file,
+                "url": new_derivative.url,
                 "size": new_derivative.size,
                 "width": new_derivative.width,
                 "height": new_derivative.height
@@ -91,6 +91,7 @@ def generate_derivative(specimen: Specimen, image: BytesIO, size: str, width: in
         size=size,
         height=img.height,
         width=img.width,
+        url=blob_client.url,
         output_file=blob_client.url,
         create_date=datetime.now()
     )
