@@ -19,9 +19,11 @@ public class TorchTask
     public int? SortOrder { get; private set; }
     public string? Description { get; private set; }
     public DateTime LastUpdatedDate { get; private set; }
+    public DateTime? DeletedDate { get; private set; }
     public Dictionary<string, string> Parameters { get; private set; }
     internal decimal? TemporarySortOrder { get; private set; }
 
+    public void Delete() => DeletedDate = DateTime.UtcNow;
     public void SetSortOrder(int sortOrder)
     {
         if (SortOrder != sortOrder)

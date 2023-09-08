@@ -2,6 +2,7 @@
     @if (IsError)
     {
         <ErrorIcon />
+        <button class="retry-btn" @* @onclick="Retry" *@>Retry</button>
     }
     else if (Specimen.CardImage != null)
     {
@@ -97,4 +98,21 @@
             await Specimens.ExecuteAsync(Specimen, x => x.Delete());
         }
     }
+
+    // async Task Retry()
+    // {        
+    //     Status = new TaskStatus("Processing", DateTime.UtcNow, 0, 0, 0);        
+        
+    //     foreach (var taskRun in Specimen.TaskRuns)
+    //     {            
+    //         if (taskRun.Status?.StartsWith("Error") == true)
+    //         {                
+    //             taskRun.Status = "Processing";
+                
+    //             taskRun.Result = null;               
+    //         }
+    //     }
+        
+    //     Status = new TaskStatus("Retrying", DateTime.UtcNow, 0, 0, 0);        
+    // }
 }
