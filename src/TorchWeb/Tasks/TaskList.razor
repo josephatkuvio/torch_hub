@@ -10,7 +10,7 @@
             </div>
         </header>
 
-        <section class="workflow-cards">           
+        <section class="workflow-cards">
             @foreach (var task in Workflow.Tasks.Where(x => x.DeletedDate == null).OrderBy(x => x.SortOrder))
             {
                 <TaskCard Task="task" OnDelete="Delete" OnReorder="Reorder" IsEditable=true />
@@ -58,7 +58,7 @@
     IEnumerable<Torch.Api.CatalogTask> FilteredCatalog => Catalog.Where(x =>
         string.IsNullOrWhiteSpace(searchText)
         || x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-        .OrderBy(x => x.Name);    
+        .OrderBy(x => x.Name);
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,15 +72,31 @@
         await Workflows.UpdateAsync(Workflow);
     }
 
-    async Task Delete(TorchTask task)
+    async Task Delete(TorchTask taskToDelete)
     {
-        task.Delete();
+        taskToDelete.Delete();
         await Workflows.UpdateAsync(Workflow);
-        Workflow.Tasks.Remove(task);
+        Workflow.Tasks.Remove(taskToDelete);
+
+        int sortOrder = 1;
+        foreach (var task in Workflow.Tasks.OrderBy(x => x.SortOrder))
+        {
+            task.SetSortOrder(sortOrder++);
+        }
+
+        Workflow.UpdateTaskSortOrders();
+        await Workflows.UpdateAsync(Workflow);
     }
 
     async Task Reorder(TorchTask task)
     {
+        var sortedTasks = Workflow.Tasks.OrderBy(x => x.SortOrder).ToList();
+
+        for (int i = 0; i < sortedTasks.Count; i++)
+        {
+            sortedTasks[i].SetSortOrder(i + 1);
+        }
+
         Workflow.UpdateTaskSortOrders();
         await Workflows.UpdateAsync(Workflow);
     }
