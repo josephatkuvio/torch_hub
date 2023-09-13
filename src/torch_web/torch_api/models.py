@@ -80,9 +80,9 @@ class Workflow(SQLModel, table=True):
                 session.refresh(local_specimen)
                 emit(local_specimen, workflow, 'task_completed')
             
-                if task_run_status.startswith("Error"):
+                if task_run_status.startswith("Error"):                    
                     local_specimen.set_status(task_run_status)
-                    break
+                    break                
                     
             if not local_specimen.status.startswith("Error"):
                 local_specimen.set_status('Processed')
@@ -94,9 +94,13 @@ class Workflow(SQLModel, table=True):
             output_connection = next((c for c in workflow.connections if c.direction == 'Output' and c.deleted_date is None), None)
             if output_connection is not None:
                 for image in local_specimen.images:
-                    output_connection.upload(image)
+                    output_connection.upload(image)                 
                 
-                local_specimen.set_status('Processed and Transferred')
+                if task_run_status.startswith('Error'):
+                    local_specimen.set_status('Error: ' + task_run.task.name)
+                else:
+                     local_specimen.set_status('Processed and Transferred')   
+                
                 local_specimen.output_connection_id = output_connection.id
                 session.commit()
                 emit(local_specimen, workflow, 'specimen_uploaded')
