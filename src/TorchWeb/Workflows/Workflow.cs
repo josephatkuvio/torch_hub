@@ -34,10 +34,11 @@ public partial class Workflow : Entity<int>
     public void AddTask(string funcName, string name, Dictionary<string, string>? parameters)
     {
         var newTask = new TorchTask(Id, funcName, name, parameters);
+        var maxSortOrder = Tasks.Where(x => x.DeletedDate == null).Max(x => x.SortOrder);
+        newTask.SetSortOrder((maxSortOrder ?? 0) + 1);
         Tasks.Add(newTask);
-        UpdateTaskSortOrders();
     }
-    
+
     public void DeleteTask(TorchTask task)
     {
         var existingTask = Tasks.FirstOrDefault(x => x.Id == task.Id);

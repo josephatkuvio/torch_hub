@@ -24,6 +24,7 @@ public class TorchTask
     internal decimal? TemporarySortOrder { get; private set; }
 
     public void Delete() => DeletedDate = DateTime.UtcNow;
+
     public void SetSortOrder(int sortOrder)
     {
         if (SortOrder != sortOrder)

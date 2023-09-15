@@ -75,16 +75,13 @@
     async Task Delete(TorchTask taskToDelete)
     {
         taskToDelete.Delete();
-        await Workflows.UpdateAsync(Workflow);
-        Workflow.Tasks.Remove(taskToDelete);
+        var remainingTasks = Workflow.Tasks.Where(x => x.DeletedDate == null).OrderBy(x => x.SortOrder).ToList();
 
-        int sortOrder = 1;
-        foreach (var task in Workflow.Tasks.OrderBy(x => x.SortOrder))
+        for (int i = 0; i < remainingTasks.Count; i++)
         {
-            task.SetSortOrder(sortOrder++);
+            remainingTasks[i].SetSortOrder(i + 1);
         }
 
-        Workflow.UpdateTaskSortOrders();
         await Workflows.UpdateAsync(Workflow);
     }
 
@@ -97,7 +94,6 @@
             sortedTasks[i].SetSortOrder(i + 1);
         }
 
-        Workflow.UpdateTaskSortOrders();
         await Workflows.UpdateAsync(Workflow);
     }
 }

@@ -67,8 +67,8 @@ class Workflow(SQLModel, table=True):
 
             local_specimen.set_status('Starting...')
             session.commit()
-            
-            sorted_tasks = sorted(workflow.tasks, key=lambda x: x.sort_order)
+                       
+            sorted_tasks = sorted([task for task in workflow.tasks if task.deleted_date is None], key=lambda x: x.sort_order)
             for task in sorted_tasks:
                 task_run = TaskRun(specimen=local_specimen, task=task, start_date=datetime.now(), parameters=task.parameters)
                 local_specimen.tasks.append(task_run)
@@ -121,6 +121,7 @@ class Task(SQLModel, table=True):
     sort_order: Optional[int]
     description: Optional[str]
     last_updated_date: Optional[datetime]
+    deleted_date: Optional[datetime]
     workflow: Workflow = Relationship(back_populates="tasks")
     parameters: dict = Field(default={}, sa_column=Column(JSON))
     runs: list["TaskRun"] = Relationship(back_populates="task")
