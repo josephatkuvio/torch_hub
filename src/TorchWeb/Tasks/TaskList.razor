@@ -6,7 +6,7 @@
             <div>
                 <h4>Last Updated: @(Workflow.Tasks.Any() ? Workflow.Tasks.Max(x => x.LastUpdatedDate) : "Never")</h4>
                 <h4>Created by: @Workflow.Institution?.Owner?.FirstName</h4>
-                <h4>Assigned Tasks: @Workflow.Tasks.Count()</h4>
+                <h4>Assigned Tasks: @Workflow.Tasks.Where(x => x.DeletedDate == null).Count()</h4>
             </div>
         </header>
 

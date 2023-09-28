@@ -10,7 +10,7 @@
         @foreach (var specimen in AllSpecimens)
         {
             <article @onclick="@(() => Select(specimen))" class="@(SelectedSpecimens.Contains(specimen) ? "selected" : "")">
-                <SpecimenCard Specimen="specimen" @key=specimen.Id />
+                <SpecimenCard Specimen="specimen" @key=specimen.Id RetryFromSpecimenCard="Retry" />
             </article>
         }
 
@@ -56,5 +56,10 @@
     {
         var ctrlKey = await JSRuntime.InvokeAsync<bool>("ctrlKeyPressed", new object[] { });
         return ctrlKey;
+    }
+
+    async void Retry()
+    {
+        var abc = "";
     }
 }

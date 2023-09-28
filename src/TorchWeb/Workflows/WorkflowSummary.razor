@@ -59,7 +59,7 @@
         <section class="w-list-cards">
             @foreach (var specimen in SpecimenQueue.Where(x => x.Status != "Uploaded"))
             {
-                <SpecimenCard Specimen="specimen" />
+                <SpecimenCard Specimen="specimen" RetryFromSpecimenCard="EventCallback.Empty" />
             }
         </section>
     }
@@ -166,5 +166,36 @@
 
         await TorchApi.StartWorkflowAsync(Workflow.Id, Batch.Id);
         SpecimenQueue.Clear();
+    }
+
+    public async Task Retry(InputFileChangeEventArgs e)
+    {
+        if (Workflow?.InputConnection == null || Batch == null)
+            return;
+
+        foreach (var file in e.GetMultipleFiles(10000))
+        {
+            SpecimenQueue.Add(new Specimen(Workflow.InputConnection.Id, Batch.Id, file));
+        }
+
+        StateHasChanged();
+
+        await Workflow.InputConnection.InitializeAsync();
+
+        foreach (var specimen in SpecimenQueue)
+        {
+            await Workflow.InputConnection.UploadAsync(specimen, specimen.File!.OpenReadStream(2_000_000_000));
+            await Workflows.UpdateAsync(Workflow);
+            UploadCount++;
+            StateHasChanged();
+        }
+
+        await TorchApi.StartWorkflowAsync(Workflow.Id, Batch.Id);
+        SpecimenQueue.Clear();
+    }
+
+    public async Task UpdateSpecimen(Specimen specimen)
+    {
+        await Specimens.UpdateAsync(specimen);
     }
 }

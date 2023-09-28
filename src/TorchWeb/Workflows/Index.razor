@@ -38,7 +38,7 @@
                 <section class="tab-content">
                     @if (activeTab == "workflow")
                     {
-                        <WorkflowDetail @ref=DetailComponent Workflow ="CurrentWorkflow" OnBatchSelect="SelectBatch" />
+                        <WorkflowDetail @ref=DetailComponent Workflow="CurrentWorkflow" OnBatchSelect="SelectBatch" RetryFromWorkflowDetail="Retry" />
                     }
                     else if (activeTab == "tasks")
                     {
@@ -116,7 +116,7 @@
             User.SetCurrentWorkflow(CurrentWorkflow!);
             await Users.UpdateAsync(User);
         }
-        
+
         Socket = new SocketIOClient.SocketIO(Config["Blossom:Authority"], new SocketIOClient.SocketIOOptions
             {
                 Path = "/ws/socket.io"
@@ -142,6 +142,42 @@
         StateHasChanged();
 
         await SummaryComponent!.Upload(e);
+        CurrentWorkflow = await Workflows.FindAsync(CurrentWorkflow!.Id);
+        await DetailComponent!.Go(CurrentBatch);
+        NewBatchId = Batch.NewId(Env.ContentRootPath);
+    }
+
+    private async Task Retry(Specimen specimen)
+    {
+        CurrentBatch = new(NewBatchId, DateTime.UtcNow, 0);
+        StateHasChanged();
+
+        // await SummaryComponent!.Upload(e);
+
+        // var specimenToUpdate = await Specimens.FindAsync(specimen.Id);
+        // if (specimenToUpdate != null)
+        // {
+        //     specimenToUpdate.BatchId = CurrentBatch.Id;
+        // }
+
+        // var specimenUpdate = Specimens.Query
+        //     .FirstOrDefault(x => x.Id == specimenId);
+        specimen.BatchId = CurrentBatch.Id;
+
+        await Workflows.UpdateAsync(CurrentWorkflow);
+
+        // if (specimenUpdate != null)
+        // {
+        //     specimenUpdate.BatchId = CurrentBatch.Id;
+        // }
+        // StateHasChanged();
+
+
+        // await Specimens.UpdateAsync(specimenUpdate);
+
+        // await SummaryComponent!.UpdateSpecimen(specimen);
+
+        await TorchApi.StartWorkflowAsync(CurrentWorkflow!.Id, CurrentBatch.Id);
         CurrentWorkflow = await Workflows.FindAsync(CurrentWorkflow!.Id);
         await DetailComponent!.Go(CurrentBatch);
         NewBatchId = Batch.NewId(Env.ContentRootPath);

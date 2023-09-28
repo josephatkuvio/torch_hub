@@ -37,7 +37,7 @@ public class Specimen : Entity<int>
 
     public int InputConnectionId { get; internal set; }
     public int? OutputConnectionId { get; set; }
-    public string BatchId { get; private set; }
+    public string BatchId { get; set; }
     public string InputFile { get; private set; }
     public string Name { get; private set; }
     public string? Status { get; private set; }

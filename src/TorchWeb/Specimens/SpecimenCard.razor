@@ -2,7 +2,7 @@
     @if (IsError)
     {
         <ErrorIcon />
-        <button class="retry-btn" @* @onclick="Retry" *@>Retry</button>
+        <button class="retry-btn" @onclick="Retry">Retry</button>
     }
     else if (Specimen.CardImage != null)
     {
@@ -49,6 +49,7 @@
 
 @code {
     [Parameter] public Specimen Specimen { get; set; } = null!;
+    [Parameter] public EventCallback<Specimen> RetryFromSpecimenCard { get; set; }
     [CascadingParameter] public SocketIOClient.SocketIO Socket { get; set; } = null!;
     TaskStatus Status = null!;
     bool IsMonitoring;
@@ -115,4 +116,9 @@
         
     //     Status = new TaskStatus("Retrying", DateTime.UtcNow, 0, 0, 0);        
     // }
+
+    private async Task Retry()
+    {
+        await RetryFromSpecimenCard.InvokeAsync(Specimen);
+    }
 }

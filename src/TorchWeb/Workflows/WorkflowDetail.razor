@@ -41,7 +41,7 @@
         <section class="spec-cards">
             @foreach (var specimen in RecentSpecimens)
             {
-                <SpecimenCard Specimen="specimen" />
+                <SpecimenCard Specimen="specimen" RetryFromSpecimenCard="Retry" />
             }
             @if (!RecentSpecimens.Any())
             {
@@ -62,7 +62,7 @@ else
         <section class="spec-cards">
             @foreach (var specimen in AllSpecimens)
             {
-                <SpecimenCard Specimen="specimen" />
+                <SpecimenCard Specimen="specimen" RetryFromWorkflow="Retry" />
             }
         </section>
     </section>
@@ -72,12 +72,13 @@ else
 @code {
     [Parameter] public Workflow Workflow { get; set; } = null!;
     [Parameter] public EventCallback<Batch> OnBatchSelect { get; set; }
+    [Parameter] public EventCallback<Specimen> RetryFromWorkflowDetail { get; set; }
     List<Specimen> RecentSpecimens = new();
     List<Batch> RecentBatches = new();
     IEnumerable<Specimen> AllSpecimens = new List<Specimen>();
     Batch? ActiveBatch;
 
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
         RecentBatches = Specimens.Query
             .Where(x => x.InputConnection.WorkflowId == Workflow.Id)
@@ -117,5 +118,10 @@ else
     {
         ActiveBatch = null;
         await OnBatchSelect.InvokeAsync(null);
+    }
+
+    private async Task Retry(Specimen specimen)
+    {
+        await RetryFromWorkflowDetail.InvokeAsync(specimen);
     }
 }

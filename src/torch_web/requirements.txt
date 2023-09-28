@@ -16,3 +16,12 @@ azure-identity
 azure-cognitiveservices-vision-computervision
 azure-keyvault-secrets
 paramiko
+
+# New
+fastapi-socketio
+jmespath
+pip
+python-dateutil
+s3transfer
+setuptools
+boto3
